@@ -1,0 +1,184 @@
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/ensemble/_forest.py:830: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/sklearn/tree/_classes.py:297: UserWarning: The number of unique classes is greater than 50% of the number of samples. `y` could represent a regression problem, not a classification problem.
+  check_classification_targets(y)
+
+████████████████████████████████████████████████████████████
+  AutoMITRE AI Models — Training Pipeline
+████████████████████████████████████████████████████████████
+
+============================================================
+  Training: ThreatClassifier
+============================================================
+  Training on 1419 samples, 14 classes...
+
+──────────────────────────────────────────────────
+Model: ThreatClassifier
+  Accuracy : 96.81%
+  F1-Score : 96.65%
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        11
+           1       1.00      1.00      1.00        15
+           2       1.00      1.00      1.00        22
+           3       0.94      1.00      0.97        68
+           4       1.00      1.00      1.00        13
+           5       1.00      1.00      1.00        17
+           6       1.00      1.00      1.00         6
+           7       1.00      1.00      1.00        12
+           8       1.00      1.00      1.00         5
+           9       1.00      1.00      1.00         8
+          10       0.94      0.89      0.92        37
+          11       0.71      0.56      0.62         9
+          12       1.00      1.00      1.00        14
+          13       1.00      1.00      1.00        14
+
+    accuracy                           0.97       251
+   macro avg       0.97      0.96      0.97       251
+weighted avg       0.97      0.97      0.97       251
+
+  ✓ Saved ThreatClassifier (acc=96.81%)
+
+============================================================
+  Training: FrameworkMapper
+============================================================
+
+  [ATTCK] Training 835 classes on 1419 samples...
+  [ATTCK] Accuracy=84.06%  F1=83.47%
+
+  [D3FEND] Training 3 classes on 1419 samples...
+  [D3FEND] Accuracy=98.41%  F1=98.32%
+
+  [NIST] Training 3 classes on 1419 samples...
+  [NIST] Accuracy=98.41%  F1=98.45%
+
+  [OWASP] Training 14 classes on 1419 samples...
+  [OWASP] Accuracy=84.06%  F1=83.95%
+  ✓ Saved FrameworkMapper (avg_acc=91.24%)
+
+============================================================
+  Training: SeverityScorer
+============================================================
+  Training on 1419 samples...
+
+──────────────────────────────────────────────────
+Model: SeverityScorer
+  Accuracy : 95.22%
+  F1-Score : 95.13%
+              precision    recall  f1-score   support
+
+           0       1.00      0.91      0.96        47
+           1       0.93      1.00      0.96       131
+           2       0.92      1.00      0.96        24
+           3       1.00      0.84      0.91        49
+
+    accuracy                           0.95       251
+   macro avg       0.96      0.94      0.95       251
+weighted avg       0.96      0.95      0.95       251
+
+  ✓ Saved SeverityScorer (acc=95.22%)
+
+============================================================
+  Training: PcapAnalyzer
+============================================================
+  Training on 8500 samples, 6 traffic classes...
+
+──────────────────────────────────────────────────
+Model: PcapAnalyzer
+  Accuracy : 63.20%
+  F1-Score : 62.94%
+              precision    recall  f1-score   support
+
+           0       0.21      0.20      0.21       143
+           1       0.23      0.21      0.22       141
+           2       0.21      0.20      0.20       141
+           3       0.22      0.20      0.21       135
+           4       0.99      1.00      0.99       803
+           5       0.20      0.23      0.21       137
+
+    accuracy                           0.63      1500
+   macro avg       0.34      0.34      0.34      1500
+weighted avg       0.63      0.63      0.63      1500
+
+  ✓ Saved PcapAnalyzer (acc=63.20%)
+
+============================================================
+  Training: LogAnomalyDetector
+============================================================
+  Training on 2552 samples...
+
+──────────────────────────────────────────────────
+Model: LogAnomalyDetector
+  Accuracy : 100.00%
+  F1-Score : 100.00%
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       451
+
+    accuracy                           1.00       451
+   macro avg       1.00      1.00      1.00       451
+weighted avg       1.00      1.00      1.00       451
+
+  ✓ Saved LogAnomalyDetector (acc=100.00%)
+
+============================================================
+  Training: ThreatPredictor
+============================================================
+  [next_threat] Training 14 classes...
+  [next_threat] Accuracy=100.00%
+  [risk_trend] Training 2 classes...
+  [risk_trend] Accuracy=100.00%
+  ✓ Saved ThreatPredictor (threat_acc=100.00%, trend_acc=100.00%)
+
+============================================================
+  TRAINING COMPLETE — Model Accuracy Summary
+============================================================
+  ThreatClassifier.accuracy = 96.81%
+  ThreatClassifier.f1 = 96.65%
+  FrameworkMapper.attck = 84.06%
+  FrameworkMapper.d3fend = 98.41%
+  FrameworkMapper.nist = 98.41%
+  FrameworkMapper.owasp = 84.06%
+  SeverityScorer.accuracy = 95.22%
+  PcapAnalyzer.accuracy = 63.20%
+  LogAnomalyDetector.accuracy = 100.00%
+  ThreatPredictor.accuracy_threat = 100.00%
+  ThreatPredictor.accuracy_trend = 100.00%

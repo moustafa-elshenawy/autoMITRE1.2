@@ -1,0 +1,233 @@
+{
+  "top10": [
+    {
+      "id": "A01:2021",
+      "name": "Broken Access Control",
+      "description": "Failures typically lead to unauthorized information disclosure, modification, or destruction of all data.",
+      "techniques": [
+        "T1078",
+        "T1134",
+        "T1548",
+        "T1068",
+        "T1210"
+      ]
+    },
+    {
+      "id": "A02:2021",
+      "name": "Cryptographic Failures",
+      "description": "Failures related to cryptography (or lack thereof), which often leads to sensitive data exposure or system compromise.",
+      "techniques": [
+        "T1552",
+        "T1040",
+        "T1003",
+        "T1555"
+      ]
+    },
+    {
+      "id": "A03:2021",
+      "name": "Injection",
+      "description": "Injection flaws, such as SQL, NoSQL, OS, and LDAP injection, occur when untrusted data is sent to an interpreter as part of a command or query.",
+      "techniques": [
+        "T1190",
+        "T1059",
+        "T1210"
+      ]
+    },
+    {
+      "id": "A04:2021",
+      "name": "Insecure Design",
+      "description": "Focuses on risks related to design flaws. A secure design requires secure architecture/patterns and threat modeling.",
+      "techniques": [
+        "T1068",
+        "T1190",
+        "T1133"
+      ]
+    },
+    {
+      "id": "A05:2021",
+      "name": "Security Misconfiguration",
+      "description": "Security misconfiguration is the most commonly seen issue. This is commonly a result of insecure default settings, incomplete or ad hoc configurations.",
+      "techniques": [
+        "T1562",
+        "T1003",
+        "T1078",
+        "T1548"
+      ]
+    },
+    {
+      "id": "A06:2021",
+      "name": "Vulnerable and Outdated Components",
+      "description": "Components, such as libraries, frameworks, and other software modules, run with the same privileges as the application.",
+      "techniques": [
+        "T1190",
+        "T1203",
+        "T1210"
+      ]
+    },
+    {
+      "id": "A07:2021",
+      "name": "Identification and Authentication Failures",
+      "description": "Authentication and session management are often implemented incorrectly, allowing attackers to compromise passwords, keys, or session tokens.",
+      "techniques": [
+        "T1110",
+        "T1078",
+        "T1558",
+        "T1555",
+        "T1556"
+      ]
+    },
+    {
+      "id": "A08:2021",
+      "name": "Software and Data Integrity Failures",
+      "description": "Relates to code and infrastructure that does not protect against integrity violations. An example is an application that relies upon plugins from untrusted sources.",
+      "techniques": [
+        "T1195",
+        "T1547",
+        "T1554",
+        "T1565"
+      ]
+    },
+    {
+      "id": "A09:2021",
+      "name": "Security Logging and Monitoring Failures",
+      "description": "Without logging and monitoring, breaches cannot be detected. Attackers rely on this to maintain persistence and extract data.",
+      "techniques": [
+        "T1562",
+        "T1070",
+        "T1146"
+      ]
+    },
+    {
+      "id": "A10:2021",
+      "name": "Server-Side Request Forgery (SSRF)",
+      "description": "SSRF flaws occur whenever a web application is fetching a remote resource without validating the user-supplied URL.",
+      "techniques": [
+        "T1190",
+        "T1134",
+        "T1046",
+        "T1018"
+      ]
+    }
+  ],
+  "asvs": [
+    {
+      "id": "V1",
+      "name": "Architecture, Design and Threat Modeling",
+      "techniques": [
+        "T1190"
+      ]
+    },
+    {
+      "id": "V2",
+      "name": "Authentication",
+      "techniques": [
+        "T1110",
+        "T1078",
+        "T1555"
+      ]
+    },
+    {
+      "id": "V3",
+      "name": "Session Management",
+      "techniques": [
+        "T1556",
+        "T1539"
+      ]
+    },
+    {
+      "id": "V4",
+      "name": "Access Control",
+      "techniques": [
+        "T1078",
+        "T1548",
+        "T1134"
+      ]
+    },
+    {
+      "id": "V5",
+      "name": "Validation, Sanitization and Encoding",
+      "techniques": [
+        "T1190",
+        "T1059",
+        "T1210"
+      ]
+    },
+    {
+      "id": "V6",
+      "name": "Stored Cryptography",
+      "techniques": [
+        "T1552",
+        "T1003",
+        "T1528"
+      ]
+    },
+    {
+      "id": "V7",
+      "name": "Error Handling and Logging",
+      "techniques": [
+        "T1562",
+        "T1070"
+      ]
+    },
+    {
+      "id": "V8",
+      "name": "Data Protection",
+      "techniques": [
+        "T1048",
+        "T1041",
+        "T1560"
+      ]
+    },
+    {
+      "id": "V9",
+      "name": "Communication",
+      "techniques": [
+        "T1040",
+        "T1119",
+        "T1048"
+      ]
+    },
+    {
+      "id": "V10",
+      "name": "Malicious Code",
+      "techniques": [
+        "T1055",
+        "T1027",
+        "T1543"
+      ]
+    },
+    {
+      "id": "V11",
+      "name": "Business Logic",
+      "techniques": [
+        "T1565",
+        "T1560"
+      ]
+    },
+    {
+      "id": "V12",
+      "name": "File and Resources",
+      "techniques": [
+        "T1048",
+        "T1083",
+        "T1005"
+      ]
+    },
+    {
+      "id": "V13",
+      "name": "API and Web Service",
+      "techniques": [
+        "T1190"
+      ]
+    },
+    {
+      "id": "V14",
+      "name": "Configuration",
+      "techniques": [
+        "T1562",
+        "T1078",
+        "T1548"
+      ]
+    }
+  ]
+}

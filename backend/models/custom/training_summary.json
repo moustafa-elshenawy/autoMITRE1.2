@@ -1,0 +1,28 @@
+{
+  "models": {
+    "ThreatClassifier": {
+      "accuracy": 0.9681274900398407,
+      "f1": 0.9665291216088028
+    },
+    "FrameworkMapper": {
+      "attck": 0.8406374501992032,
+      "d3fend": 0.9840637450199203,
+      "nist": 0.9840637450199203,
+      "owasp": 0.8406374501992032
+    },
+    "SeverityScorer": {
+      "accuracy": 0.952191235059761
+    },
+    "PcapAnalyzer": {
+      "accuracy": 0.632
+    },
+    "LogAnomalyDetector": {
+      "accuracy": 1.0
+    },
+    "ThreatPredictor": {
+      "accuracy_threat": 1.0,
+      "accuracy_trend": 1.0
+    }
+  },
+  "model_dir": "/Users/shno/Desktop/autoMITRE1.2/backend/models/custom"
+}

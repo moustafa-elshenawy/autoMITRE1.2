@@ -1,0 +1,161 @@
+[
+    {
+        "id": "D3-AH",
+        "name": "Application Hardening",
+        "category": "Harden",
+        "description": "Making an application more resilient to attack.",
+        "counters": [
+            "T1190",
+            "T1059"
+        ]
+    },
+    {
+        "id": "D3-NTF",
+        "name": "Network Traffic Filtering",
+        "category": "Isolate",
+        "description": "Restricting network traffic to and from an application.",
+        "counters": [
+            "T1071",
+            "T1095",
+            "T1048"
+        ]
+    },
+    {
+        "id": "D3-IAM",
+        "name": "Multi-factor Authentication",
+        "category": "Credential Hardening",
+        "description": "Requiring multiple authentication factors to verify user identity.",
+        "counters": [
+            "T1078",
+            "T1110",
+            "T1133"
+        ]
+    },
+    {
+        "id": "D3-PH",
+        "name": "Password Hashing",
+        "category": "Credential Hardening",
+        "description": "One-way transformation of passwords for secure storage.",
+        "counters": [
+            "T1003",
+            "T1555"
+        ]
+    },
+    {
+        "id": "D3-UAP",
+        "name": "User Account Permissions",
+        "category": "Harden",
+        "description": "Restricting user account permissions to minimize attack surface.",
+        "counters": [
+            "T1078",
+            "T1134",
+            "T1548"
+        ]
+    },
+    {
+        "id": "D3-IPAM",
+        "name": "Inbound Traffic Filtering",
+        "category": "Isolate",
+        "description": "Filtering inbound network traffic to block malicious connections.",
+        "counters": [
+            "T1190",
+            "T1133"
+        ]
+    },
+    {
+        "id": "D3-PE",
+        "name": "Process Termination",
+        "category": "Evict",
+        "description": "Terminating suspicious or malicious processes.",
+        "counters": [
+            "T1059",
+            "T1055",
+            "T1489"
+        ]
+    },
+    {
+        "id": "D3-AL",
+        "name": "Application Layer Filtering",
+        "category": "Isolate",
+        "description": "Filtering traffic at the application layer to block malicious payloads.",
+        "counters": [
+            "T1190",
+            "T1071"
+        ]
+    },
+    {
+        "id": "D3-DE",
+        "name": "Decoy Environment",
+        "category": "Detect",
+        "description": "Creating a simulated environment to detect attackers.",
+        "counters": [
+            "T1087",
+            "T1046",
+            "T1083"
+        ]
+    },
+    {
+        "id": "D3-SR",
+        "name": "Software Updates",
+        "category": "Harden",
+        "description": "Applying software patches and updates to fix vulnerabilities.",
+        "counters": [
+            "T1190",
+            "T1548",
+            "T1055"
+        ]
+    },
+    {
+        "id": "D3-EI",
+        "name": "Email Filtering",
+        "category": "Harden",
+        "description": "Filtering email to detect and block phishing attempts.",
+        "counters": [
+            "T1566",
+            "T1204"
+        ]
+    },
+    {
+        "id": "D3-NM",
+        "name": "Network Monitoring",
+        "category": "Detect",
+        "description": "Monitoring network traffic for indicators of compromise.",
+        "counters": [
+            "T1071",
+            "T1095",
+            "T1048",
+            "T1041"
+        ]
+    },
+    {
+        "id": "D3-BA",
+        "name": "Backup",
+        "category": "Restore",
+        "description": "Creating copies of data to recover from destructive attacks.",
+        "counters": [
+            "T1485",
+            "T1486"
+        ]
+    },
+    {
+        "id": "D3-EM",
+        "name": "Endpoint Monitoring",
+        "category": "Detect",
+        "description": "Monitoring endpoint activity for indicators of compromise.",
+        "counters": [
+            "T1059",
+            "T1055",
+            "T1027",
+            "T1070"
+        ]
+    },
+    {
+        "id": "D3-ACH",
+        "name": "Account Locking",
+        "category": "Credential Hardening",
+        "description": "Locking accounts after repeated failed authentication attempts.",
+        "counters": [
+            "T1110"
+        ]
+    }
+]

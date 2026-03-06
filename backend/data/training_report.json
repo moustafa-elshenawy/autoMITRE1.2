@@ -1,0 +1,80 @@
+{
+  "text_severity": {
+    "train_size": 42500,
+    "val_size": 7500,
+    "tfidf_features": 12000,
+    "mae": 0.9834,
+    "rmse": 1.2797,
+    "r2": 0.5139,
+    "cv_mae_mean": 0.9866,
+    "cv_mae_std": 0.0035,
+    "per_bin": {
+      "Low (0-3.9)": {
+        "count": 267,
+        "mae": 2.378
+      },
+      "Medium (4-6.9)": {
+        "count": 3404,
+        "mae": 0.896
+      },
+      "High (7-8.9)": {
+        "count": 2746,
+        "mae": 0.726
+      },
+      "Critical (9-10)": {
+        "count": 1083,
+        "mae": 1.567
+      }
+    }
+  },
+  "numerical_xgboost": {
+    "train_size": 42500,
+    "val_size": 7500,
+    "mae": 1.3564,
+    "rmse": 1.6629,
+    "r2": 0.1795,
+    "feature_importance": {
+      "text_length": 0.0314,
+      "entity_count": 0.06,
+      "keyword_severity": 0.216,
+      "has_critical": 0.675,
+      "has_network": 0.0176
+    }
+  },
+  "attack_keywords": {
+    "total_keywords": 400,
+    "categories": 10,
+    "technique_pairs": 997
+  },
+  "isolation_forest_nslkdd": {
+    "total_samples": 125973,
+    "normal": 67343,
+    "attack": 58630,
+    "contamination": 0.45,
+    "attack_recall": 0.0903,
+    "attack_precision": 0.0934,
+    "attack_f1": 0.0919,
+    "confusion_matrix": {
+      "tn": 15956,
+      "fp": 51387,
+      "fn": 53333,
+      "tp": 5297
+    }
+  },
+  "isolation_forest_cicids": {
+    "total_samples": 100000,
+    "benign": 98703,
+    "attack": 1297,
+    "features": 78,
+    "contamination": 0.013,
+    "attack_recall": 0.0,
+    "attack_precision": 0.0,
+    "attack_f1": 0.0,
+    "confusion_matrix": {
+      "tn": 97406,
+      "fp": 1297,
+      "fn": 1297,
+      "tp": 0
+    }
+  }
+}

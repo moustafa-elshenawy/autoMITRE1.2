@@ -1,0 +1,37 @@
+{
+  "threat_classification": [
+    "CICIDS2017/2018 - Canadian Institute for Cybersecurity Intrusion Detection",
+    "NSL-KDD - Network intrusion detection benchmark",
+    "UNSW-NB15 - Network traffic with 9 attack categories",
+    "MITRE ATT&CK STIX data - https://github.com/mitre/cti",
+    "CTI Corpus - Threat intelligence NLP dataset",
+    "SecureNLP - Cybersecurity NER dataset",
+    "MalwareBazaar - Malware samples and metadata"
+  ],
+  "framework_mapping": [
+    "MITRE ATT&CK Enterprise JSON (https://attack.mitre.org/resources/attack-data-and-tools/)",
+    "MITRE D3FEND ontology (https://d3fend.mitre.org/)",
+    "NIST NVD CVE database (https://nvd.nist.gov/)",
+    "OWASP ASVS controls (https://owasp.org/www-project-application-security-verification-standard/)",
+    "NVD-CWE mappings for CVE to technique correlation"
+  ],
+  "threat_prediction": [
+    "VERIS Community Database - Incident patterns over time",
+    "CISA KEV (Known Exploited Vulnerabilities) catalog",
+    "Shodan historical scan data",
+    "AlienVault OTX threat intelligence feeds",
+    "VirusTotal public reports (API)"
+  ],
+  "pcap_analysis": [
+    "PCAP-ISCX dataset",
+    "CTU-13 botnet dataset",
+    "CIC-DDoS2019",
+    "CAIDA anonymized traces"
+  ],
+  "log_analysis": [
+    "HDFS log dataset (Loghub)",
+    "Windows event log dataset",
+    "Linux syslog dataset (Loghub)",
+    "CERT Insider Threat dataset"
+  ]
+}

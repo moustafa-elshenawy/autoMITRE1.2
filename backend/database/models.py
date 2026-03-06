@@ -1,0 +1,122 @@
+import datetime
+from sqlalchemy import Column, String, Float, Integer, ForeignKey, Text, JSON, Boolean
+from sqlalchemy.orm import relationship
+from database.config import Base
+import uuid
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, index=True, default=lambda: str(uuid.uuid4()))
+    username = Column(String, unique=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)
+
+    # Profile fields
+    full_name = Column(String, nullable=True)
+    bio = Column(Text, nullable=True)
+    role = Column(String, nullable=True, default="analyst")        # analyst, admin, viewer
+    organization = Column(String, nullable=True)
+    avatar_url = Column(String, nullable=True)
+
+    # Timestamps
+    created_at = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())
+    last_login_at = Column(String, nullable=True)
+
+
+class ThreatRecord(Base):
+    __tablename__ = "threat_records"
+
+    id = Column(String, primary_key=True, index=True)
+    user_id = Column(String, ForeignKey("users.id"), index=True, nullable=True)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    input_type = Column(String, nullable=False)
+    
+    # Risk Score flatten
+    risk_score = Column(Float, nullable=False)
+    severity = Column(String, nullable=False)
+    likelihood = Column(Float, nullable=False)
+    impact_score = Column(Float, nullable=False)
+    business_impact = Column(Text, nullable=False)
+    
+    # Raw data stored as JSON to avoid excessive tables for simple lists
+    raw_indicators = Column(JSON, default={})
+    
+    # We store the pre-mapped framework coverage counts for dashboard speed
+    framework_coverage_attack = Column(Integer, default=0)
+    framework_coverage_defend = Column(Integer, default=0)
+    framework_coverage_nist = Column(Integer, default=0)
+    framework_coverage_owasp = Column(Integer, default=0)
+
+    timestamp = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())
+
+    # Relationships
+    entities = relationship("ThreatEntity", back_populates="threat", cascade="all, delete")
+    techniques = relationship("ThreatTechnique", back_populates="threat", cascade="all, delete")
+    mitigations = relationship("ThreatMitigation", back_populates="threat", cascade="all, delete")
+
+
+class ThreatEntity(Base):
+    __tablename__ = "threat_entities"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    threat_id = Column(String, ForeignKey("threat_records.id"), nullable=False)
+    type = Column(String, nullable=False)
+    value = Column(String, nullable=False)
+    context = Column(String, nullable=True)
+
+    threat = relationship("ThreatRecord", back_populates="entities")
+
+
+class ThreatTechnique(Base):
+    __tablename__ = "threat_techniques"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    threat_id = Column(String, ForeignKey("threat_records.id"), nullable=False)
+    technique_id = Column(String, nullable=False)
+    name = Column(String, nullable=False)
+    tactic = Column(String, nullable=False)
+    tactic_id = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    confidence = Column(Float, nullable=False)
+
+    threat = relationship("ThreatRecord", back_populates="techniques")
+
+
+class ThreatMitigation(Base):
+    __tablename__ = "threat_mitigations"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    threat_id = Column(String, ForeignKey("threat_records.id"), nullable=False)
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    priority = Column(String, nullable=False)
+    effort = Column(String, nullable=False)
+    iac_snippet = Column(Text, nullable=True)
+    iac_type = Column(String, nullable=True)
+
+    threat = relationship("ThreatRecord", back_populates="mitigations")
+
+
+class OSINTFeedItem(Base):
+    """Stores external threat intelligence feeds identically to the frontend."""
+    __tablename__ = "osint_feed_items"
+
+    id = Column(String, primary_key=True, index=True)
+    title = Column(String, nullable=False)
+    severity = Column(String, nullable=False)
+    technique = Column(String, nullable=True)
+    tactic = Column(String, nullable=True)
+    timestamp = Column(String, nullable=False)
+    source = Column(String, nullable=False)
+    source_key = Column(String, nullable=False)
+    iocs = Column(JSON, default=list)
+    frameworks = Column(JSON, default=list)
+    tags = Column(JSON, default=list)
+    description = Column(Text, nullable=True)
+    external_url = Column(String, nullable=True)
+    
+    # Internal usage tracker
+    created_at = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())

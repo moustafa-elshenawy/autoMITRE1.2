@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Managerial Threat Report</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 2cm;
+
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 50pt;
+                width: 512pt;
+                top: 772pt;
+                height: 20pt;
+            }
+        }
+
+        body {
+            font-family: Helvetica, sans-serif;
+            font-size: 10pt;
+            color: #333;
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 20pt;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 5px;
+        }
+
+        h2 {
+            color: #1e293b;
+            font-size: 14pt;
+            margin-top: 15pt;
+            background-color: #f1f5f9;
+            padding: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10pt;
+            margin-bottom: 10pt;
+        }
+
+        th {
+            background-color: #e2e8f0;
+            color: #334155;
+            font-weight: bold;
+            text-align: left;
+            padding: 6pt;
+            border: 1px solid #cbd5e1;
+        }
+
+        td {
+            padding: 6pt;
+            border: 1px solid #cbd5e1;
+            vertical-align: top;
+        }
+
+        .badge {
+            padding: 2pt 5pt;
+            border-radius: 3pt;
+            font-weight: bold;
+            font-size: 9pt;
+        }
+
+        .badge-High {
+            background-color: #fef08a;
+            color: #854d0e;
+            border: 1px solid #facc15;
+        }
+
+        .badge-Critical {
+            background-color: #fecaca;
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
+
+        .badge-Medium {
+            background-color: #bfdbfe;
+            color: #1e40af;
+            border: 1px solid #60a5fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="footer_content">
+        <div style="font-size: 9pt; color: #94a3b8; text-align: center;">autoMITRE™ Managerial Document - Page
+            <pdf:pagenumber> of <pdf:pagecount>
+        </div>
+    </div>
+
+    <h1>Managerial Action Plan & Resource Allocation</h1>
+    <p>Generated on: {{ report_date }} | Threats Tracked: {{ total_threats }}</p>
+
+    {% for threat in threats %}
+    <h2>Incident Action Plan: {{ threat.title }}</h2>
+    <p><strong>Risk Severity:</strong> <span class="badge badge-{{ threat.risk_score.severity }}">{{
+            threat.risk_score.severity }}</span></p>
+
+    <p><strong>Situation Summary:</strong><br>{{ threat.description }}</p>
+
+    <h3>Resource Requirements & Tasks</h3>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 25%">Task Name</th>
+                <th style="width: 45%">Operational Description</th>
+                <th style="width: 15%">Sub-Team</th>
+                <th style="width: 15%">Effort Est.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mitigation in threat.mitigations %}
+            <tr>
+                <td><strong>{{ mitigation.title }}</strong></td>
+                <td>{{ mitigation.description }}</td>
+                <td>SecOps / IAM</td>
+                <td>{{ mitigation.effort|default('Medium') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+
+</body>
+
+</html>

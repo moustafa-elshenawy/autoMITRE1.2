@@ -1,0 +1,239 @@
+[
+  {
+    "id": "AC-2",
+    "family": "Access Control",
+    "name": "Account Management",
+    "description": "Manage system accounts, establishing conditions for group membership.",
+    "severity": "High",
+    "threats": [
+      "T1078",
+      "T1098",
+      "T1136",
+      "T1087",
+      "T1071"
+    ]
+  },
+  {
+    "id": "AC-3",
+    "family": "Access Control",
+    "name": "Access Enforcement",
+    "description": "Enforce approved authorizations for logical access to information and system resources.",
+    "severity": "High",
+    "threats": [
+      "T1210",
+      "T1134",
+      "T1548",
+      "T1068",
+      "T1558",
+      "T1068",
+      "T1021",
+      "T1531",
+      "T1222"
+    ]
+  },
+  {
+    "id": "AC-4",
+    "family": "Access Control",
+    "name": "Information Flow Enforcement",
+    "description": "Enforce approved authorizations for controlling information flow within the system and between connected systems.",
+    "severity": "Medium",
+    "threats": [
+      "T1562",
+      "T1048",
+      "T1041",
+      "T1560"
+    ]
+  },
+  {
+    "id": "AU-2",
+    "family": "Audit and Accountability",
+    "name": "Event Logging",
+    "description": "Identify types of events that the system is capable of logging.",
+    "severity": "High",
+    "threats": [
+      "T1562",
+      "T1070",
+      "T1059",
+      "T1003",
+      "T1146"
+    ]
+  },
+  {
+    "id": "AU-6",
+    "family": "Audit and Accountability",
+    "name": "Audit Record Review, Analysis, and Reporting",
+    "description": "Review and analyze system audit records for indications of inappropriate or unusual activity.",
+    "severity": "High",
+    "threats": [
+      "T1562",
+      "T1070",
+      "T1046",
+      "T1083"
+    ]
+  },
+  {
+    "id": "CM-2",
+    "family": "Configuration Management",
+    "name": "Baseline Configuration",
+    "description": "Develop, document, and maintain under configuration control, a current baseline configuration of the system.",
+    "severity": "Medium",
+    "threats": [
+      "T1562",
+      "T1003",
+      "T1078",
+      "T1546",
+      "T1547"
+    ]
+  },
+  {
+    "id": "CM-6",
+    "family": "Configuration Management",
+    "name": "Configuration Settings",
+    "description": "Establish and document configuration settings for information technology products.",
+    "severity": "High",
+    "threats": [
+      "T1562",
+      "T1548",
+      "T1574"
+    ]
+  },
+  {
+    "id": "CP-9",
+    "family": "Contingency Planning",
+    "name": "System Backup",
+    "description": "Conduct backups of user-level and system-level information and system documentation.",
+    "severity": "Critical",
+    "threats": [
+      "T1486",
+      "T1485",
+      "T1490"
+    ]
+  },
+  {
+    "id": "IA-2",
+    "family": "Identification and Authentication",
+    "name": "Identification and Authentication (Organizational Users)",
+    "description": "Uniquely identify and authenticate organizational users (or processes acting on behalf of users).",
+    "severity": "High",
+    "threats": [
+      "T1110",
+      "T1078",
+      "T1556",
+      "T1558",
+      "T1555",
+      "T1003"
+    ]
+  },
+  {
+    "id": "IR-4",
+    "family": "Incident Response",
+    "name": "Incident Handling",
+    "description": "Handle incidents, including preparation, detection, analysis, containment, recovery, and user response.",
+    "severity": "High",
+    "threats": [
+      "T1486",
+      "T1070",
+      "T1562"
+    ]
+  },
+  {
+    "id": "PL-4",
+    "family": "Planning",
+    "name": "Rules of Behavior",
+    "description": "Establish and make readily available to individuals requiring access to the system, rules of behavior.",
+    "severity": "Low",
+    "threats": [
+      "T1078"
+    ]
+  },
+  {
+    "id": "SA-11",
+    "family": "System and Services Acquisition",
+    "name": "Developer Testing and Evaluation",
+    "description": "Require developers of the system to implement testing and evaluation.",
+    "severity": "Medium",
+    "threats": [
+      "T1190",
+      "T1133"
+    ]
+  },
+  {
+    "id": "SC-7",
+    "family": "System and Communications Protection",
+    "name": "Boundary Protection",
+    "description": "Monitor and control communications at external boundary and key internal boundaries.",
+    "severity": "High",
+    "threats": [
+      "T1190",
+      "T1133",
+      "T1048",
+      "T1041",
+      "T1040",
+      "T1071",
+      "T1095"
+    ]
+  },
+  {
+    "id": "SC-8",
+    "family": "System and Communications Protection",
+    "name": "Transmission Confidentiality and Integrity",
+    "description": "Protect the confidentiality and integrity of transmitted information.",
+    "severity": "High",
+    "threats": [
+      "T1040",
+      "T1027"
+    ]
+  },
+  {
+    "id": "SC-28",
+    "family": "System and Communications Protection",
+    "name": "Protection of Information at Rest",
+    "description": "Protect the confidentiality and integrity of information at rest.",
+    "severity": "High",
+    "threats": [
+      "T1486",
+      "T1027",
+      "T1119"
+    ]
+  },
+  {
+    "id": "SI-2",
+    "family": "System and Information Integrity",
+    "name": "Flaw Remediation",
+    "description": "Identify, report, and correct system flaws.",
+    "severity": "Critical",
+    "threats": [
+      "T1190",
+      "T1203",
+      "T1210"
+    ]
+  },
+  {
+    "id": "SI-3",
+    "family": "System and Information Integrity",
+    "name": "Malicious Code Protection",
+    "description": "Employ malicious code protection mechanisms at system entry and exit points.",
+    "severity": "High",
+    "threats": [
+      "T1059",
+      "T1055",
+      "T1486",
+      "T1485",
+      "T1204"
+    ]
+  },
+  {
+    "id": "SI-4",
+    "family": "System and Information Integrity",
+    "name": "System Monitoring",
+    "description": "Monitor the system to detect attacks and indicators of potential attacks.",
+    "severity": "High",
+    "threats": [
+      "T1040",
+      "T1046",
+      "T1048",
+      "T1071",
+      "T1095"
+    ]
+  }
+]

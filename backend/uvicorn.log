@@ -1,0 +1,137 @@
+INFO:     Will watch for changes in these directories: ['/Users/shno/Desktop/autoMITRE1.2/backend']
+INFO:     Uvicorn running on http://0.00.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [35400] using StatReload
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:57,  4.72it/s]Loading weights:  97%|█████████▋| 264/272 [00:00<00:00, 1058.63it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 860.44it/s] 
+INFO:     Started server process [35447]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✓ AutoMITRE: 6/6 models loaded
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7483.21it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:     127.0.0.1:53932 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53933 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53932 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53932 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53935 - "OPTIONS /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53935 - "POST /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53937 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53937 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53949 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53968 - "POST /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53976 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53978 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53989 - "POST /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53996 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53996 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54068 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 6651.49it/s]
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4374.46it/s]
+INFO:     127.0.0.1:54068 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54070 - "OPTIONS /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54070 - "POST /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54095 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54096 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54095 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54096 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54111 - "POST /api/v2/analyze HTTP/1.1" 422 Unprocessable Content
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [35447]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:31,  8.67it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1421.75it/s]
+INFO:     Started server process [36991]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+✓ AutoMITRE: 6/6 models loaded
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7928.01it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+INFO:     127.0.0.1:54175 - "POST /api/v2/analyze HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:54179 - "POST /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54209 - "OPTIONS /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54209 - "POST /api/v2/analyze HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54211 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 3862.87it/s]
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5344.01it/s]
+INFO:     127.0.0.1:54211 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54217 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54227 - "POST /api/analyze/text HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [36991]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:52,  5.19it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 935.88it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:     Started server process [37817]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✓ AutoMITRE: 6/6 models loaded
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7494.12it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [37817]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:31,  8.51it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1424.35it/s]
+INFO:     Started server process [37825]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✓ AutoMITRE: 6/6 models loaded
+INFO:     127.0.0.1:54247 - "POST /api/v2/analyze HTTP/1.1" 422 Unprocessable Content
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6913.10it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [37825]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<01:03,  4.27it/s]Loading weights:  91%|█████████ | 247/272 [00:00<00:00, 934.02it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 756.81it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:     Started server process [38020]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✓ AutoMITRE: 6/6 models loaded
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7712.46it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 5 leaked semaphore objects to clean up at shutdown: {'/loky-38020-eojrqxse', '/loky-37817-vuz8ulvo', '/loky-37825-h8riuuuv', '/loky-36991-fn1nonhl', '/loky-35447-_mczppfy'}
+  warnings.warn(

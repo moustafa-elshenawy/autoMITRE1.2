@@ -1,0 +1,77 @@
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:38,  6.99it/s]Loading weights:  94%|█████████▍| 257/272 [00:00<00:00, 1276.41it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1084.05it/s]
+INFO:     Started server process [89934]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6970.32it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+INFO:     127.0.0.1:60629 - "GET /api/health HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60633 - "GET /api/status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60854 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60855 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60855 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60857 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60861 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60862 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60863 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60855 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60857 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60861 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60857 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60854 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60857 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60863 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60854 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60863 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:60862 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60862 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60855 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:60862 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60876 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 7076.89it/s]
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5579.93it/s]
+INFO:     127.0.0.1:60879 - "HEAD /health HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:60879 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60876 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60912 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60912 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60918 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60918 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60915 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60915 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:60912 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60915 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60917 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:60915 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:60930 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:60934 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60943 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60963 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60964 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60963 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60964 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60984 - "OPTIONS /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60984 - "POST /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60986 - "POST /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61089 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61089 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61091 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61114 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61091 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61091 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61117 - "POST /api/analyze/text HTTP/1.1" 200 OK
+/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/loky-89934-hjn9l3xz'}
+  warnings.warn(
