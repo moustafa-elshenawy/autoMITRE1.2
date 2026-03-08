@@ -316,12 +316,8 @@ export default function ThreatAnalysis() {
         setLoading(false)
     }
 
-    const [useV2, setUseV2] = useState(false)
 
-    const analyzeText = () => analyze(
-        useV2 ? { type: 'text', content: text } : { text },
-        useV2 ? '/api/v2/analyze' : '/api/analyze/text'
-    )
+    const analyzeText = () => analyze({ text }, '/api/analyze/text')
     const analyzeHash = () => analyze({ hash, hash_type: 'sha256' }, '/api/analyze/hash')
 
     const onDrop = useCallback(async (files) => {
@@ -380,18 +376,6 @@ export default function ThreatAnalysis() {
                                 {loading ? 'Analyzing...' : 'Analyze Threat'}
                             </button>
                             <button className="btn btn-secondary" onClick={() => setText(exampleText)}>Load Example</button>
-                        </div>
-                        <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: 6, border: '1px solid rgba(255,255,255,0.08)', width: 'fit-content' }}>
-                            <input
-                                type="checkbox"
-                                id="v2-toggle"
-                                checked={useV2}
-                                onChange={e => setUseV2(e.target.checked)}
-                                style={{ accentColor: '#00d4ff', width: 16, height: 16, cursor: 'pointer' }}
-                            />
-                            <label htmlFor="v2-toggle" style={{ fontSize: 13, color: '#e2e8f0', cursor: 'pointer', userSelect: 'none' }}>
-                                Use <strong>Custom 6-Model AI Pipeline</strong> (v2)
-                            </label>
                         </div>
                     </div>
                 )}
