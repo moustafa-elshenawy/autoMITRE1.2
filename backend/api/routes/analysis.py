@@ -42,7 +42,7 @@ async def analyze_text(request: TextAnalysisRequest, db: AsyncSession = Depends(
     """Analyze a text description of a threat."""
     try:
         processed = process_input(request.text, InputType.TEXT)
-        threat = analyze_threat(processed)
+        threat = analyze_threat(processed, deep_analysis=request.deep_analysis)
         technique_ids = threat.raw_indicators.get('technique_ids', [])
         threat = enrich_threat_result(threat, technique_ids)
         

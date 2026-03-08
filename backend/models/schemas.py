@@ -23,6 +23,7 @@ class InputType(str, Enum):
 class TextAnalysisRequest(BaseModel):
     text: str
     context: Optional[str] = None
+    deep_analysis: bool = False
 
 
 class HashLookupRequest(BaseModel):
@@ -34,9 +35,11 @@ class ATTACKTechnique(BaseModel):
     id: str
     name: str
     tactic: str
-    tactic_id: str
-    description: str
+    tactic_id: Optional[str] = "Unknown"
+    description: Optional[str] = ""
     confidence: float = Field(ge=0.0, le=1.0)
+    verified: bool = False
+    evidence: List[str] = []
 
 
 class D3FENDCountermeasure(BaseModel):

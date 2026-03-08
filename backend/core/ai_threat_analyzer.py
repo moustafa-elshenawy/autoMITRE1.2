@@ -746,92 +746,87 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
 
 
 
-def analyze_threat(processed_input: Dict[str, Any]) -> ThreatResult:
-    """Main threat analysis function. Returns complete ThreatResult."""
+def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False) -> ThreatResult:
+    """
+    Main industrial-grade threat analysis function.
+    Orchestrates the two-stage AI pipeline (SecBERT + Phi-3.5) with heuristic baselines.
+    """
     text = processed_input.get('normalized_text', '')
     entities = processed_input.get('entities', [])
 
-    # Classify threats and get technique IDs (Heuristic baseline)
+    # 1. Heuristic Baseline Scoring (Fast)
     technique_scores = classify_threats(processed_input)
-    technique_ids = list(technique_scores.keys())
-
-    # Determine severity
-    severity, likelihood, impact = determine_severity(text, technique_ids)
-
-    # Calculate CVSS-inspired score
-    score = round((likelihood * 0.4 + impact * 0.6) * 2, 1)
-    score = min(10.0, score)
-
-    # --- ML ENSEMBLE PIPELINE ---
-    is_anomalous, ml_score = ml_engine.evaluate_threat(processed_input, score)
-    if ml_score is not None:
-        if len(technique_ids) == 0:
-            ml_score = min(ml_score, 4.0)
-        score = round(ml_score, 1)
-    if is_anomalous:
-        score = min(10.0, score + 1.0)
-
-    # Get full technique objects with REAL semantic confidence scores
-    attack_techniques = get_attack_techniques(technique_scores, text)
-    sorted_tech_ids = [t.id for t in attack_techniques]
-
-    # Entities were already enhanced in generate_predictive_actions during fallback building
-
-
-    # --- Dynamic threat title based on highest-priority detected technique ---
-    if sorted_tech_ids:
-        title = _get_threat_title(sorted_tech_ids, entities)
-    else:
-        title = "No Known Threat Patterns Detected"
-
-    # Explicitly prefix [ANOMALY] when the ML isolation forest flags the threat
-    if is_anomalous:
-        title = f"[ANOMALY] {title}"
+    # determine_severity returns (severity, likelihood, impact) as enums/floats
+    severity, likelihood, impact = determine_severity(text, list(technique_scores.keys()))
     
-    # Build risk score
-    risk_score = RiskScore(
-        score=score,
-        severity=severity,
-        likelihood=likelihood,
-        impact=impact,
-        business_impact=generate_business_impact(severity, technique_ids)
-    )
+    # Calculate initial CVSS-inspired score (0-10)
+    base_score = float(round((likelihood * 0.4 + impact * 0.6) * 2, 1))
+    base_score = min(10.0, base_score)
 
-    # Base heuristic fallbacks — now dynamic using text + entities
-    prediction_description = generate_predictive_actions(sorted_tech_ids, text=text, entities=entities)
-    mitigations = get_mitigations(sorted_tech_ids)
+    # 2. Industrial ML Ensemble (SecBERT + Phi-3.5)
+    # evaluate_threat performs Stage 1 (TTP mapping) and Stage 2 (LLM reasoning)
+    is_anomalous, final_score, deep_insights = ml_engine.evaluate_threat(processed_input, base_score, deep_analysis=deep_analysis)
+    
+    # 3. Final Result Construction
+    final_techniques_list = []
+    if deep_analysis and deep_insights:
+        # TTPs from ML Engine Stage 3 already contain name, confirmed ID, and verified status
+        detected_ttps = deep_insights.get("ttps", [])
+        
+        for ttp in detected_ttps:
+            # Propagate "Verified" status and evidence to the final result
+            final_techniques_list.append(ATTACKTechnique(
+                id=ttp.get("id"),
+                name=ttp.get("name", "Classified Technique"),
+                tactic="Multiple Tactics", # This will be filled by get_attack_techniques if needed
+                confidence=float(round(ttp.get("confidence", 0.5), 2)),
+                verified=ttp.get("verified", False),
+                evidence=ttp.get("evidence", [])
+            ))
+    
+    if not final_techniques_list: # Fallback if deep_analysis didn't yield TTPs or wasn't enabled
+        # Fallback to TRAM keywords if ML Stage 1 failed or is loading
+        for tid, conf in technique_scores.items():
+            final_techniques_list.append(ATTACKTechnique(
+                id=tid, 
+                name="Classified Technique", 
+                tactic="Multiple Tactics", 
+                confidence=float(round(conf, 2))
+            ))
 
-    # --- NANO LLM STAGE 2 DYNAMIC NARRATIVE ---
-    # We invoke the 135M Nano LLM to write a cohesive narrative based on the text and detected techniques.
-    if len(technique_ids) > 0:
-        try:
-            from core.nano_llm_engine import nano_llm
-            techs_for_llm = [{"id": t.id, "name": t.name} for t in attack_techniques]
-            nano_result = nano_llm.generate_narrative(raw_text=text, techniques=techs_for_llm)
-            
-            if nano_result.get("narrative"):
-                # LLM narrative takes precedence over the template fallback
-                prediction_description = nano_result["narrative"]
-        except Exception as e:
-            print(f"Nano LLM narrative generation failed: {e}. Falling back to heuristic templates.")
+    # Map score to standard SeverityLevel
+    mapped_severity = SeverityLevel.LOW
+    if final_score >= 9.0: mapped_severity = SeverityLevel.CRITICAL
+    elif final_score >= 7.0: mapped_severity = SeverityLevel.HIGH
+    elif final_score >= 4.0: mapped_severity = SeverityLevel.MEDIUM
 
-
-    input_type_str = processed_input.get('input_type', 'text')
-    if hasattr(input_type_str, 'value'):
-        input_type_str = input_type_str.value
-
-    return ThreatResult(
+    # Framework Mappings (NIST, D3FEND, OWASP)
+    tech_ids = [t.id for t in final_techniques_list]
+    
+    result = ThreatResult(
         id=str(uuid.uuid4()),
-        title=title,
-        description=prediction_description,
-        input_type=input_type_str,
-        risk_score=risk_score,
-        entities=entities,
-        attack_techniques=attack_techniques,
-        defend_countermeasures=map_to_defend(sorted_tech_ids),
-        nist_controls=map_to_nist(sorted_tech_ids),
-        owasp_items=map_to_owasp(sorted_tech_ids),
-        mitigations=mitigations,
-        raw_indicators={'technique_ids': technique_ids},
-        timestamp=datetime.utcnow().isoformat()
+        title=deep_insights.get("title", f"AI Analysis: Threat Activity Detected"),
+        timestamp=datetime.now(),
+        description=deep_insights.get("summary", "Heuristic patterns detected."),
+        risk_score=RiskScore(
+            score=float(round(final_score, 1)),
+            severity=mapped_severity,
+            likelihood=float(likelihood) if not is_anomalous else 0.8,
+            impact=float(impact),
+            business_impact=deep_insights.get("analysis", "AI analysis identifies potential risk to organizational pillars.")
+        ),
+        attack_techniques=final_techniques_list,
+        defend_countermeasures=map_to_defend(tech_ids),
+        nist_controls=map_to_nist(tech_ids),
+        owasp_items=map_to_owasp(tech_ids),
+        mitigations=get_mitigations(tech_ids),
+        entities=[ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', '')) for e in entities],
+        raw_indicators={
+            "technique_ids": tech_ids,
+            "is_anomaly": is_anomalous,
+            "deep_extraction": deep_insights.get("terms", []),
+            "technical_dive": deep_insights.get("analysis", "")
+        }
     )
+    return result
+    return result

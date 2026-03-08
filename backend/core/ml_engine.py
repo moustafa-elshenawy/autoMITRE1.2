@@ -1,13 +1,15 @@
 import os
 import re
+import json
 import pickle
+import logging
+import torch
 import numpy as np
 import pandas as pd
-import logging
 import scipy.sparse
-from typing import Dict, Any, Tuple, Optional
-from sklearn.ensemble import IsolationForest
+from typing import List, Tuple, Dict, Any, Optional
 import xgboost as xgb
+from sklearn.ensemble import IsolationForest
 
 logger = logging.getLogger(__name__)
 
@@ -142,48 +144,84 @@ class EnsembleMLEngine:
         return np.array([[text_len, num_entities, keyword_severity, has_critical, has_network]])
 
 
-    def evaluate_threat(self, processed_input: Dict[str, Any], heuristic_score: float) -> Tuple[bool, Optional[float]]:
+    def evaluate_threat(self, processed_input: Dict[str, Any], heuristic_score: float, deep_analysis: bool = False) -> Tuple[bool, Optional[float], Dict[str, Any]]:
         """
-        Evaluates a single threat.
+        Industrial-Grade Hybrid Evaluation.
         Returns:
-            Tuple: (is_anomalous: bool, blended_severity_score: float | None)
+            Tuple: (is_anomalous: bool, blended_severity: float, deep_insights: dict)
 
-        Blending strategy (when TextSeverityClassifier available):
-            40% heuristic + 30% numerical XGBoost + 30% text XGBoost (NVD-trained)
-        Fallback (text model absent):
-            40% heuristic + 60% numerical XGBoost
+        Logic:
+        1.  Heuristic (15%): Fast keyword-based severity.
+        2.  Numerical XGBoost (15%): Metadata complexity rules.
+        3.  Deep Intelligence (70% - Optional):
+            - Stage 1: SecBERT Multi-Label TTP Mapping (Domain-Specific).
+            - Stage 2: Phi-3.5-mini Reasoning & Entity Extraction (Contextual).
         """
         text = processed_input.get('normalized_text', '')
         entities = processed_input.get('entities', [])
 
-        if not self.iforest or not self.xgb_model:
-            return False, None
+        # Default results
+        is_anomalous = False
+        deep_insights = {"title": "Standard Analysis", "summary": "", "terms": []}
 
         try:
+            # 1. Extraction & Anomaly Detection
             features = self._extract_features(text, entities, heuristic_score)
+            if self.iforest:
+                anomaly_pred = self.iforest.predict(features)[0]
+                is_anomalous = (anomaly_pred == -1)
 
-            # 1. Isolation Forest anomaly detection (-1 = anomaly)
-            anomaly_pred = self.iforest.predict(features)[0]
-            is_anomalous = (anomaly_pred == -1)
+            # 2. Numerical Score (XGBoost) - 0-10
+            num_score = 5.0
+            if self.xgb_model:
+                num_score = float(np.clip(self.xgb_model.predict(features)[0], 0.0, 10.0))
 
-            # 2. Numerical XGBoost (5-feature)
-            num_score = float(np.clip(self.xgb_model.predict(features)[0], 0.0, 10.0))
+            if not deep_analysis:
+                # Standard Blend: 40% Heuristic, 60% XGBoost
+                final_severity = (0.40 * heuristic_score) + (0.60 * num_score)
+                return is_anomalous, float(np.clip(final_severity, 0.0, 10.0)), deep_insights
 
-            # 3. Text-based XGBoost (NVD CVE-trained) — blended if available
-            text_score = self.text_classifier.predict(text)
-            if text_score is not None:
-                # 3-way blend: heuristic 40%, numerical 30%, text 30%
-                blended = 0.40 * heuristic_score + 0.30 * num_score + 0.30 * text_score
-            else:
-                # 2-way blend: heuristic 40%, numerical 60%
-                blended = 0.40 * heuristic_score + 0.60 * num_score
+            # 3. Deep Intelligence Stage 1: SecBERT TTP Mapping
+            from core.secbert_classifier import secbert_clf
+            detected_ttps = secbert_clf.predict_techniques(text) # Dict {ID: Conf}
+            
+            # Convert to list of dicts for LLM/UI
+            ttp_list = [{"id": tid, "name": "Classified Technique", "confidence": conf} for tid, conf in detected_ttps.items()]
+            
+            # SecBERT Severity proxy (average confidence of top TTPs * 10)
+            secbert_score = 5.0
+            if detected_ttps:
+                secbert_score = min(10.0, sum(detected_ttps.values()) / len(detected_ttps) * 10)
 
-            final = float(np.clip(blended, 0.0, 10.0))
-            return is_anomalous, final
+            # 4. Deep Intelligence Stage 2: Phi-3.5 Reasoning
+            from core.nano_llm_engine import nano_llm
+            llm_results = nano_llm.extract_and_analyze(text, ttp_list)
+            
+            # 5. Deep Intelligence Stage 3: Technical Evidence Alignment (Deterministic)
+            from core.evidence_aligner import evidence_aligner
+            llm_terms = llm_results.get("terms", [])
+            final_ttps = evidence_aligner.align_techniques(ttp_list, llm_terms, text)
+
+            deep_insights = {
+                "title": llm_results.get("title", "Threat Detected"),
+                "summary": llm_results.get("summary", ""),
+                "analysis": llm_results.get("analysis", ""),
+                "terms": llm_terms,
+                "ttps": final_ttps
+            }
+
+            # 5. Industrial Blended Severity
+            # Weights: 15% Heuristic, 15% XGBoost, 70% SecBERT (Proxied)
+            final_severity = (0.15 * heuristic_score) + (0.15 * num_score) + (0.70 * secbert_score)
+            
+            # Clip final result
+            final_severity = float(np.clip(final_severity, 0.0, 10.0))
+
+            return is_anomalous, final_severity, deep_insights
 
         except Exception as e:
-            logger.error(f"ML evaluation failed: {e}")
-            return False, None
+            logger.error(f"Industrial ML evaluation failed: {e}")
+            return False, heuristic_score, deep_insights
 
 
     def baseline_training(self):

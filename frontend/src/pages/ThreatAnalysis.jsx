@@ -209,20 +209,41 @@ function ThreatResultPanel({ result }) {
             </div>
 
             {activeTab === 'attack' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {attack_techniques?.map(t => (
-                        <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: 'rgba(0,212,255,0.04)', borderRadius: 6, border: '1px solid rgba(0,212,255,0.1)' }}>
-                            <span className="badge badge-attack">{t.id}</span>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f4ff' }}>{t.name}</div>
-                                <div style={{ fontSize: 11, color: '#94a3b8' }}>{t.tactic}</div>
+                        <div key={t.id} style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '12px', background: 'rgba(0,212,255,0.04)', borderRadius: 8, border: t.verified ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(0,212,255,0.1)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <span className="badge badge-attack">{t.id}</span>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f4ff', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        {t.name}
+                                        {t.verified && (
+                                            <span style={{ fontSize: 9, padding: '2px 6px', background: 'rgba(16,185,129,0.2)', color: '#10b981', borderRadius: 4, border: '1px solid rgba(16,185,129,0.4)', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                                                ✓ Verified Evidence
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div style={{ fontSize: 11, color: '#94a3b8' }}>{t.tactic}</div>
+                                </div>
+                                <div style={{ fontSize: 11, textAlign: 'right' }}>
+                                    <div style={{ color: t.confidence > 0.8 ? '#10b981' : t.confidence > 0.6 ? '#f59e0b' : '#ef4444', fontWeight: 600 }}>
+                                        {Math.round(t.confidence * 100)}%
+                                    </div>
+                                    <div style={{ fontSize: 9, color: '#64748b' }}>confidence</div>
+                                </div>
+                                <a href={`https://attack.mitre.org/techniques/${t.id.replace('.', '/')}`} target="_blank" rel="noreferrer" style={{ color: '#00d4ff' }}>
+                                    <ExternalLink size={14} />
+                                </a>
                             </div>
-                            <div style={{ fontSize: 11, color: t.confidence > 0.7 ? '#10b981' : '#f59e0b' }}>
-                                {Math.round(t.confidence * 100)}% confidence
-                            </div>
-                            <a href={`https://attack.mitre.org/techniques/${t.id.replace('.', '/')}`} target="_blank" rel="noreferrer" style={{ color: '#00d4ff' }}>
-                                <ExternalLink size={12} />
-                            </a>
+
+                            {t.evidence?.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, padding: '6px 8px', background: 'rgba(0,0,0,0.2)', borderRadius: 4 }}>
+                                    <span style={{ fontSize: 9, color: '#475569', fontWeight: 600, textTransform: 'uppercase', marginRight: 4 }}>Evidence:</span>
+                                    {t.evidence.map((ev, i) => (
+                                        <span key={i} style={{ fontSize: 10, color: '#38bdf8', fontFamily: 'JetBrains Mono' }}>"{ev}"{i < t.evidence.length - 1 ? ',' : ''}</span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
@@ -299,6 +320,7 @@ export default function ThreatAnalysis() {
     const [text, setText] = useState('')
     const [hash, setHash] = useState('')
     const [loading, setLoading] = useState(false)
+    const [deepAnalysis, setDeepAnalysis] = useState(false)
     const [result, setResult] = useState(null)
     const [error, setError] = useState(null)
 
@@ -317,7 +339,7 @@ export default function ThreatAnalysis() {
     }
 
 
-    const analyzeText = () => analyze({ text }, '/api/analyze/text')
+    const analyzeText = () => analyze({ text, deep_analysis: deepAnalysis }, '/api/analyze/text')
     const analyzeHash = () => analyze({ hash, hash_type: 'sha256' }, '/api/analyze/hash')
 
     const onDrop = useCallback(async (files) => {
@@ -368,13 +390,24 @@ export default function ThreatAnalysis() {
                     <div>
                         <div className="form-group">
                             <label className="form-label">Threat Description / Log / Event</label>
-                            <textarea className="form-input" style={{ minHeight: 140 }} placeholder="Paste threat description, log entries, IOCs, incident report..." value={text} onChange={e => setText(e.target.value)} />
+                            <textarea className="form-control" placeholder="Paste threat intelligence summary, CTI report text, or system logs..." value={text} onChange={(e) => setText(e.target.value)} style={{ height: 160, fontSize: 13 }} />
                         </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                            <button className="btn btn-primary btn-lg" onClick={analyzeText} disabled={!text.trim() || loading}>
-                                {loading ? <div className="spinner" /> : <Search size={16} />}
-                                {loading ? 'Analyzing...' : 'Analyze Threat'}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <label className="switch" style={{ position: 'relative', display: 'inline-block', width: 44, height: 22 }}>
+                                    <input type="checkbox" checked={deepAnalysis} onChange={(e) => setDeepAnalysis(e.target.checked)} />
+                                    <span className="slider round" />
+                                </label>
+                                <div>
+                                    <div style={{ fontSize: 13, fontWeight: 600, color: '#f8fafc' }}>Industrial Deep Analysis</div>
+                                    <div style={{ fontSize: 11, color: '#94a3b8' }}>Enables fine-tuned SecBERT + Phi-3.5 reasoning (Higher Accuracy)</div>
+                                </div>
+                            </div>
+                            <button className="btn btn-primary" onClick={analyzeText} disabled={!text.trim() || loading} style={{ minWidth: 140 }}>
+                                {loading ? 'AI Analyzing...' : <><Search size={16} style={{ marginRight: 6 }} /> Analyze Threat</>}
                             </button>
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 12 }}>
                             <button className="btn btn-secondary" onClick={() => setText(exampleText)}>Load Example</button>
                         </div>
                     </div>
