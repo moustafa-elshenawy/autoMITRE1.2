@@ -158,3 +158,54 @@ async def get_threat_by_id(db: AsyncSession, threat_id: str) -> models.ThreatRec
     )
     result = await db.execute(query)
     return result.scalar_one_or_none()
+
+
+async def get_threat_activity(db: AsyncSession, user_id: str = None) -> Dict[str, Any]:
+    """Fetch threat counts grouped by day and severity for the last 7 days."""
+    from datetime import datetime, timedelta
+    
+    now = datetime.utcnow()
+    labels = []
+    # Generate labels for the last 7 days (e.g., Mon, Tue...)
+    for i in range(6, -1, -1):
+        day = now - timedelta(days=i)
+        labels.append(day.strftime("%a"))
+    
+    # Initialize datasets with zeros
+    datasets = {
+        "Critical": [0] * 7,
+        "High": [0] * 7,
+        "Medium": [0] * 7,
+        "Low": [0] * 7
+    }
+    
+    # We want data from the last 7 days inclusive of "today"
+    # Start from beginning of the day 6 days ago
+    start_date = (now - timedelta(days=6)).replace(hour=0, minute=0, second=0, microsecond=0)
+    start_iso = start_date.isoformat()
+    
+    query = select(models.ThreatRecord.timestamp, models.ThreatRecord.severity)
+    if user_id:
+        query = query.where(models.ThreatRecord.user_id == user_id)
+    query = query.where(models.ThreatRecord.timestamp >= start_iso)
+    
+    result = await db.execute(query)
+    for ts_str, severity in result.all():
+        try:
+            ts = datetime.fromisoformat(ts_str)
+            # Calculate day index relative to 6 days ago (0 to 6)
+            days_diff = (ts.date() - start_date.date()).days
+            if 0 <= days_diff < 7:
+                sev_str = str(severity)
+                if sev_str in datasets:
+                    datasets[sev_str][days_diff] += 1
+        except Exception:
+            continue
+            
+    return {
+        "labels": labels,
+        "datasets": [
+            {"label": label, "data": data}
+            for label, data in datasets.items()
+        ]
+    }

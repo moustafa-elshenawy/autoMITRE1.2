@@ -38,3 +38,74 @@ INFO:     127.0.0.1:51348 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:51343 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:51358 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:51360 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51448 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51448 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51445 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51445 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51442 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51442 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51446 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51442 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51479 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 7138.95it/s]
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5004.59it/s]
+INFO:     127.0.0.1:51479 - "POST /api/analyze/text HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'database/crud.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [72961]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7048.07it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:  StatReload detected changes in 'api/routes/intelligence.py'. Reloading...
+INFO:     Started server process [74322]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74322]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4658.64it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:     Started server process [74334]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✓ AutoMITRE: 6/6 models loaded
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7508.97it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+WARNING:  StatReload detected changes in 'database/crud.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74334]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:32,  8.32it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1376.18it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:     Started server process [74753]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+✓ AutoMITRE: 6/6 models loaded
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6815.38it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+INFO:     127.0.0.1:51521 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51521 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51517 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51517 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51515 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51515 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51520 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51515 - "GET /api/intelligence/feed HTTP/1.1" 200 OK

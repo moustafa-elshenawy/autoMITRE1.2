@@ -11,7 +11,7 @@ import random
 from models.schemas import ChatRequest, ChatResponse, DashboardStats
 from core.ai_chat_engine import generate_chat_response
 from database.config import get_db
-from database.crud import get_dashboard_stats as get_db_stats, get_recent_threats
+from database.crud import get_dashboard_stats as get_db_stats, get_recent_threats, get_threat_activity
 from api.dependencies import get_current_user
 from database.models import User
 
@@ -45,19 +45,8 @@ async def get_dashboard_stats(db: AsyncSession = Depends(get_db), current_user: 
 
 @router.get("/dashboard/activity")
 async def get_activity(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
-    """Get recent system activity logs."""
-    # Since we removed mock data, we return empty stats or fetch real ones
-    # For now, returning empty so it doesn't show fake high numbers
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    return {
-        "labels": days,
-        "datasets": [
-            {"label": "Critical", "data": [0 for _ in days]},
-            {"label": "High", "data": [0 for _ in days]},
-            {"label": "Medium", "data": [0 for _ in days]},
-            {"label": "Low", "data": [0 for _ in days]}
-        ]
-    }
+    """Get threat counts grouped by day and severity for the last 7 days."""
+    return await get_threat_activity(db, current_user.id)
 
 
 @router.get("/intelligence/feed")
