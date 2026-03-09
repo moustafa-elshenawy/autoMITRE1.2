@@ -1,137 +1,180 @@
 import os
 import json
 import logging
+import httpx
 from typing import List, Dict, Any, Optional
 from llama_cpp import Llama
 
+from dotenv import load_dotenv
+
+# Load .env variables
+load_dotenv()
+
 log = logging.getLogger("nano_llm")
 
-# Paths for the GGUF model
-MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "Phi-3.5-mini-instruct-Q4_K_M.gguf")
+# Model configurations
+LOCAL_MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "Phi-3.5-mini-instruct-Q4_K_M.gguf")
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_MODEL = "llama-3.1-8b-instant"
 
 class NanoLLMEngine:
     """
     Stage 2 Industrial-Grade Reasoning Engine.
-    Uses quantized Phi-3.5-mini (3.8B) via llama-cpp-python for high-performance 
-    Metal-accelerated inference on 8GB M1 hardware.
+    Hybrid setup: Uses Groq Cloud Llama 3 (Ultra-Fast) if API key exists,
+    otherwise falls back to local Phi-3.5-mini via llama-cpp-python.
     """
     def __init__(self):
-        self.llm = None
-        self.is_loaded = False
-        log.info("NanoLLMEngine (Phi-3.5) initialized. Metal acceleration (MPS) enabled via llama-cpp.")
+        self.local_llm = None
+        self.is_local_loaded = False
+        self.use_cloud = bool(GROQ_API_KEY)
+        
+        if self.use_cloud:
+            log.info("NanoLLMEngine: Cloud Llama 3 (Groq) enabled. Low latency, 0 local memory load.")
+        else:
+            log.info("NanoLLMEngine: Falling back to Local Phi-3.5 (Metal Acceleration).")
 
-    def load(self):
-        if self.is_loaded:
+    def load_local(self):
+        if self.is_local_loaded:
             return True
 
-        if not os.path.exists(MODEL_PATH):
-            log.warning(f"Phi-3.5-mini GGUF not found at {MODEL_PATH}. Download required.")
+        if not os.path.exists(LOCAL_MODEL_PATH):
+            log.warning(f"Phi-3.5-mini GGUF not found at {LOCAL_MODEL_PATH}.")
             return False
 
         try:
-            log.info(f"Loading Phi-3.5-mini from {MODEL_PATH} (n_gpu_layers=-1 for Metal)...")
-            # Load with n_gpu_layers=-1 to use Apple Silicon GPU (Metal)
-            self.llm = Llama(
-                model_path=MODEL_PATH,
+            log.info(f"Loading local Phi-3.5-mini from {LOCAL_MODEL_PATH}...")
+            self.local_llm = Llama(
+                model_path=LOCAL_MODEL_PATH,
                 n_gpu_layers=-1, # Force Metal
-                n_ctx=4096,      # Sufficient for CTI analysis
+                n_ctx=4096,
                 verbose=False
             )
-            self.is_loaded = True
-            log.info("Phi-3.5-mini successfully loaded into M1 GPU memory.")
+            self.is_local_loaded = True
+            log.info("Local Phi-3.5-mini successfully loaded into M1 GPU.")
             return True
         except Exception as e:
-            log.error(f"Failed to load Phi-3.5-mini: {e}")
-            self.is_loaded = False
+            log.error(f"Failed to load local Phi-3.5-mini: {e}")
             return False
+
+    def _query_groq(self, prompt: str) -> Optional[str]:
+        """Query Groq Cloud Llama 3 API."""
+        api_key = os.getenv("GROQ_API_KEY") or GROQ_API_KEY
+        if not api_key:
+             return None
+             
+        try:
+            with httpx.Client(timeout=30.0) as client:
+                response = client.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {api_key}"},
+                    json={
+                        "model": GROQ_MODEL,
+                        "messages": [
+                            {"role": "system", "content": "You are an industrial-grade Cyber Threat Intelligence analyst. Output ONLY valid JSON."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        "temperature": 0.1,
+                        "response_format": {"type": "json_object"}
+                    }
+                )
+                if response.status_code == 200:
+                    return response.json()['choices'][0]['message']['content']
+                else:
+                    log.error(f"Groq API Error: {response.status_code} - {response.text}")
+                    return None
+        except Exception as e:
+            log.error(f"Cloud request failed: {e}")
+            return None
 
     def extract_and_analyze(self, raw_text: str, techniques: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Industrial-grade reasoning:
         1. Analyzes raw text for hidden cybersecurity terms.
         2. Correlates findings with SecBERT's TTP detections.
-        3. Generates a deep technical narrative and executive summary.
+        3. Generates deep technical narrative (Llama 3 Cloud or Phi-3.5 Local).
         """
-        if not self.is_loaded and not self.load():
-            return self._fallback_narrative(techniques)
-
-        # Build context from SecBERT techniques
         tech_context = ", ".join([f"{t.get('id', '')} ({t.get('name', '')})" for t in techniques])
         
         prompt = (
-            f"<|system|>\nYou are an industrial-grade Cyber Threat Intelligence (CTI) Assistant. "
-            f"You MUST output ONLY valid JSON. No conversational text. No markdown blocks.\n"
-            f"<|user|>\nAnalyze this threat data and output a JSON object with PRECISELY these 4 keys:\n"
-            f"1. 'title': Short professional title.\n"
+            f"Analyst report format JSON object with these 6 keys:\n"
+            f"1. 'title': Professional threat title.\n"
             f"2. 'summary': 2-sentence executive summary.\n"
-            f"3. 'analysis': Deep technical dive (300+ words) into the methods, potential impact, and attribution.\n"
-            f"4. 'extracted_terms': List of all technical terms, IPs, hostnames, or specific tools mentioned.\n\n"
+            f"3. 'analysis': Deep technical dive (300+ words) into methods, impact, and attribution.\n"
+            f"4. 'extracted_terms': List of IPs, hostnames, or specific tools.\n"
+            f"5. 'detected_techniques': List of MITRE ATT&CK technique IDs (e.g. ['T1190', 'T1021.001', 'T1048']).\n"
+            f"6. 'predicted_steps': List of objects [{{'id': 1, 'title': 'Short Title', 'description': 'Full analyst reasoning', 'confidence': 0.9}}] describing the attacker's likely next actions.\n\n"
             f"REPORT:\n{raw_text}\n\n"
-            f"CONTEXT (Techniques): {tech_context}\n\n"
-            f"JSON OUTPUT:\n"
-            f"<|assistant|>\n"
-            f"{{"
+            f"CONTEXT (Already detected TTPs): {tech_context}"
         )
 
+        # Check cloud status dynamically
+        use_cloud = bool(os.getenv("GROQ_API_KEY")) or self.use_cloud
+        
+        # Attempt Cloud First (Llama 3)
+        if use_cloud:
+            cloud_response = self._query_groq(prompt)
+            if cloud_response:
+                return self._parse_json_result(cloud_response, techniques)
+            else:
+                log.warning("Cloud Llama 3 failed. Falling back to local/static.")
+
+        # Local Fallback (Phi-3.5)
+        if self.load_local():
+            try:
+                # Phi-3.5 prompt format
+                local_prompt = f"<|system|>\nYou are a CTI analyst. JSON ONLY.<|user|>\n{prompt}\nJSON OUTPUT:\n<|assistant|>\n{{"
+                output = self.local_llm(local_prompt, max_tokens=600, temperature=0.1, stop=["<|end|>"])
+                return self._parse_json_result("{" + output['choices'][0]['text'], techniques)
+            except Exception as e:
+                log.error(f"Local inference failed: {e}")
+
+        return self._fallback_narrative(techniques)
+
+    def _parse_json_result(self, text: str, techniques: list) -> dict:
+        """Robust JSON parsing for LLM output."""
         try:
-            # Generate response
-            output = self.llm(
-                prompt,
-                max_tokens=512,
-                stop=["<|end|>", "--- REPORT START ---"],
-                temperature=0.1, # Lower for higher precision
-                repeat_penalty=1.1
-            )
+            # Clean up potential markdown
+            if "```json" in text:
+                text = text.split("```json")[1].split("```")[0]
+            elif "```" in text:
+                text = text.split("```")[1].split("```")[0]
             
-            response_text = output['choices'][0]['text'].strip()
-            
-            # 1. Aggressive JSON Extraction
-            # Look for JSON between code blocks if they exist
-            if "```json" in response_text:
-                response_text = response_text.split("```json")[1].split("```")[0].strip()
-            elif "```" in response_text:
-                response_text = response_text.split("```")[1].split("```")[0].strip()
+            # Find JSON block
+            start = text.find('{')
+            end = text.rfind('}') + 1
+            if start != -1 and end != -1:
+                parsed = json.loads(text[start:end])
+                
+                # Merge techniques safely (handle dicts and strings)
+                new_tids = [tid for tid in parsed.get("detected_techniques", []) if isinstance(tid, str)]
+                all_ttps = techniques.copy()
+                existing_ids = {t.get("id") for t in all_ttps if isinstance(t, dict)}
+                
+                for tid in new_tids:
+                    if tid not in existing_ids:
+                        all_ttps.append(tid)
+                        existing_ids.add(tid)
 
-            # 2. Find outermost curly braces
-            start_idx = response_text.find('{')
-            end_idx = response_text.rfind('}') + 1
-            
-            if start_idx != -1 and end_idx != -1:
-                json_part = response_text[start_idx:end_idx]
-                try:
-                    parsed = json.loads(json_part)
-                    # Standardize keys to match frontend expectations
-                    return {
-                        "title": parsed.get("title", "AI Analysis Report"),
-                        "summary": parsed.get("summary", "Technical threat detected."),
-                        "analysis": parsed.get("analysis", "Deep reasoning continues."),
-                        "terms": parsed.get("extracted_terms", parsed.get("terms", [])),
-                        "ttps": parsed.get("ttps", techniques) # Pass-through techniques
-                    }
-                except json.JSONDecodeError as jde:
-                    log.warning(f"Partial JSON detected but failed to parse: {jde}")
-            
-            # Catch-all for non-JSON or broken JSON
-            return {
-                "title": "Industrial Threat Insight",
-                "summary": response_text[:200].replace('\n', ' '),
-                "analysis": response_text,
-                "terms": [],
-                "ttps": techniques
-            }
-
+                return {
+                    "title": parsed.get("title", "AI Analysis Report"),
+                    "summary": parsed.get("summary", "Technical threat detected."),
+                    "analysis": parsed.get("analysis", "No deep analysis available."),
+                    "terms": parsed.get("extracted_terms", parsed.get("terms", [])),
+                    "ttps": all_ttps,
+                    "predicted_steps": parsed.get("predicted_steps", [])
+                }
         except Exception as e:
-            log.error(f"Error during Phi-3.5 inference: {e}")
-            return self._fallback_narrative(techniques)
+            log.warning(f"JSON Parse Error: {e}")
+        
+        return self._fallback_narrative(techniques)
 
-    def _fallback_narrative(self, techniques: json) -> dict:
-        tech_names = [t.get('name', '') for t in techniques]
-        nar = f"Identified activity: {' and '.join(tech_names[:3])}."
+    def _fallback_narrative(self, techniques: list) -> dict:
         return {
-            "title": "Threat Detection Summary",
-            "summary": nar,
-            "analysis": "LLM secondary analysis currently unavailable.",
-            "extracted_terms": []
+            "title": "Industrial Threat Insight",
+            "summary": "Threat detected and mapped to ATT&CK.",
+            "analysis": "AI Reasoning modules (Cloud/Local) are currently restricted. Review manual TTP alignments below.",
+            "terms": [],
+            "ttps": techniques
         }
 
 # Singleton instance

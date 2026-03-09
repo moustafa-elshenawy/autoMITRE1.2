@@ -200,14 +200,25 @@ class EnsembleMLEngine:
             # 5. Deep Intelligence Stage 3: Technical Evidence Alignment (Deterministic)
             from core.evidence_aligner import evidence_aligner
             llm_terms = llm_results.get("terms", [])
-            final_ttps = evidence_aligner.align_techniques(ttp_list, llm_terms, text)
+            
+            # Normalize TTPs: convert strings to dicts for aligner
+            raw_ttps = llm_results.get("ttps", ttp_list)
+            normalized_for_aligner = []
+            for ttp in raw_ttps:
+                if isinstance(ttp, str):
+                    normalized_for_aligner.append({"id": ttp, "name": "Classified Technique", "confidence": 0.85})
+                else:
+                    normalized_for_aligner.append(ttp)
+
+            final_ttps = evidence_aligner.align_techniques(normalized_for_aligner, llm_terms, text)
 
             deep_insights = {
                 "title": llm_results.get("title", "Threat Detected"),
                 "summary": llm_results.get("summary", ""),
                 "analysis": llm_results.get("analysis", ""),
                 "terms": llm_terms,
-                "ttps": final_ttps
+                "ttps": final_ttps,
+                "predicted_steps": llm_results.get("predicted_steps", [])
             }
 
             # 5. Industrial Blended Severity

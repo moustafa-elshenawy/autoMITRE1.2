@@ -21,6 +21,9 @@ export const AuthProvider = ({ children }) => {
                 headers: { 'Authorization': `Bearer ${storedToken}` }
             }).then(res => {
                 if (res.ok) return res.json();
+                if (res.status === 401) {
+                    logout(); // Token is invalid, clear it
+                }
             }).then(freshUser => {
                 if (freshUser) {
                     setUser(freshUser);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Database, Search, Clock, ShieldAlert, Activity, ArrowRight, ExternalLink } from 'lucide-react'
 
 export default function SavedThreats() {
@@ -172,6 +173,11 @@ export default function SavedThreats() {
                                         <a href={t.external_url} target="_blank" rel="noopener noreferrer" className="btn btn-secondary" style={{ padding: '4px 12px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
                                             <ExternalLink size={14} /> View Source
                                         </a>
+                                    )}
+                                    {!isOsint && (
+                                        <Link to={`/threat-mapping/${t.id}`} className="btn btn-primary" style={{ padding: '6px 16px', fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, textDecoration: 'none' }}>
+                                            View Full Analysis <ArrowRight size={14} />
+                                        </Link>
                                     )}
                                 </div>
                             </div>

@@ -24,7 +24,6 @@ const navItems = [
   {
     group: 'Frameworks', items: [
       { to: '/coverage', icon: Grid, label: 'Framework Coverage' },
-      { to: '/mitigations', icon: ShieldCheck, label: 'Mitigations & Predictions' },
       { to: '/reports', icon: FileText, label: 'Reports & Export' },
     ]
   },

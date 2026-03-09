@@ -35,7 +35,7 @@ function formatUnix(ts) {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 }
 
-function VirusTotalPanel({ vt }) {
+export function VirusTotalPanel({ vt }) {
     if (!vt || !vt.found) return null
 
     // Safety check for older backend responses without the new fields
@@ -134,10 +134,10 @@ function VirusTotalPanel({ vt }) {
     )
 }
 
-function ThreatResultPanel({ result }) {
+export function ThreatResultPanel({ result }) {
     const [activeTab, setActiveTab] = useState('attack')
     if (!result) return null
-    const { risk_score, attack_techniques, defend_countermeasures, nist_controls, owasp_items, mitigations, entities } = result
+    const { risk_score, attack_techniques, defend_countermeasures, nist_controls, owasp_items, mitigations, entities, predicted_steps } = result
 
     // If it's a direct hash lookup, only show the VirusTotal panel
     if (result.input_type === 'hash') {
@@ -197,13 +197,14 @@ function ThreatResultPanel({ result }) {
 
             {/* Framework Tabs */}
             <div className="tabs" style={{ marginBottom: 16 }}>
-                {['attack', 'defend', 'nist', 'owasp', 'mitigations'].map(t => (
+                {['attack', 'defend', 'nist', 'owasp', 'mitigations', 'predictions'].map(t => (
                     <button key={t} className={`tab ${activeTab === t ? 'active' : ''}`} onClick={() => setActiveTab(t)}>
                         {t === 'attack' ? `ATT&CK (${attack_techniques?.length || 0})` :
                             t === 'defend' ? `D3FEND (${defend_countermeasures?.length || 0})` :
                                 t === 'nist' ? `NIST (${nist_controls?.length || 0})` :
                                     t === 'owasp' ? `OWASP (${owasp_items?.length || 0})` :
-                                        `Mitigations (${mitigations?.length || 0})`}
+                                        t === 'mitigations' ? `Mitigations (${mitigations?.length || 0})` :
+                                            `Predictions (${predicted_steps?.length || 0})`}
                     </button>
                 ))}
             </div>
@@ -246,6 +247,30 @@ function ThreatResultPanel({ result }) {
                             )}
                         </div>
                     ))}
+                </div>
+            )}
+
+            {activeTab === 'predictions' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {predicted_steps?.length > 0 ? (
+                        predicted_steps.map((s, i) => (
+                            <div key={i} className="mitigation-step" style={{ borderLeft: '3px solid #f59e0b', background: 'rgba(245,158,11,0.03)' }}>
+                                <div className="mitigation-number" style={{ background: '#f59e0b', color: '#000' }}>{s.id || i + 1}</div>
+                                <div style={{ flex: 1 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                                        <span style={{ fontSize: 13, fontWeight: 700, color: '#f0f4ff' }}>{s.title}</span>
+                                        <span style={{ fontSize: 10, color: '#f59e0b', fontWeight: 600 }}>{Math.round((s.confidence || 0.8) * 100)}% Confidence</span>
+                                    </div>
+                                    <p style={{ fontSize: 12, color: '#94a3b8', lineHeight: 1.5 }}>{s.description}</p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="alert alert-info">
+                            <AlertCircle size={14} />
+                            <span style={{ fontSize: 12 }}>Insufficient context to generate specific predicted steps.</span>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -320,7 +345,7 @@ export default function ThreatAnalysis() {
     const [text, setText] = useState('')
     const [hash, setHash] = useState('')
     const [loading, setLoading] = useState(false)
-    const [deepAnalysis, setDeepAnalysis] = useState(false)
+    const [deepAnalysis, setDeepAnalysis] = useState(true)
     const [result, setResult] = useState(null)
     const [error, setError] = useState(null)
 
@@ -390,19 +415,9 @@ export default function ThreatAnalysis() {
                     <div>
                         <div className="form-group">
                             <label className="form-label">Threat Description / Log / Event</label>
-                            <textarea className="form-control" placeholder="Paste threat intelligence summary, CTI report text, or system logs..." value={text} onChange={(e) => setText(e.target.value)} style={{ height: 160, fontSize: 13 }} />
+                            <textarea className="form-input" placeholder="Paste threat intelligence summary, CTI report text, or system logs..." value={text} onChange={(e) => setText(e.target.value)} style={{ height: 160, fontSize: 13 }} />
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                                <label className="switch" style={{ position: 'relative', display: 'inline-block', width: 44, height: 22 }}>
-                                    <input type="checkbox" checked={deepAnalysis} onChange={(e) => setDeepAnalysis(e.target.checked)} />
-                                    <span className="slider round" />
-                                </label>
-                                <div>
-                                    <div style={{ fontSize: 13, fontWeight: 600, color: '#f8fafc' }}>Industrial Deep Analysis</div>
-                                    <div style={{ fontSize: 11, color: '#94a3b8' }}>Enables fine-tuned SecBERT + Phi-3.5 reasoning (Higher Accuracy)</div>
-                                </div>
-                            </div>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 12 }}>
                             <button className="btn btn-primary" onClick={analyzeText} disabled={!text.trim() || loading} style={{ minWidth: 140 }}>
                                 {loading ? 'AI Analyzing...' : <><Search size={16} style={{ marginRight: 6 }} /> Analyze Threat</>}
                             </button>

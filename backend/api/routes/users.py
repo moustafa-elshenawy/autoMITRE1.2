@@ -16,6 +16,7 @@ from models.schemas import ThreatHistoryResponse
 from core.security import verify_password, get_password_hash
 from api.dependencies import get_current_user
 import database.crud as crud
+from api.routes.analysis import map_record_to_result
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
@@ -73,28 +74,7 @@ async def get_threat_history(
     
     # We must manually map the nested ORM components into the Pydantic schemas 
     # since SQLite uses relationships that need processing for the `ThreatResult` output format.
-    items = []
-    for r in records:
-        items.append({
-            "id": r.id,
-            "title": r.title,
-            "description": r.description or "",
-            "input_type": r.input_type or "text",
-            "risk_score": {
-                "score": r.risk_score,
-                "severity": r.severity,
-                "likelihood": r.likelihood,
-                "impact": r.impact_score,
-                "business_impact": r.business_impact or ""
-            },
-            "entities": [{"type": e.type, "value": e.value, "context": e.context} for e in r.entities],
-            "attack_techniques": [{"id": t.technique_id, "name": t.name, "tactic": t.tactic, "tactic_id": t.tactic_id, "description": "", "confidence": t.confidence} for t in r.techniques],
-            "defend_countermeasures": [], # Not stored deeply in this schema version
-            "nist_controls": [],
-            "owasp_items": [],
-            "mitigations": [{"title": m.title, "description": m.description, "priority": m.priority, "effort": m.effort} for m in r.mitigations],
-            "timestamp": r.timestamp.isoformat() if hasattr(r.timestamp, "isoformat") else str(r.timestamp)
-        })
+    items = [map_record_to_result(r) for r in records]
 
     return {"items": items}
 

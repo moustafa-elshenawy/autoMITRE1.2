@@ -27,6 +27,9 @@ async def create_threat_record(db: AsyncSession, threat: ThreatResult, user_id: 
         framework_coverage_defend=len(threat.defend_countermeasures),
         framework_coverage_nist=len(threat.nist_controls),
         framework_coverage_owasp=len(threat.owasp_items),
+        defend_json=[m.model_dump() for m in threat.defend_countermeasures],
+        nist_json=[m.model_dump() for m in threat.nist_controls],
+        owasp_json=[m.model_dump() for m in threat.owasp_items],
         timestamp=threat.timestamp
     )
     db.add(db_threat)
@@ -67,6 +70,17 @@ async def create_threat_record(db: AsyncSession, threat: ThreatResult, user_id: 
         )
         db.add(db_mit)
         
+    # Add predicted steps
+    for step in threat.predicted_steps:
+        db_step = models.ThreatPredictedStep(
+            threat_id=threat.id,
+            step_id=step.id,
+            title=step.title,
+            description=step.description,
+            confidence=step.confidence
+        )
+        db.add(db_step)
+        
     await db.commit()
     await db.refresh(db_threat)
     return db_threat
@@ -81,6 +95,7 @@ async def get_recent_threats(db: AsyncSession, limit: int = 20, user_id: str = N
         .options(selectinload(models.ThreatRecord.techniques))
         .options(selectinload(models.ThreatRecord.entities))
         .options(selectinload(models.ThreatRecord.mitigations))
+        .options(selectinload(models.ThreatRecord.predicted_steps))
     )
     if user_id:
         query = query.where(models.ThreatRecord.user_id == user_id)
@@ -155,6 +170,7 @@ async def get_threat_by_id(db: AsyncSession, threat_id: str) -> models.ThreatRec
         .options(selectinload(models.ThreatRecord.techniques))
         .options(selectinload(models.ThreatRecord.entities))
         .options(selectinload(models.ThreatRecord.mitigations))
+        .options(selectinload(models.ThreatRecord.predicted_steps))
     )
     result = await db.execute(query)
     return result.scalar_one_or_none()

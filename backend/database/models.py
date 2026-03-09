@@ -51,11 +51,17 @@ class ThreatRecord(Base):
     framework_coverage_owasp = Column(Integer, default=0)
 
     timestamp = Column(String, default=lambda: datetime.datetime.utcnow().isoformat())
+    
+    # Framework mappings stored as JSON
+    defend_json = Column(JSON, default=list)
+    nist_json = Column(JSON, default=list)
+    owasp_json = Column(JSON, default=list)
 
     # Relationships
     entities = relationship("ThreatEntity", back_populates="threat", cascade="all, delete")
     techniques = relationship("ThreatTechnique", back_populates="threat", cascade="all, delete")
     mitigations = relationship("ThreatMitigation", back_populates="threat", cascade="all, delete")
+    predicted_steps = relationship("ThreatPredictedStep", back_populates="threat", cascade="all, delete")
 
 
 class ThreatEntity(Base):
@@ -98,6 +104,19 @@ class ThreatMitigation(Base):
     iac_type = Column(String, nullable=True)
 
     threat = relationship("ThreatRecord", back_populates="mitigations")
+
+
+class ThreatPredictedStep(Base):
+    __tablename__ = "threat_predicted_steps"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    threat_id = Column(String, ForeignKey("threat_records.id"), nullable=False)
+    step_id = Column(Integer, nullable=True) # The order/index
+    title = Column(String, nullable=False)
+    description = Column(Text, nullable=False)
+    confidence = Column(Float, nullable=False)
+
+    threat = relationship("ThreatRecord", back_populates="predicted_steps")
 
 
 class OSINTFeedItem(Base):

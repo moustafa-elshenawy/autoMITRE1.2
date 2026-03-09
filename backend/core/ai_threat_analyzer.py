@@ -28,7 +28,7 @@ except ImportError:
 
 from models.schemas import (
     ATTACKTechnique, ThreatResult, RiskScore, SeverityLevel,
-    ThreatEntity, MitigationStep
+    ThreatEntity, MitigationStep, PredictedStep
 )
 from core.llm_engine import LocalHuggingFaceEngine
 from core.ml_engine import ml_engine
@@ -39,6 +39,7 @@ llama_rag = LocalHuggingFaceEngine()
 
 # Load ATT&CK database at module level
 _ATTACK_DB = None
+_ATTACK_LOOKUP = {} # Added for fast ID -> metadata lookup
 _DEFEND_DB = None
 _NIST_DB = None
 _OWASP_DB = None
@@ -99,16 +100,22 @@ def _load_expanded_keywords():
 
 
 def _load_databases():
-    global _ATTACK_DB, _DEFEND_DB, _NIST_DB, _OWASP_DB
+    global _ATTACK_DB, _ATTACK_LOOKUP, _DEFEND_DB, _NIST_DB, _OWASP_DB
     base = os.path.join(os.path.dirname(__file__), '..', 'data')
-    with open(os.path.join(base, 'mitre_attack.json')) as f:
-        _ATTACK_DB = json.load(f)
-    with open(os.path.join(base, 'mitre_defend.json')) as f:
-        _DEFEND_DB = json.load(f)
-    with open(os.path.join(base, 'nist_controls.json')) as f:
-        _NIST_DB = json.load(f)
-    with open(os.path.join(base, 'owasp_data.json')) as f:
-        _OWASP_DB = json.load(f)
+    try:
+        with open(os.path.join(base, 'mitre_attack.json')) as f:
+            _ATTACK_DB = json.load(f)
+            # Build lookup for performance
+            _ATTACK_LOOKUP = {t['id']: t for t in _ATTACK_DB}
+        with open(os.path.join(base, 'mitre_defend.json')) as f:
+            _DEFEND_DB = json.load(f)
+        with open(os.path.join(base, 'nist_controls.json')) as f:
+            _NIST_DB = json.load(f)
+        with open(os.path.join(base, 'owasp_data.json')) as f:
+            _OWASP_DB = json.load(f)
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Failed to load threat databases: {e}")
 
 _load_databases()
 
@@ -631,15 +638,15 @@ def _extract_entities(text: str) -> List[Dict[str, str]]:
     return unique_entities
 
 
-def generate_predictive_actions(technique_ids: List[str], text: str = '', entities: List[Any] = None) -> str:
+def generate_predictive_actions(technique_ids: List[str], text: str = '', entities: List[Any] = None) -> List[PredictedStep]:
     """
-    Generate a DYNAMIC prediction narrative based on the SPECIFIC techniques,
-    tools, and CVEs detected — not a generic template.
+    Generate DYNAMIC predicted steps based on the SPECIFIC techniques,
+    tools, and CVEs detected.
     """
     if entities is None:
         entities = []
     if not technique_ids:
-        return "No threat-specific patterns were detected. If this was flagged as suspicious, review system logs for unusual process execution or network connections."
+        return []
 
     # Extract comprehensive entities using NER and regex
     extracted_entities = _extract_entities(text)
@@ -649,37 +656,21 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
     
     # Pre-populate input entities with our extractions so they show up in the UI
     for ext_e in extracted_entities:
-        if not any(isinstance(e, dict) and e.get('value', '').lower() == ext_e['value'].lower() for e in entities):
+        if not any((e.value if isinstance(e, ThreatEntity) else e.get('value', '')).lower() == ext_e['value'].lower() for e in entities):
             try:
-                # Add as ThreatEntity schema-compatible dict
-                entities.append({
-                    'type': ext_e['type'],
-                    'value': ext_e['value'],
-                    'context': 'NLP Extracted'
-                })
+                # Add as ThreatEntity schema-compatible instance
+                entities.append(ThreatEntity(
+                    type=ext_e['type'],
+                    value=ext_e['value'],
+                    context='NLP Extracted'
+                ))
             except Exception:
                 pass
-    parts = []
+    
+    steps = []
+    step_id = 1
 
-    # --- Build the narrative from actual detected evidence ---
-
-    # 1. Describe current stage clearly
-    current_stages = [_TACTIC_STAGE[t] for t in technique_ids if t in _TACTIC_STAGE]
-    if current_stages:
-        unique_stages = list(dict.fromkeys(current_stages))  # preserve order, deduplicate
-        parts.append(f"Current activity: {'; '.join(unique_stages[:4])}.")
-
-    # 2. Tool-specific context
-    if detected_tools:
-        tool_names = ', '.join(t.title() for t in detected_tools[:5])
-        parts.append(f"Specific tools/malware observed: {tool_names}.")
-
-    # 3. CVE-specific context
-    if detected_cves:
-        cve_str = ', '.join(detected_cves[:3])
-        parts.append(f"Vulnerability exploit attempted: {cve_str}.")
-
-    # 4. Next-step prediction based on kill-chain position
+    # Next-step prediction based on kill-chain position
     has_initial_access = any(t in technique_ids for t in ['T1190', 'T1566', 'T1133', 'T1091'])
     has_execution = any(t in technique_ids for t in ['T1059', 'T1059.001', 'T1053', 'T1055'])
     has_cred_access = any(t in technique_ids for t in ['T1003', 'T1110', 'T1078', 'T1555', 'T1558'])
@@ -688,61 +679,49 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
     has_impact = any(t in technique_ids for t in ['T1486', 'T1485', 'T1489'])
     has_exfil = any(t in technique_ids for t in ['T1041', 'T1048', 'T1560', 'T1005'])
 
-    predictions = []
-
     if has_impact or has_exfil:
-        predictions.append(
-            "URGENT: The attacker has reached the final objective phase. "
-            + ("Ransomware encryption is likely active — immediately isolate affected hosts, revoke domain credentials, and activate IR playbook. " if 'T1486' in technique_ids else "")
-            + ("Data exfiltration is in progress — block outbound traffic on DNS/HTTPS to untrusted destinations. " if has_exfil else "")
-        )
+        steps.append(PredictedStep(
+            id=step_id,
+            title="Final Objective Containment",
+            description="The attacker has reached the final objective phase. Ransomware encryption or data exfiltration is likely active. Immediately isolate affected hosts and revoke domain credentials.",
+            confidence=0.95
+        ))
+        step_id += 1
     elif has_lateral and has_cred_access:
         loc = 'via RDP, SMB, or WMI' if 'T1021' in technique_ids else 'across internal systems'
-        predictions.append(
-            f"The attacker is conducting lateral movement {loc} using stolen credentials. "
-            "Expect immediate targeting of domain controllers, backup servers, and file shares. "
-            "Expect ransomware deployment or sensitive data staging within hours."
-        )
+        steps.append(PredictedStep(
+            id=step_id,
+            title="Internal Lateral Movement",
+            description=f"The attacker is conducting lateral movement {loc} using stolen credentials. Expect immediate targeting of domain controllers and backup servers.",
+            confidence=0.9
+        ))
+        step_id += 1
     elif has_cred_access:
-        dump_method = ''
-        if 'T1003' in technique_ids:
-            dump_method = ' via LSASS memory dump or SAM database'
-        elif 'T1558' in technique_ids:
-            dump_method = ' via Kerberos ticket theft (Kerberoasting/Pass-the-Ticket)'
-        predictions.append(
-            f"The attacker has obtained credentials{dump_method}. "
-            "Next step: lateral movement across the domain using pass-the-hash, pass-the-ticket, or direct RDP/SMB. "
-            "Rotate all domain credentials immediately and enable Credential Guard."
-        )
-    elif has_execution and has_initial_access:
-        exe_method = 'PowerShell' if 'T1059.001' in technique_ids else 'scripting interpreter'
-        predictions.append(
-            f"The attacker has achieved initial access and is executing commands via {exe_method}. "
-            "Expect immediate privilege escalation attempts (UAC bypass, local exploits) "
-            "and credential harvesting. Deploy EDR containment on affected endpoints now."
-        )
-    elif has_initial_access:
-        vuln_str = f" ({', '.join(detected_cves)})" if detected_cves else ''
-        predictions.append(
-            f"Initial access was established via vulnerability exploitation{vuln_str}. "
-            "The attacker will next attempt to deploy a persistent backdoor or C2 implant, "
-            "then begin internal reconnaissance. Patch the exploited service and isolate the host immediately."
-        )
-    elif has_c2:
-        c2_proto = 'DNS tunneling' if 'T1048' in technique_ids else 'HTTPS/application-layer protocol'
-        predictions.append(
-            f"An active C2 channel is established ({c2_proto}). "
-            "The attacker has implant(s) running on internal hosts awaiting tasking. "
-            "Block outbound C2 traffic via firewall rules and hunt for implant processes on all endpoints."
-        )
+        steps.append(PredictedStep(
+            id=step_id,
+            title="Privilege Escalation & Lateral Spread",
+            description="The attacker has obtained credentials. Expect attempts to escalate privileges to Domain Admin or Move Laterally across the network using Pass-the-Hash/Ticket.",
+            confidence=0.85
+        ))
+        step_id += 1
+    elif has_initial_access or has_execution:
+        steps.append(PredictedStep(
+            id=step_id,
+            title="Discovery & Persistence",
+            description="Initial access established. Expect local system discovery (whoami, net view) and persistence mechanism installation (scheduled tasks, registry run keys).",
+            confidence=0.8
+        ))
+        step_id += 1
     else:
-        predictions.append(
-            "The attacker is in an early-stage reconnaissance or execution phase. "
-            "Monitor for escalating activity: increased failed logins, unusual process spawning, "
-            "or unexpected outbound connections to unfamiliar external IPs."
-        )
+        steps.append(PredictedStep(
+            id=step_id,
+            title="Further Exploration & Foothold",
+            description="The attacker is in an early-stage reconnaissance or execution phase. Monitor for escalating activity: unusual process spawning or outbound connections.",
+            confidence=0.7
+        ))
+        step_id += 1
 
-    return ' '.join(p.strip() for p in parts + predictions if p.strip())
+    return steps
 
 
 
@@ -771,14 +750,40 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
     final_techniques_list = []
     if deep_analysis and deep_insights:
         # TTPs from ML Engine Stage 3 already contain name, confirmed ID, and verified status
-        detected_ttps = deep_insights.get("ttps", [])
+        # but LLM-detected ones might just be strings
+        raw_ttps = deep_insights.get("ttps", [])
         
-        for ttp in detected_ttps:
+        # Normalize: convert all to dicts and deduplicate
+        normalized_ttps = []
+        seen_tids = set()
+        
+        for ttp in raw_ttps:
+            if isinstance(ttp, str):
+                tid = ttp
+                ttp_dict = {"id": tid, "name": "Classified Technique", "confidence": 0.85, "verified": False, "evidence": ["AI Reasoning"]}
+            else:
+                tid = ttp.get("id")
+                ttp_dict = ttp
+                
+            if tid and tid not in seen_tids:
+                seen_tids.add(tid)
+                normalized_ttps.append(ttp_dict)
+
+        for ttp in normalized_ttps:
+            tid = ttp.get("id")
+            # Hydrate name/tactic from DB if it's the placeholder or missing
+            name = ttp.get("name")
+            tactic = ttp.get("tactic", "Multiple Tactics")
+            
+            if (not name or name == "Classified Technique") and tid in _ATTACK_LOOKUP:
+                name = _ATTACK_LOOKUP[tid].get("name", name)
+                tactic = _ATTACK_LOOKUP[tid].get("tactic", tactic)
+
             # Propagate "Verified" status and evidence to the final result
             final_techniques_list.append(ATTACKTechnique(
-                id=ttp.get("id"),
-                name=ttp.get("name", "Classified Technique"),
-                tactic="Multiple Tactics", # This will be filled by get_attack_techniques if needed
+                id=tid,
+                name=name or "Classified Technique",
+                tactic=tactic,
                 confidence=float(round(ttp.get("confidence", 0.5), 2)),
                 verified=ttp.get("verified", False),
                 evidence=ttp.get("evidence", [])
@@ -787,10 +792,16 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
     if not final_techniques_list: # Fallback if deep_analysis didn't yield TTPs or wasn't enabled
         # Fallback to TRAM keywords if ML Stage 1 failed or is loading
         for tid, conf in technique_scores.items():
+            name = "Classified Technique"
+            tactic = "Multiple Tactics"
+            if tid in _ATTACK_LOOKUP:
+                name = _ATTACK_LOOKUP[tid].get("name", name)
+                tactic = _ATTACK_LOOKUP[tid].get("tactic", tactic)
+
             final_techniques_list.append(ATTACKTechnique(
                 id=tid, 
-                name="Classified Technique", 
-                tactic="Multiple Tactics", 
+                name=name,
+                tactic=tactic, 
                 confidence=float(round(conf, 2))
             ))
 
@@ -800,33 +811,58 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
     elif final_score >= 7.0: mapped_severity = SeverityLevel.HIGH
     elif final_score >= 4.0: mapped_severity = SeverityLevel.MEDIUM
 
-    # Framework Mappings (NIST, D3FEND, OWASP)
-    tech_ids = [t.id for t in final_techniques_list]
+    # 4. Mitigation & Prediction Generation
+    final_tids = [t.id for t in final_techniques_list]
     
+    # Generate predictive steps
+    # A) Deterministic steps from heuristics
+    deterministic_steps = generate_predictive_actions(final_tids, text, entities)
+    
+    # B) AI-generated steps from Llama 3
+    ai_steps_raw = deep_insights.get("predicted_steps", [])
+    ai_steps = []
+    
+    # Start ID after deterministic ones
+    next_id = len(deterministic_steps) + 1
+    for step in ai_steps_raw:
+        if isinstance(step, dict) and 'title' in step and 'description' in step:
+            ai_steps.append(PredictedStep(
+                id=next_id,
+                title=step['title'],
+                description=step['description'],
+                confidence=float(step.get('confidence', 0.8))
+            ))
+            next_id += 1
+            
+    # Combine both
+    final_predicted_steps = deterministic_steps + ai_steps
+
     result = ThreatResult(
         id=str(uuid.uuid4()),
-        title=deep_insights.get("title", f"AI Analysis: Threat Activity Detected"),
-        timestamp=datetime.now(),
-        description=deep_insights.get("summary", "Heuristic patterns detected."),
+        title=deep_insights.get("title") if deep_insights and deep_insights.get("title") != "Threat Detected" else _get_threat_title(final_tids, entities),
+        timestamp=datetime.now().isoformat(),
+        input_type=processed_input.get('input_type', 'text'),
+        description=deep_insights.get("analysis", text[:300]) if deep_insights else text[:300],
         risk_score=RiskScore(
             score=float(round(final_score, 1)),
             severity=mapped_severity,
             likelihood=float(likelihood) if not is_anomalous else 0.8,
             impact=float(impact),
-            business_impact=deep_insights.get("analysis", "AI analysis identifies potential risk to organizational pillars.")
+            business_impact=generate_business_impact(mapped_severity, final_tids)
         ),
         attack_techniques=final_techniques_list,
-        defend_countermeasures=map_to_defend(tech_ids),
-        nist_controls=map_to_nist(tech_ids),
-        owasp_items=map_to_owasp(tech_ids),
-        mitigations=get_mitigations(tech_ids),
-        entities=[ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', '')) for e in entities],
+        defend_countermeasures=map_to_defend(final_tids),
+        nist_controls=map_to_nist(final_tids),
+        owasp_items=map_to_owasp(final_tids),
+        mitigations=get_mitigations(final_tids),
+        predicted_steps=final_predicted_steps,
+        entities=[(e if isinstance(e, ThreatEntity) else ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', ''))) for e in entities],
         raw_indicators={
-            "technique_ids": tech_ids,
-            "is_anomaly": is_anomalous,
+            "technique_ids": final_tids,
+            "is_anomaly": bool(is_anomalous),
             "deep_extraction": deep_insights.get("terms", []),
-            "technical_dive": deep_insights.get("analysis", "")
+            "technical_dive": deep_insights.get("analysis", ""),
+            "llm_summary": deep_insights.get("summary", "")
         }
     )
-    return result
     return result

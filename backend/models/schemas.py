@@ -71,6 +71,13 @@ class MitigationStep(BaseModel):
     effort: str
     iac_snippet: Optional[str] = None
     iac_type: Optional[str] = None
+    
+    
+class PredictedStep(BaseModel):
+    id: int
+    title: str
+    description: str
+    confidence: float = Field(ge=0.0, le=1.0)
 
 
 class RiskScore(BaseModel):
@@ -99,6 +106,7 @@ class ThreatResult(BaseModel):
     nist_controls: List[NISTControl] = []
     owasp_items: List[OWASPItem] = []
     mitigations: List[MitigationStep] = []
+    predicted_steps: List[PredictedStep] = []
     raw_indicators: Dict[str, Any] = {}
     timestamp: str
 

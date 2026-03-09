@@ -28,6 +28,32 @@ from database.models import User
 router = APIRouter(prefix="/api/analyze", tags=["analysis"])
 
 
+def map_record_to_result(r) -> ThreatResult:
+    """Map a database ThreatRecord to a ThreatResult schema."""
+    return ThreatResult(
+        id=r.id,
+        title=r.title,
+        description=r.description or "",
+        input_type=r.input_type or "text",
+        risk_score={
+            "score": r.risk_score,
+            "severity": r.severity,
+            "likelihood": r.likelihood,
+            "impact": r.impact_score,
+            "business_impact": r.business_impact or ""
+        },
+        entities=[{"type": e.type, "value": e.value, "context": e.context} for e in r.entities],
+        attack_techniques=[{"id": t.technique_id, "name": t.name, "tactic": t.tactic, "tactic_id": t.tactic_id, "description": t.description, "confidence": t.confidence} for t in r.techniques],
+        defend_countermeasures=r.defend_json or [],
+        nist_controls=r.nist_json or [],
+        owasp_items=r.owasp_json or [],
+        mitigations=[{"title": m.title, "description": m.description, "priority": m.priority, "effort": m.effort, "iac_snippet": m.iac_snippet, "iac_type": m.iac_type} for m in r.mitigations],
+        predicted_steps=[{"id": s.step_id, "title": s.title, "description": s.description, "confidence": s.confidence} for s in r.predicted_steps],
+        raw_indicators=r.raw_indicators or {},
+        timestamp=r.timestamp.isoformat() if hasattr(r.timestamp, "isoformat") else str(r.timestamp)
+    )
+
+
 def enrich_threat_result(threat: ThreatResult, technique_ids: list) -> ThreatResult:
     """Enrich a threat result with framework mappings."""
     mappings = map_all_frameworks(technique_ids)
@@ -157,3 +183,16 @@ async def analyze_json_stix(request: TextAnalysisRequest, db: AsyncSession = Dep
         return AnalysisResponse(success=True, threat_result=threat)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+@router.get("/threats/{threat_id}", response_model=ThreatResult)
+async def get_threat_record(threat_id: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Fetch a historical threat record by ID."""
+    from database.crud import get_threat_by_id
+    record = await get_threat_by_id(db, threat_id)
+    if not record:
+        raise HTTPException(status_code=404, detail="Threat record not found.")
+    
+    # Optional: Check if record belongs to user
+    if record.user_id and record.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Access denied.")
+        
+    return map_record_to_result(record)
