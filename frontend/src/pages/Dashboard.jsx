@@ -71,7 +71,12 @@ export default function Dashboard() {
         axios.get(`${API}/api/framework/coverage`, { headers }).then(r => {
             if (r.data.attack && r.data.attack.by_tactic) {
                 const updated = TACTIC_COVERAGE.map(t => {
-                    const mapped = r.data.attack.by_tactic[t.name]
+                    // Handle naming inconsistencies between backend and frontend
+                    let backendName = t.name
+                    if (t.name === 'C2') backendName = 'Command and Control'
+                    if (t.name === 'Priv. Escalation') backendName = 'Privilege Escalation'
+                    
+                    const mapped = r.data.attack.by_tactic[backendName]
                     if (mapped) return { ...t, covered: mapped.covered }
                     return t
                 })

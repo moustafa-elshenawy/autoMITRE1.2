@@ -11,7 +11,7 @@ import random
 from models.schemas import ChatRequest, ChatResponse, DashboardStats
 from core.ai_chat_engine import generate_chat_response
 from database.config import get_db
-from database.crud import get_dashboard_stats as get_db_stats, get_recent_threats, get_threat_activity
+from database.crud import get_dashboard_stats as get_db_stats, get_recent_threats, get_threat_activity, get_attack_tactic_coverage
 from api.dependencies import get_current_user
 from database.models import User
 
@@ -198,27 +198,47 @@ async def get_feed_sources(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/framework/coverage")
-async def get_framework_coverage():
+async def get_framework_coverage(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Get framework coverage statistics."""
+    tactic_stats = await get_attack_tactic_coverage(db, current_user.id)
+    
+    # Mapping to handle backend names vs frontend expectation if needed, 
+    # but primarily ensuring values are dynamic.
+    by_tactic_template = {
+        "Initial Access": 10,
+        "Execution": 14,
+        "Persistence": 20,
+        "Privilege Escalation": 14,
+        "Defense Evasion": 44,
+        "Credential Access": 17,
+        "Discovery": 32,
+        "Lateral Movement": 9,
+        "Collection": 17,
+        "Command and Control": 18,
+        "Exfiltration": 9,
+        "Impact": 14
+    }
+    
+    dynamic_by_tactic = {}
+    normalized_tactic_stats = {k.lower(): v for k, v in tactic_stats.items()}
+    
+    total_covered = 0
+    for name, total in by_tactic_template.items():
+        covered = normalized_tactic_stats.get(name.lower(), 0)
+        dynamic_by_tactic[name] = {"total": total, "covered": covered}
+        total_covered += covered
+
+    # Get total unique techniques covered for the top level percentage
+    from database.crud import get_dashboard_stats
+    stats = await get_dashboard_stats(db, current_user.id)
+    unique_techs = stats.get("techniques_covered", 0)
+
     return {
         "attack": {
             "total_techniques": 635,
-            "covered": 34,
-            "percentage": 5.3,
-            "by_tactic": {
-                "Initial Access": {"total": 10, "covered": 4},
-                "Execution": {"total": 14, "covered": 5},
-                "Persistence": {"total": 20, "covered": 3},
-                "Privilege Escalation": {"total": 14, "covered": 3},
-                "Defense Evasion": {"total": 44, "covered": 3},
-                "Credential Access": {"total": 17, "covered": 4},
-                "Discovery": {"total": 32, "covered": 3},
-                "Lateral Movement": {"total": 9, "covered": 2},
-                "Collection": {"total": 17, "covered": 2},
-                "Command and Control": {"total": 18, "covered": 2},
-                "Exfiltration": {"total": 9, "covered": 2},
-                "Impact": {"total": 14, "covered": 3}
-            }
+            "covered": unique_techs,
+            "percentage": round((unique_techs / 635) * 100, 1) if 635 > 0 else 0,
+            "by_tactic": dynamic_by_tactic
         },
         "defend": {
             "total_countermeasures": 58,

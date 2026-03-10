@@ -227,3 +227,21 @@ async def get_threat_activity(db: AsyncSession, user_id: str = None) -> Dict[str
             for label, data in datasets.items()
         ]
     }
+
+
+async def get_attack_tactic_coverage(db: AsyncSession, user_id: str = None) -> Dict[str, int]:
+    """Calculate unique techniques covered per tactic."""
+    query = (
+        select(models.ThreatTechnique.tactic, func.count(func.distinct(models.ThreatTechnique.technique_id)))
+        .join(models.ThreatRecord)
+    )
+    if user_id:
+        query = query.where(models.ThreatRecord.user_id == user_id)
+    
+    query = query.group_by(models.ThreatTechnique.tactic)
+    result = await db.execute(query)
+    
+    coverage = {}
+    for tactic, count in result.all():
+        coverage[tactic] = count
+    return coverage

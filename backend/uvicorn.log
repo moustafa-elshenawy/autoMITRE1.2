@@ -46,3 +46,15 @@ INFO:     127.0.0.1:61573 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61573 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61579 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61573 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61708 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61709 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61708 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61709 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61723 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61724 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61723 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61724 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61744 - "OPTIONS /api/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61744 - "POST /api/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61746 - "POST /api/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61755 - "POST /api/chat HTTP/1.1" 200 OK
