@@ -1,14 +1,11 @@
-INFO:     Will watch for changes in these directories: ['/Users/shno/Desktop/autoMITRE1.2/backend']
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:30,  8.95it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1445.92it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:     Started server process [80441]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [72872] using StatReload
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:59,  4.55it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 860.23it/s]
-INFO:     Started server process [72961]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-✓ AutoMITRE: 6/6 models loaded
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7142.37it/s]
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6217.54it/s]
 [1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
 Key                     | Status     |  | 
 ------------------------+------------+--+-
@@ -16,771 +13,36 @@ embeddings.position_ids | UNEXPECTED |  |
 
 [3mNotes:
 - UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-INFO:     127.0.0.1:51342 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51343 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51342 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51343 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51345 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51342 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51343 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51345 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51348 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51349 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51351 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51349 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51349 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51342 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51345 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51345 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51343 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51343 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51348 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51343 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51358 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51360 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51448 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51448 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51445 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51445 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51442 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51442 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51446 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51442 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51479 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 7138.95it/s]
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 5004.59it/s]
-INFO:     127.0.0.1:51479 - "POST /api/analyze/text HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'database/crud.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [72961]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 7048.07it/s]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-WARNING:  StatReload detected changes in 'api/routes/intelligence.py'. Reloading...
-INFO:     Started server process [74322]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [74322]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 4658.64it/s]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-INFO:     Started server process [74334]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-✓ AutoMITRE: 6/6 models loaded
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7508.97it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-WARNING:  StatReload detected changes in 'database/crud.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [74334]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:32,  8.32it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1376.18it/s]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-INFO:     Started server process [74753]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-✓ AutoMITRE: 6/6 models loaded
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6815.38it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-INFO:     127.0.0.1:51521 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51521 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51517 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51517 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51515 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51515 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51520 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51515 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51545 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51547 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51545 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51547 - "GET /api/users/history HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'main.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [74753]
-Process SpawnProcess-5:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
-  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
-  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 54
-    "id": a["framework_mappings"]["nist_800_53"],
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'main.py'. Reloading...
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:56,  4.78it/s]Loading weights:  94%|█████████▍| 255/272 [00:00<00:00, 1019.96it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 845.51it/s] 
-INFO:     Started server process [75921]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6787.54it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-INFO:     127.0.0.1:51597 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51609 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51610 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51609 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51609 - "GET /api/users/profile HTTP/1.1" 200 OK
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 5021.74it/s]
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 3860.34it/s]
-INFO:     127.0.0.1:51612 - "POST /api/analyze/text HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'core/nano_llm_engine.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [75921]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<02:06,  2.14it/s]Loading weights:  47%|████▋     | 129/272 [00:00<00:00, 299.91it/s]Loading weights:  75%|███████▍  | 203/272 [00:00<00:00, 315.99it/s]Loading weights:  95%|█████████▌| 259/272 [00:00<00:00, 323.16it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 277.74it/s]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-INFO:     Started server process [81234]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 3018.92it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-WARNING:  StatReload detected changes in 'core/ml_engine.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [81234]
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<01:11,  3.78it/s]Loading weights:  80%|███████▉  | 217/272 [00:00<00:00, 757.72it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 620.78it/s]
-INFO:     Started server process [81826]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6841.50it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-WARNING:  StatReload detected changes in 'core/ai_threat_analyzer.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [81826]
-Process SpawnProcess-9:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 815
-    is_anomalous, ml_score, deep_insights = ml_engine.evaluate_threat(processed_input, score)
-IndentationError: expected an indented block after 'if' statement on line 812
-WARNING:  StatReload detected changes in 'core/ai_threat_analyzer.py'. Reloading...
-Process SpawnProcess-10:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/ml_engine.py'. Reloading...
-Process SpawnProcess-11:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/ml_engine.py'. Reloading...
-Process SpawnProcess-12:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/ml_engine.py'. Reloading...
-Process SpawnProcess-13:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/ml_engine.py'. Reloading...
-Process SpawnProcess-14:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'models/schemas.py'. Reloading...
-Process SpawnProcess-15:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'api/routes/analysis.py'. Reloading...
-Process SpawnProcess-16:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/ai_threat_analyzer.py'. Reloading...
-Process SpawnProcess-17:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/nano_llm_engine.py'. Reloading...
-Process SpawnProcess-18:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/nano_llm_engine.py'. Reloading...
-Process SpawnProcess-19:
-Traceback (most recent call last):
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 313, in _bootstrap
-    self.run()
-    ~~~~~~~~^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/process.py", line 108, in run
-    self._target(*self._args, **self._kwargs)
-    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/_subprocess.py", line 80, in subprocess_started
-    target(sockets=sockets)
-    ~~~~~~^^^^^^^^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 75, in run
-    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/base_events.py", line 719, in run_until_complete
-    return future.result()
-           ~~~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 79, in serve
-    await self._serve(sockets)
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/server.py", line 86, in _serve
-    config.load()
-    ~~~~~~~~~~~^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/config.py", line 441, in load
-    self.loaded_app = import_from_string(self.app)
-                      ~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/venv/lib/python3.13/site-packages/uvicorn/importer.py", line 19, in import_from_string
-    module = importlib.import_module(module_str)
-  File "/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/importlib/__init__.py", line 88, in import_module
-    return _bootstrap._gcd_import(name[level:], package, level)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
-  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
-  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
-  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
-  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
-  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/main.py", line 12, in <module>
-    from api.routes.analysis import router as analysis_router
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/api/routes/analysis.py", line 14, in <module>
-    from core.ai_threat_analyzer import analyze_threat
-  File "/Users/shno/Desktop/autoMITRE1.2/backend/core/ai_threat_analyzer.py", line 821
-    except Exception as e:
-IndentationError: unexpected indent
-WARNING:  StatReload detected changes in 'core/ai_threat_analyzer.py'. Reloading...
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:51,  5.23it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 937.68it/s]
-INFO:     Started server process [88695]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6488.63it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/multiprocessing/resource_tracker.py:301: UserWarning: resource_tracker: There appear to be 8 leaked semaphore objects to clean up at shutdown: {'/loky-74334-nvin3b8w', '/loky-74322-kmgg4iyh', '/loky-81826-8sfwe1ct', '/loky-81234-xmvx5qgn', '/loky-75921-4d0p_rq4', '/loky-88695-cuadkzbu', '/loky-74753-ea5dteri', '/loky-72961-0tipt8ia'}
-  warnings.warn(
+INFO:     127.0.0.1:61550 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61552 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/users/profile HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61564 - "GET /api/users/profile HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61564 - "GET /api/dashboard/stats HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61563 - "GET /api/dashboard/activity HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61566 - "GET /api/intelligence/feed HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61568 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61564 - "GET /api/dashboard/stats HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61568 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61563 - "GET /api/intelligence/feed HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61570 - "GET /api/dashboard/activity HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:61573 - "POST /api/auth/token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61575 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61575 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61579 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61581 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61582 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61583 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61581 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61581 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61575 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61575 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61579 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61573 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
