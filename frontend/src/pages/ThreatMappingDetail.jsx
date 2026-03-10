@@ -71,43 +71,6 @@ export default function ThreatMappingDetail() {
                 </div>
             ) : (
                 <div className="threat-detail-container">
-                    <div className="card" style={{ marginBottom: 24, padding: '24px 32px', borderLeft: '4px solid var(--accent-blue)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div style={{ flex: 1 }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-                                    <h1 style={{ margin: 0, fontSize: 24 }}>{threat.title}</h1>
-                                    <span className={`badge badge-${threat.risk_score?.severity?.toLowerCase()}`}>
-                                        {threat.risk_score?.severity}
-                                    </span>
-                                </div>
-                                <p style={{ fontSize: 15, color: 'var(--text-secondary)', lineHeight: 1.6, maxWidth: 800 }}>
-                                    {threat.description}
-                                </p>
-                            </div>
-                            <div className="risk-meter-compact" style={{ textAlign: 'center' }}>
-                                <div style={{
-                                    width: 64,
-                                    height: 64,
-                                    borderRadius: '50%',
-                                    border: '4px solid rgba(59, 130, 246, 0.2)',
-                                    borderTopColor: 'var(--accent-blue)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: 20,
-                                    fontWeight: 700,
-                                    color: 'var(--text-primary)',
-                                    marginBottom: 8
-                                }}>
-                                    {threat.risk_score?.score}
-                                </div>
-                                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-                                    Risk Score
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <ThreatResultPanel result={threat} />
                 </div>
             )}

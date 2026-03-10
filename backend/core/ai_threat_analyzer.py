@@ -267,9 +267,9 @@ _load_expanded_keywords()
 
 TACTICAL_MITIGATIONS = {
     'T1190': [
-        MitigationStep(title="Deploy Web Application Firewall", description="Implement a WAF to filter malicious HTTP traffic and block common web attack patterns.", priority="Critical", effort="Medium"),
-        MitigationStep(title="Patch Public-Facing Applications", description="Regularly update and patch all internet-facing applications, prioritizing critical security updates.", priority="Critical", effort="Low"),
-        MitigationStep(title="Input Validation & Sanitization", description="Implement strict server-side input validation and output encoding to prevent injection attacks.", priority="High", effort="Medium")
+        MitigationStep(title="Deploy Web Application Firewall", description="Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.", priority="Critical", effort="Medium"),
+        MitigationStep(title="Input Validation & Sanitization", description="Implement strict server-side input validation and output encoding to prevent injection attacks.", priority="High", effort="Medium"),
+        MitigationStep(title="Patch Public-Facing Applications", description="Regularly update and patch all internet-facing applications, prioritizing critical security updates.", priority="Critical", effort="Low")
     ],
     'T1110': [
         MitigationStep(title="Implement Multi-Factor Authentication", description="Enable MFA on all accounts, especially administrative and privileged access accounts.", priority="Critical", effort="Low"),
@@ -284,17 +284,35 @@ TACTICAL_MITIGATIONS = {
     'T1486': [
         MitigationStep(title="Offline Backup Strategy", description="Maintain 3-2-1 backup strategy: 3 copies, 2 media types, 1 offsite/offline backup. Test regularly.", priority="Critical", effort="Medium"),
         MitigationStep(title="Endpoint Detection & Response", description="Deploy EDR solution to detect ransomware execution patterns and enable automatic containment.", priority="Critical", effort="High"),
-        MitigationStep(title="Network Segmentation", description="Segment the network to limit ransomware propagation. Restrict lateral movement via firewall rules.", priority="High", effort="High")
+        MitigationStep(title="Inhibit System Recovery Protection", description="Monitor for unauthorized use of vssadmin.exe and other tools used to delete shadow copies.", priority="High", effort="Low")
     ],
-    'T1078': [
-        MitigationStep(title="Privileged Access Management", description="Implement PAM solution to manage, monitor, and rotate privileged account credentials.", priority="Critical", effort="High"),
-        MitigationStep(title="Zero Trust Architecture", description="Adopt Zero Trust model - verify every user and device before granting access to resources.", priority="High", effort="High"),
-        MitigationStep(title="Credential Exposure Monitoring", description="Monitor dark web and breach databases for leaked organizational credentials.", priority="High", effort="Medium")
+    'T1003': [
+        MitigationStep(title="Enable LSA Protection", description="Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.", priority="Critical", effort="Low"),
+        MitigationStep(title="Credential Guard", description="Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.", priority="Critical", effort="Medium"),
+        MitigationStep(title="Restrict Debug Privileges", description="Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.", priority="High", effort="Low")
     ],
-    'T1055': [
-        MitigationStep(title="Enable Process Protection", description="Enable Windows Credential Guard and Protected Users security group to prevent process injection.", priority="High", effort="Low"),
-        MitigationStep(title="Application Whitelisting", description="Implement application whitelisting to prevent unauthorized code execution.", priority="High", effort="High"),
-        MitigationStep(title="Memory Protection Controls", description="Enable DEP/NX bit and ASLR on all systems to make exploitation significantly harder.", priority="Medium", effort="Low")
+    'T1021': [
+        MitigationStep(title="Disable Unnecessary RDP", description="Disable Remote Desktop Services on workstations and servers where not strictly required.", priority="High", effort="Low"),
+        MitigationStep(title="Network Level Authentication", description="Enforce Network Level Authentication (NLA) for RDP to require authentication before a session is started.", priority="High", effort="Low"),
+        MitigationStep(title="RDP Gateway and VPN", description="Restrict RDP access to be available only through a secure VPN or an RDP Gateway.", priority="High", effort="Medium")
+    ],
+    'T1505.003': [
+        MitigationStep(title="Server-Side File Integrity Monitoring", description="Deploy FIM to monitor web directories for the creation of unauthorized scripts and shells.", priority="High", effort="Medium"),
+        MitigationStep(title="Principle of Least Privilege", description="Configure the web server process to run with the minimum necessary permissions, preventing shell execution.", priority="High", effort="Low"),
+        MitigationStep(title="Disable Execution in Assets", description="Configure the web server to disable script execution in directories intended for static assets like images.", priority="High", effort="Low")
+    ],
+    'T1059.001': [
+        MitigationStep(title="PowerShell Constrained Language Mode", description="Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.", priority="High", effort="Medium"),
+        MitigationStep(title="PowerShell Script Block Logging", description="Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.", priority="High", effort="Low"),
+        MitigationStep(title="Disable Unused PowerShell Versions", description="Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.", priority="Medium", effort="Low")
+    ],
+    'T1547.001': [
+        MitigationStep(title="Monitor Registry Run Keys", description="Implement monitoring for changes to common persistence keys in HKLM and HKCU (Run, RunOnce).", priority="High", effort="Low"),
+        MitigationStep(title="Application Execution Prevention", description="Use AppLocker or Windows Defender Application Control to prevent execution from suspicious paths.", priority="High", effort="Medium")
+    ],
+    'T1548': [
+        MitigationStep(title="UAC Enforcement", description="Ensure User Account Control (UAC) is enabled and set to 'Always Notify' for all accounts.", priority="High", effort="Low"),
+        MitigationStep(title="Restrict Local Admin", description="Remove users from the local Administrators group and use Just-In-Time (JIT) access instead.", priority="High", effort="Medium")
     ]
 }
 

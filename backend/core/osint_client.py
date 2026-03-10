@@ -29,7 +29,7 @@ from database.config import SessionLocal
 from database.models import OSINTFeedItem
 from sqlalchemy.future import select
 
-load_dotenv()
+load_dotenv(override=True)
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +40,8 @@ MISP_API_KEY    = os.getenv("MISP_API_KEY", "")
 OTX_API_KEY     = os.getenv("OTX_API_KEY", "")
 CACHE_TTL       = int(os.getenv("OSINT_CACHE_TTL", "300"))   # seconds
 
-URLHAUS_API     = "https://urlhaus.abuse.ch/downloads/json_online/"   # free bulk, no auth
-BAZAAR_API      = "https://bazaar.abuse.ch/export/csv/recent/" # MalwareBazaar CSV API
+URLHAUS_API     = "https://urlhaus.abuse.ch/downloads/json_online/"
+BAZAAR_CSV      = "https://bazaar.abuse.ch/export/csv/recent/"
 OTX_BASE        = "https://otx.alienvault.com/api/v1"
 
 # A dedicated settings file for runtime-configured variables (set via UI)
@@ -250,98 +250,121 @@ async def fetch_urlhaus(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
     if cached is not None:
         return cached
 
+    limit = int(RUNTIME_CONFIG.get("osint_limit", 50))
+    min_sev = RUNTIME_CONFIG.get("osint_min_severity", "Low")
+    
+    cached = _cached(f"urlhaus_{limit}")
+    if cached is not None:
+        return cached
+
     try:
-        resp = await client.get(URLHAUS_API, timeout=15.0)
+        # Use a proper User-Agent to avoid blocks
+        headers = {'User-Agent': 'autoMITRE Threat Intel Aggregator/1.2'}
+        resp = await client.get(URLHAUS_API, headers=headers, timeout=15.0)
         resp.raise_for_status()
         data = resp.json()
+        
+        # URLhaus bulk JSON is a dict where keys are IDs and values are LISTS of records.
+        if isinstance(data, dict):
+            entries = list(data.values())
+        elif isinstance(data, list):
+            entries = data
+        else:
+            entries = []
+
+        items: List[ThreatFeedItem] = []
+        seen_hosts: set = set()
+        
+        limit = int(RUNTIME_CONFIG.get("osint_limit", 50))
+        min_sev = RUNTIME_CONFIG.get("osint_min_severity", "Low")
+
+        for entry in entries:
+            # entry is typically a list (bulk JSON format) or a dict (standard API)
+            records = entry if isinstance(entry, list) else [entry]
+
+            for r in records:
+                if not isinstance(r, dict): continue
+                url_str   = r.get("url", "")
+                host      = url_str.split("/")[2] if "/" in url_str and len(url_str.split("/")) > 2 else ""
+                status    = r.get("url_status", "")
+                tags      = r.get("tags") or []
+                date_added = r.get("dateadded", "") # Format: "2024-03-21 12:34:56 UTC"
+                threat    = r.get("threat", "malware_download")
+                url_id    = str(hash(url_str))[:12]
+
+                if not url_str or host in seen_hosts:
+                    continue
+                seen_hosts.add(host)
+
+                severity = "High" if status == "online" else "Medium"
+                iocs = [i for i in [url_str[:80], host] if i][:3]
+
+                # Clean timestamp: '2024-03-21 12:34:56 UTC' -> '2024-03-21T12:34:56'
+                ts_clean = date_added.replace(" UTC", "").replace(" ", "T") if date_added else "recent"
+
+                item = ThreatFeedItem(
+                    id=f"urlhaus_{url_id}",
+                    title=f"Malicious URL: {host or url_str[:60]}",
+                    severity=severity,
+                    technique="T1189",
+                    tactic="Initial Access",
+                    timestamp=_relative_time(ts_clean),
+                    source="Abuse.ch URLhaus",
+                    source_key="urlhaus",
+                    iocs=iocs,
+                    frameworks=["ATT&CK", "OWASP"],
+                    tags=tags[:4],
+                    description=f"Threat: {threat}. Status: {status}.",
+                    external_url=r.get("urlhaus_link", ""),
+                )
+                
+                if _sev_to_int(severity) >= _sev_to_int(min_sev):
+                    items.append(item)
+                    if len(items) >= limit:
+                        break
+            if len(items) >= limit:
+                break
+
+        _store(f"urlhaus_{limit}", items)
+        return items
+
     except Exception as exc:
         logger.warning("URLhaus fetch failed: %s", exc)
         return []
-
-    items: List[ThreatFeedItem] = []
-    seen_hosts: set = set()
-    entries = list(data.values()) if isinstance(data, dict) else []
-    
-    limit = int(RUNTIME_CONFIG.get("osint_limit", 50))
-    min_sev = RUNTIME_CONFIG.get("osint_min_severity", "Low")
-
-    for entry in entries:
-        if isinstance(entry, list):
-            # Each key maps to a list of URL records
-            records = entry
-        else:
-            records = [entry]
-
-        for rec in records[:2]:
-            url_str   = rec.get("url", "")
-            host      = rec.get("url", "").split("/")[2] if "/" in rec.get("url", "") else ""
-            status    = rec.get("url_status", "")
-            tags      = rec.get("tags") or []
-            date_added = rec.get("dateadded", "")
-            threat    = rec.get("threat", "malware_download")
-            url_id    = str(hash(url_str))[:12]
-
-            if not url_str or host in seen_hosts:
-                continue
-            seen_hosts.add(host)
-
-            severity = "High" if status == "online" else "Medium"
-            iocs = [i for i in [url_str[:80], host] if i][:3]
-
-            item = ThreatFeedItem(
-                id=f"urlhaus_{url_id}",
-                title=f"Malicious URL: {host or url_str[:60]}",
-                severity=severity,
-                technique="T1189",
-                tactic="Initial Access",
-                timestamp=_relative_time(date_added.replace(" UTC","").replace(" ","T")) if date_added else "recent",
-                source="Abuse.ch URLhaus",
-                source_key="urlhaus",
-                iocs=iocs,
-                frameworks=["ATT&CK", "OWASP"],
-                tags=tags[:4],
-                description=f"Threat: {threat}. Status: {status}.",
-                external_url=rec.get("urlhaus_link", ""),
-            )
-            
-            if _sev_to_int(severity) >= _sev_to_int(min_sev):
-                items.append(item)
-                if len(items) >= limit:
-                    break
-        if len(items) >= limit:
-            break
-
-    _store("urlhaus", items)
-    return items
 
 
 # ── Abuse.ch MalwareBazaar ────────────────────────────────────────────────────
 
 async def fetch_bazaar(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
-    """Fetch from MalwareBazaar — recent malware payload hashes (free, no auth)."""
-    cached = _cached("bazaar")
+    """Fetch from MalwareBazaar — recent malware payload hashes."""
+    limit = int(RUNTIME_CONFIG.get("osint_limit", 50))
+    cached = _cached(f"bazaar_{limit}")
     if cached is not None:
         return cached
 
     try:
-        resp = await client.get(BAZAAR_API, timeout=20.0)
+        headers = {'User-Agent': 'autoMITRE Threat Intel Aggregator/1.2'}
+        # CSV is public and doesn't require 401 API keys
+        resp = await client.get(BAZAAR_CSV, headers=headers, timeout=15.0)
         resp.raise_for_status()
-        # Parse CSV. Skip comment lines starting with #
-        lines = [line for line in resp.iter_lines() if not line.startswith('#')]
-        reader = csv.reader(io.StringIO("\n".join(lines)))
-        # Format: first_seen_utc, sha256_hash, md5_hash, sha1_hash, reporter, file_name, file_type_guess, mime_type, signature, clamav, vtpercent, imphash, ssdeep, tlsh
+        
+        # Parse CSV lines, skipping the header/comments
+        lines = resp.text.splitlines()
         entries = []
-        for row in reader:
-            if len(row) >= 9:
+        for line in lines:
+            if not line or line.startswith('#'): continue
+            # Format: "first_seen_utc","sha256_hash","md5_hash","sha1_hash",...
+            parts = [p.strip(' "') for p in line.split(',')]
+            if len(parts) >= 9:
                 entries.append({
-                    "first_seen": row[0].strip(' "'),
-                    "sha256_hash": row[1].strip(' "'),
-                    "md5_hash": row[2].strip(' "'),
-                    "sha1_hash": row[3].strip(' "'),
-                    "reporter": row[4].strip(' "'),
-                    "file_name": row[5].strip(' "'),
-                    "file_type": row[6].strip(' "'),
-                    "signature": row[8].strip(' "'),
+                    "first_seen": parts[0],
+                    "sha256_hash": parts[1],
+                    "md5_hash": parts[2],
+                    "sha1_hash": parts[3],
+                    "reporter": parts[4],
+                    "file_name": parts[5],
+                    "file_type": parts[6],
+                    "signature": parts[8],
                 })
     except Exception as exc:
         logger.warning("MalwareBazaar fetch failed: %s", exc)
@@ -368,8 +391,9 @@ async def fetch_bazaar(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
         if signature == "n/a":
             signature = ""
 
-        # Consider all malware payloads from Bazaar as High severity
-        sev = "High"
+        # Set severity based on signature presence
+        # If it has a known malware signature, it's High. Otherwise Medium.
+        sev = "High" if signature and signature != "n/a" else "Medium"
 
         # Determine a label
         label = signature or file_type
@@ -408,33 +432,40 @@ async def fetch_bazaar(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
 async def fetch_otx(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
     key = RUNTIME_CONFIG.get("otx_api_key") or OTX_API_KEY
     if not key:
+        logger.info("OTX: No API key configured, skipping.")
         return []
 
-    cached = _cached(f"otx_{key[:8]}")
+    # Temporary cache bust for debugging
+    cache_key = f"otx_{key[:8]}_ref"
+    cached = _cached(cache_key)
     if cached is not None:
+        logger.info(f"OTX: Returning cached result for {cache_key}")
         return cached
     limit = int(RUNTIME_CONFIG.get("osint_limit", 50))
     min_sev = RUNTIME_CONFIG.get("osint_min_severity", "Low")
 
-    items: List[ThreatFeedItem] = []
     url = f"{OTX_BASE}/pulses/subscribed"
     params = {"limit": 50}
+    items: List[ThreatFeedItem] = []
 
     while url and len(items) < limit:
         try:
+            logger.info(f"OTX: Fetching from {url} (Key: {key[:4]}...)")
             resp = await client.get(
                 url,
-                headers={"X-OTX-API-KEY": key},
+                headers={"X-OTX-API-KEY": key, "User-Agent": "autoMITRE/1.2"},
                 params=params,
                 timeout=15.0,
             )
+            logger.info(f"OTX: Status {resp.status_code}")
             resp.raise_for_status()
             data = resp.json()
             pulses = data.get("results", [])
+            logger.info(f"OTX: Pulses found: {len(pulses)}")
             url = data.get("next")
             params = None  # the 'next' URL already contains pagination params
         except Exception as exc:
-            logger.warning("OTX fetch failed: %s", exc)
+            logger.error("OTX fetch failed: %s", exc)
             break
 
         if not pulses:

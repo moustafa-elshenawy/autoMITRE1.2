@@ -3,7 +3,7 @@ autoMITRE — Main FastAPI Application
 Autonomous AI-Driven Cyber Threat Intelligence Platform
 """
 from dotenv import load_dotenv
-load_dotenv()  # Load .env before any other imports read os.environ
+load_dotenv(override=True)  # Load .env before any other imports read os.environ
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

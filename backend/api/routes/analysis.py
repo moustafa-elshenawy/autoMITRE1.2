@@ -43,7 +43,7 @@ def map_record_to_result(r) -> ThreatResult:
             "business_impact": r.business_impact or ""
         },
         entities=[{"type": e.type, "value": e.value, "context": e.context} for e in r.entities],
-        attack_techniques=[{"id": t.technique_id, "name": t.name, "tactic": t.tactic, "tactic_id": t.tactic_id, "description": t.description, "confidence": t.confidence} for t in r.techniques],
+        attack_techniques=[{"id": t.technique_id, "name": t.name, "tactic": t.tactic, "tactic_id": t.tactic_id, "description": t.description, "confidence": t.confidence, "verified": getattr(t, 'verified', False), "evidence": getattr(t, 'evidence', [])} for t in r.techniques],
         defend_countermeasures=r.defend_json or [],
         nist_controls=r.nist_json or [],
         owasp_items=r.owasp_json or [],

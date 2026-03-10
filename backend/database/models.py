@@ -87,6 +87,8 @@ class ThreatTechnique(Base):
     tactic_id = Column(String, nullable=False)
     description = Column(Text, nullable=False)
     confidence = Column(Float, nullable=False)
+    verified = Column(Boolean, default=False)
+    evidence = Column(JSON, default=list)
 
     threat = relationship("ThreatRecord", back_populates="techniques")
 

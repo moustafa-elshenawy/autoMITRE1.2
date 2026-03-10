@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Upload, Search, Hash, FileText, ChevronRight, AlertCircle, CheckCircle, ExternalLink } from 'lucide-react'
+import { Upload, Search, Hash, FileText, ChevronRight, AlertCircle, CheckCircle, ExternalLink, Info, AlertTriangle } from 'lucide-react'
 import axios from 'axios'
 
 const API = 'http://localhost:8000'
@@ -136,6 +136,9 @@ export function VirusTotalPanel({ vt }) {
 
 export function ThreatResultPanel({ result }) {
     const [activeTab, setActiveTab] = useState('attack')
+    const [descExpanded, setDescExpanded] = useState(false)
+    const [entitiesExpanded, setEntitiesExpanded] = useState(false)
+
     if (!result) return null
     const { risk_score, attack_techniques, defend_countermeasures, nist_controls, owasp_items, mitigations, entities, predicted_steps } = result
 
@@ -162,7 +165,17 @@ export function ThreatResultPanel({ result }) {
                         <CheckCircle size={18} color="#10b981" />
                         <h3 style={{ fontSize: 16, fontWeight: 700 }}>{result.title}</h3>
                     </div>
-                    <p style={{ fontSize: 12, color: '#94a3b8', maxWidth: 600 }}>{result.description?.slice(0, 200)}</p>
+                    <p style={{ fontSize: 12, color: '#94a3b8', maxWidth: 660, lineHeight: 1.5 }}>
+                        {descExpanded ? result.description : `${result.description?.slice(0, 180)}${result.description?.length > 180 ? '...' : ''}`}
+                        {result.description?.length > 180 && (
+                            <button
+                                onClick={() => setDescExpanded(!descExpanded)}
+                                style={{ background: 'transparent', border: 'none', color: 'var(--accent-blue)', fontSize: 11, cursor: 'pointer', padding: '0 4px', fontWeight: 600 }}
+                            >
+                                {descExpanded ? 'Show Less' : 'Read More'}
+                            </button>
+                        )}
+                    </p>
                 </div>
                 <SeverityBadge severity={risk_score?.severity} />
             </div>
@@ -170,9 +183,12 @@ export function ThreatResultPanel({ result }) {
             <RiskMeter score={risk_score?.score || 0} />
 
             {risk_score?.business_impact && (
-                <div className="alert alert-warning" style={{ marginBottom: 16 }}>
-                    <AlertCircle size={16} style={{ flexShrink: 0 }} />
-                    <span style={{ fontSize: 12 }}>{risk_score.business_impact}</span>
+                <div className="alert alert-warning" style={{ marginBottom: 16, borderLeft: '3px solid var(--accent-yellow)', background: 'rgba(245, 158, 11, 0.05)' }}>
+                    <Info size={16} style={{ flexShrink: 0, color: 'var(--accent-yellow)' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--accent-yellow)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Business Impact Assessment</span>
+                        <span style={{ fontSize: 12, lineHeight: 1.4 }}>{risk_score.business_impact}</span>
+                    </div>
                 </div>
             )}
 
@@ -181,11 +197,19 @@ export function ThreatResultPanel({ result }) {
                 <div style={{ marginBottom: 16 }}>
                     <div style={{ fontSize: 11, color: '#475569', marginBottom: 6, fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>Extracted Indicators</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {entities.map((e, i) => (
+                        {(entitiesExpanded ? entities : entities.slice(0, 8)).map((e, i) => (
                             <span key={i} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, padding: '2px 8px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 4, color: '#94a3b8' }}>
                                 <span style={{ color: '#00d4ff', marginRight: 4 }}>[{e.type}]</span>{e.value}
                             </span>
                         ))}
+                        {entities.length > 8 && (
+                            <button
+                                onClick={() => setEntitiesExpanded(!entitiesExpanded)}
+                                style={{ background: 'rgba(0, 212, 255, 0.1)', border: '1px solid rgba(0, 212, 255, 0.2)', borderRadius: 4, color: 'var(--accent-blue)', fontSize: 10, cursor: 'pointer', padding: '2px 8px', fontWeight: 600 }}
+                            >
+                                {entitiesExpanded ? 'Show Less' : `+${entities.length - 8} More`}
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
@@ -417,13 +441,17 @@ export default function ThreatAnalysis() {
                             <label className="form-label">Threat Description / Log / Event</label>
                             <textarea className="form-input" placeholder="Paste threat intelligence summary, CTI report text, or system logs..." value={text} onChange={(e) => setText(e.target.value)} style={{ height: 160, fontSize: 13 }} />
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 12 }}>
-                            <button className="btn btn-primary" onClick={analyzeText} disabled={!text.trim() || loading} style={{ minWidth: 140 }}>
-                                {loading ? 'AI Analyzing...' : <><Search size={16} style={{ marginRight: 6 }} /> Analyze Threat</>}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 16, gap: 12 }}>
+                            <button className="btn btn-secondary" onClick={() => setText(exampleText)} disabled={loading} style={{ height: 38 }}>
+                                Load Example
                             </button>
-                        </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 12 }}>
-                            <button className="btn btn-secondary" onClick={() => setText(exampleText)}>Load Example</button>
+                            <button className="btn btn-primary" onClick={analyzeText} disabled={!text.trim() || loading} style={{ minWidth: 160, height: 38 }}>
+                                {loading ? (
+                                    <><div className="spinner-small" style={{ marginRight: 8 }} /> AI Analyzing...</>
+                                ) : (
+                                    <><Search size={16} style={{ marginRight: 8 }} /> Analyze Threat</>
+                                )}
+                            </button>
                         </div>
                     </div>
                 )}

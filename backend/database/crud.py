@@ -53,7 +53,9 @@ async def create_threat_record(db: AsyncSession, threat: ThreatResult, user_id: 
             tactic=tech.tactic,
             tactic_id=tech.tactic_id,
             description=tech.description,
-            confidence=tech.confidence
+            confidence=tech.confidence,
+            verified=tech.verified,
+            evidence=tech.evidence
         )
         db.add(db_tech)
         
