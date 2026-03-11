@@ -142,10 +142,20 @@ async def export_download_get(format: str, token: str = Query(...), db: AsyncSes
                     for t in record.techniques
                 ],
                 "mitigations": [
-                    {"title": m.title, "description": m.description}
+                    {
+                        "title": m.title, 
+                        "description": m.description,
+                        "priority": getattr(m, 'priority', 'Medium'),
+                        "iac_snippet": getattr(m, 'iac_snippet', ''),
+                        "iac_type": getattr(m, 'iac_type', '')
+                    }
                     for m in record.mitigations
-                ]
+                ],
+                "defend_countermeasures": record.defend_json if getattr(record, 'defend_json', None) else [],
+                "nist_controls": record.nist_json if getattr(record, 'nist_json', None) else [],
+                "owasp_items": record.owasp_json if getattr(record, 'owasp_json', None) else []
             })
+
 
         # 4. Generate the right format
         if format == "stix":
@@ -213,8 +223,17 @@ async def _get_real_threats(threat_ids: list, db: AsyncSession) -> list:
                     for t in record.techniques
                 ],
                 "mitigations": [
-                    {"title": m.title, "description": m.description}
+                    {
+                        "title": m.title, 
+                        "description": m.description,
+                        "priority": getattr(m, 'priority', 'Medium'),
+                        "iac_snippet": getattr(m, 'iac_snippet', ''),
+                        "iac_type": getattr(m, 'iac_type', '')
+                    }
                     for m in record.mitigations
-                ]
+                ],
+                "defend_countermeasures": record.defend_json if getattr(record, 'defend_json', None) else [],
+                "nist_controls": record.nist_json if getattr(record, 'nist_json', None) else [],
+                "owasp_items": record.owasp_json if getattr(record, 'owasp_json', None) else []
             })
     return threats
