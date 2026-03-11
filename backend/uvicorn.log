@@ -1,0 +1,89 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:56,  4.83it/s]Loading weights:  93%|█████████▎| 254/272 [00:00<00:00, 1035.87it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 810.41it/s] 
+INFO:     Started server process [27390]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 7881.15it/s]
+[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+INFO:     127.0.0.1:51170 - "HEAD /api/export/download/executive/autoMITRE_executive_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51182 - "GET /api/export/download/executive/autoMITRE_executive_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "POST /api/auth/token HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51196 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51196 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51198 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51201 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51203 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51204 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51196 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:51196 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51201 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51201 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51201 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51196 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51194 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51216 - "GET /api/export/download/executive/autoMITRE_executive_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:51198 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51218 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51245 - "GET /api/export/download/managerial/autoMITRE_managerial_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51251 - "GET /api/export/download/technical/autoMITRE_technical_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51262 - "GET /api/export/download/stix/autoMITRE_stix_export.json?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51269 - "GET /api/export/download/json/autoMITRE_json_export.json?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51278 - "GET /api/export/download/csv/autoMITRE_csv_export.csv?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51289 - "GET /api/export/download/splunk/autoMITRE_splunk_export.json?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczODM5NzM2fQ.QV89NdMGTfv_IS7KTO3D2Jp_vQRF5x28eua9FjVOe1E HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51349 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51349 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51349 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51353 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51356 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:51348 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51357 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51357 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51351 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51357 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51348 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51357 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51364 - "GET /api/export/download/executive/autoMITRE_executive_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51368 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51368 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51368 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 6216.68it/s]
+Industrial ML evaluation failed: Feature shape mismatch, expected: 5, got 15
+INFO:     127.0.0.1:51370 - "POST /api/analyze/text HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51370 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51368 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51366 - "GET /api/export/download/executive/autoMITRE_executive_export.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:51349 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51392 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51392 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51392 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51392 - "GET /api/users/history HTTP/1.1" 200 OK
+OTX fetch failed: 
