@@ -89,38 +89,8 @@ export default function Reports() {
     const threatIds = threats.map(t => t.id || t.threat_id).filter(Boolean)
     const hasThreats = threatIds.length > 0
 
-    const handleExport = async (fmt) => {
-        if (!hasThreats) return
-
-        setExporting(p => ({ ...p, [fmt.id]: true }))
-        setExportError(p => ({ ...p, [fmt.id]: null }))
-
-        try {
-            const token = localStorage.getItem('token')
-            if (!token) throw new Error('Not authenticated')
-
-            // Direct browser navigation via hidden anchor 
-            // We omit the 'download' attribute so the browser opens it in a new tab natively
-            // This is the most reliable way to show the user the file on strict browsers
-            const url = `${API}/api/export/download/${fmt.id}?token=${token}`
-            const a = document.createElement('a')
-            a.style.display = 'none'
-            a.href = url
-            a.target = '_blank'
-            document.body.appendChild(a)
-            a.click()
-            
-            // Clean up
-            setTimeout(() => document.body.removeChild(a), 1000)
-
-            setExported(p => ({ ...p, [fmt.id]: true }))
-            setTimeout(() => setExported(p => ({ ...p, [fmt.id]: false })), 3000)
-        } catch (err) {
-            setExportError(p => ({ ...p, [fmt.id]: err.message || 'Export failed' }))
-        }
-        setExporting(p => ({ ...p, [fmt.id]: false }))
-    }
-
+    // Get token for native links
+    const token = localStorage.getItem('token') || ''
 
     return (
         <div>
@@ -150,55 +120,66 @@ export default function Reports() {
 
             {/* Export Cards */}
             <div className="grid-2" style={{ marginBottom: 28 }}>
-                {EXPORT_FORMATS.map(fmt => (
-                    <div key={fmt.id} className="card" style={{ borderTop: `2px solid ${fmt.color}` }}>
-                        {/* Card header */}
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
-                            <div style={{
-                                width: 44, height: 44, borderRadius: 10,
-                                background: `${fmt.color}18`,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                flexShrink: 0, color: fmt.color,
-                            }}>
-                                {fmt.icon}
+                {EXPORT_FORMATS.map(fmt => {
+                    // Generate the direct download URL with token
+                    const downloadUrl = `${API}/api/export/download/${fmt.id}?token=${token}`;
+
+                    return (
+                        <div key={fmt.id} className="card" style={{ borderTop: `2px solid ${fmt.color}` }}>
+                            {/* Card header */}
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
+                                <div style={{
+                                    width: 44, height: 44, borderRadius: 10,
+                                    background: `${fmt.color}18`,
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    flexShrink: 0, color: fmt.color,
+                                }}>
+                                    {fmt.icon}
+                                </div>
+                                <div>
+                                    <h3 style={{ fontSize: 14, fontWeight: 700, color: '#f0f4ff', marginBottom: 4 }}>
+                                        {fmt.name}
+                                    </h3>
+                                    {/* What's included */}
+                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+                                        {fmt.contains.map((item, i) => (
+                                            <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#64748b', marginBottom: 2 }}>
+                                                <span style={{ color: fmt.color, fontSize: 8 }}>⬤</span> {item}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
-                            <div>
-                                <h3 style={{ fontSize: 14, fontWeight: 700, color: '#f0f4ff', marginBottom: 4 }}>
-                                    {fmt.name}
-                                </h3>
-                                {/* What's included */}
-                                <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-                                    {fmt.contains.map((item, i) => (
-                                        <li key={i} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#64748b', marginBottom: 2 }}>
-                                            <span style={{ color: fmt.color, fontSize: 8 }}>⬤</span> {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+
+                            {/* Native HTML link - impenetrable to popup blockers */}
+                            {(!hasThreats || loadingThreats) ? (
+                                <button
+                                    className="btn btn-secondary"
+                                    style={{ width: '100%', justifyContent: 'center', border: `1px solid ${fmt.color}33`, opacity: 0.5 }}
+                                    disabled={true}
+                                >
+                                    <Download size={14} /> Export {fmt.name}
+                                </button>
+                            ) : (
+                                <a
+                                    href={downloadUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="btn btn-secondary"
+                                    style={{ 
+                                        width: '100%', 
+                                        justifyContent: 'center', 
+                                        border: `1px solid ${fmt.color}33`,
+                                        textDecoration: 'none',
+                                        display: 'inline-flex'
+                                    }}
+                                >
+                                    <Download size={14} /> Export {fmt.name}
+                                </a>
+                            )}
                         </div>
-
-                        {/* Error */}
-                        {exportError[fmt.id] && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: '#ef4444', marginBottom: 8, padding: '6px 10px', background: 'rgba(239,68,68,0.06)', borderRadius: 6 }}>
-                                <AlertCircle size={11} /> {exportError[fmt.id]}
-                            </div>
-                        )}
-
-                        <button
-                            className="btn btn-secondary"
-                            style={{ width: '100%', justifyContent: 'center', border: `1px solid ${fmt.color}33`, opacity: (!hasThreats || loadingThreats) ? 0.5 : 1 }}
-                            onClick={() => handleExport(fmt)}
-                            disabled={exporting[fmt.id] || !hasThreats || loadingThreats}
-                        >
-                            {exported[fmt.id]
-                                ? <><CheckCircle size={14} color="#10b981" /> Downloaded!</>
-                                : exporting[fmt.id]
-                                    ? <><Loader size={14} className="spinning" /> Exporting...</>
-                                    : <><Download size={14} /> Export {fmt.name}</>
-                            }
-                        </button>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
             {/* SIEM Integration Guide */}

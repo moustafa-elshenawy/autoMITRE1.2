@@ -69,3 +69,9 @@ INFO:     127.0.0.1:64091 - "GET /api/users/history HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64090 - "GET /api/users/history HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64095 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64093 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64163 - "GET /api/export/download/managerial?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64163 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64163 - "GET /api/export/download/csv?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64163 - "GET /api/export/download/managerial?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64187 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64187 - "GET /api/users/history HTTP/1.1" 200 OK
