@@ -691,16 +691,16 @@ def update_runtime_config(key: str, value: str):
         try:
             import pathlib
             from dotenv import set_key as dotenv_set_key
-            # Resolve .env relative to this file's parent directory (backend/)
             env_path = pathlib.Path(__file__).resolve().parent.parent / ".env"
             dotenv_set_key(str(env_path), env_var, str(value), quote_mode="never")
             logger.info("Persisted %s to .env", env_var)
         except Exception as exc:
             logger.warning("Could not persist %s to .env: %s", env_var, exc)
 
-    # Invalidate cache when config changes
-    if key.startswith("osint_"):
+    # Always clear ALL cache when any API key changes — stale entries block new keys
+    if "api_key" in key or "url" in key or key.startswith("osint_"):
         _cache.clear()
+        logger.info("Cache cleared after config update: %s", key)
     else:
         for c_key in list(_cache.keys()):
             if key.split("_")[0] in c_key:
