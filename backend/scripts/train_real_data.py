@@ -301,7 +301,7 @@ def train_text_severity(records):
 # PHASE 3 — CVE-Derived Numerical XGBoost (replaces synthetic)
 # ─────────────────────────────────────────────────────────────
 
-# Critical keywords that indicate high-severity threats
+# ── Patterns (15-feature schema, mirrored from ml_engine.py) ──
 _CRITICAL_PATTERNS = re.compile(
     r'(remote code execution|arbitrary code|buffer overflow|heap overflow'
     r'|stack overflow|use.after.free|privilege escalation|authentication bypass'
@@ -309,46 +309,102 @@ _CRITICAL_PATTERNS = re.compile(
     r'|zero.day|0.day|unauthenticated|pre.auth)',
     re.IGNORECASE
 )
-
 _NETWORK_PATTERNS = re.compile(
     r'(network|http|https|tcp|udp|dns|smtp|ssh|ftp|ssl|tls'
     r'|remote|server|client|request|packet|socket|port|web)',
     re.IGNORECASE
 )
-
 _ENTITY_PATTERNS = re.compile(
     r'(CVE-\d{4}-\d+|CWE-\d+|[A-Z][a-z]+(?:SQL|XSS|CSRF|RCE|LFI|RFI))',
     re.IGNORECASE
 )
+_PROCESS_PATTERNS_TR = re.compile(
+    r'(powershell|cmd\.exe|wscript|cscript|mshta|regsvr32|rundll32'
+    r'|wmic|lsass|svchost|ntdll|explorer|services\.exe|taskkill|net\.exe)',
+    re.IGNORECASE
+)
+_REGISTRY_PATTERNS_TR = re.compile(
+    r'(HKLM|HKCU|HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER'
+    r'|\\Software\\Microsoft|\\Run\\|\\RunOnce\\|registry|reg add|reg query)',
+    re.IGNORECASE
+)
+_FILE_PATH_PATTERNS_TR = re.compile(
+    r'(C:\\|C:/|/etc/|/tmp/|/var/|AppData|System32|Temp\\|%APPDATA%'
+    r'|\.exe|\.dll|\.bat|\.ps1|\.vbs|\.js|\.sh)',
+    re.IGNORECASE
+)
+_PERSISTENCE_PATTERNS_TR = re.compile(
+    r'(scheduled task|schtasks|cron|autorun|startup|boot|persistence'
+    r'|run key|at\.exe|taskschd|loginitem|launchd|init\.d)',
+    re.IGNORECASE
+)
+_LATERAL_PATTERNS_TR = re.compile(
+    r'(lateral movement|psexec|wmiexec|pass.the.hash|pass.the.ticket'
+    r'|rdp|remote desktop|mimikatz|impacket|bloodhound|cobalt strike'
+    r'|empire|crackmapexec|spread|pivot)',
+    re.IGNORECASE
+)
+_EXFIL_PATTERNS_TR = re.compile(
+    r'(exfiltrat|upload|transfer|steal|dump|harvest|collect'
+    r'|compress|archive|zip|encrypted.*send|ftp.*upload|data.*theft)',
+    re.IGNORECASE
+)
+_MITRE_TECHNIQUE_RE_TR = re.compile(r'\bT\d{4}(?:\.\d{3})?\b')
+_MALWARE_PATTERNS_TR = re.compile(
+    r'(cobalt strike|metasploit|meterpreter|emotet|trickbot|ryuk|maze'
+    r'|revil|lockbit|blackcat|lazarus|apt28|apt29|fin7|carbanak'
+    r'|darkside|conti|lapsus|donut|sliver|havoc|brute ratel)',
+    re.IGNORECASE
+)
+_EXPLOIT_PATTERNS_TR = re.compile(
+    r'(exploit|0.day|zero.day|CVE-|poc|proof.of.concept|shellcode'
+    r'|payload|weaponize|weaponized|dropper|stager|staged)',
+    re.IGNORECASE
+)
+
+FEATURE_NAMES_15 = [
+    "text_length", "entity_count", "keyword_severity", "has_critical", "has_network",
+    "has_process", "has_registry", "has_file_path", "has_persistence", "has_lateral_movement",
+    "has_exfiltration", "technique_id_count", "malware_name_count", "has_exploit", "sentence_count"
+]
 
 def _extract_numerical_features_from_cve(text):
-    """Extract 5 numerical features from a CVE description.
-    
-    These features match the schema used by ml_engine._extract_features():
-      0: text_length      — proxy for threat complexity
-      1: entity_count     — number of CVE/CWE/technical references
-      2: keyword_severity — heuristic severity score (0-10) from critical keywords
-      3: has_critical      — binary: contains RCE, auth bypass, etc.
-      4: has_network       — binary: contains network/web indicators
+    """Extract 15 features from a CVE description (mirrors ml_engine._extract_features).
+
+    Schema:
+      0:  text_length, 1: entity_count, 2: keyword_severity, 3: has_critical, 4: has_network,
+      5:  has_process, 6: has_registry, 7: has_file_path, 8: has_persistence,
+      9:  has_lateral_movement, 10: has_exfiltration, 11: technique_id_count,
+      12: malware_name_count, 13: has_exploit, 14: sentence_count
     """
     text_length = len(text)
     entity_count = len(_ENTITY_PATTERNS.findall(text))
     has_critical = 1.0 if _CRITICAL_PATTERNS.search(text) else 0.0
-    has_network = 1.0 if _NETWORK_PATTERNS.search(text) else 0.0
+    has_network  = 1.0 if _NETWORK_PATTERNS.search(text) else 0.0
 
-    # Heuristic severity: count critical keyword matches and scale 0-10
     critical_matches = len(_CRITICAL_PATTERNS.findall(text))
     keyword_severity = min(10.0, critical_matches * 2.5 + (has_network * 1.5))
 
-    return [text_length, entity_count, keyword_severity, has_critical, has_network]
+    has_process    = 1.0 if _PROCESS_PATTERNS_TR.search(text) else 0.0
+    has_registry   = 1.0 if _REGISTRY_PATTERNS_TR.search(text) else 0.0
+    has_file_path  = 1.0 if _FILE_PATH_PATTERNS_TR.search(text) else 0.0
+    has_persistence = 1.0 if _PERSISTENCE_PATTERNS_TR.search(text) else 0.0
+    has_lateral    = 1.0 if _LATERAL_PATTERNS_TR.search(text) else 0.0
+    has_exfil      = 1.0 if _EXFIL_PATTERNS_TR.search(text) else 0.0
+    technique_count = min(float(len(_MITRE_TECHNIQUE_RE_TR.findall(text))), 20.0)
+    malware_count   = min(float(len(_MALWARE_PATTERNS_TR.findall(text))), 10.0)
+    has_exploit    = 1.0 if _EXPLOIT_PATTERNS_TR.search(text) else 0.0
+    sentence_count  = min(float(text.count('.') + text.count('\n')), 50.0)
+
+    return [
+        text_length, entity_count, keyword_severity, has_critical, has_network,
+        has_process, has_registry, has_file_path, has_persistence, has_lateral,
+        has_exfil, technique_count, malware_count, has_exploit, sentence_count
+    ]
 
 
 def train_numerical_xgboost(records):
-    """Train the 5-feature numerical XGBoost on CVE-derived features.
-    
-    This replaces the synthetic baseline_training() in ml_engine.py with
-    a model trained on real CVE descriptions mapped to their CVSS scores.
-    """
+    """Train the 15-feature numerical XGBoost on CVE-derived features."""
     from sklearn.model_selection import train_test_split
     from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
     import xgboost as xgb
@@ -393,34 +449,23 @@ def train_numerical_xgboost(records):
 
     # Feature importance
     importances = model.feature_importances_
-    feature_names = ["text_length", "entity_count", "keyword_severity", "has_critical", "has_network"]
-    for name, imp in sorted(zip(feature_names, importances), key=lambda x: -x[1]):
+    for name, imp in sorted(zip(FEATURE_NAMES_15, importances), key=lambda x: -x[1]):
         log.info(f"  Feature '{name}': importance = {imp:.4f}")
 
-    # ==============================================================
-    # FIX: Train Text Isolation Forest on the same CVE features
-    # ==============================================================
+    # Train auxiliary Isolation Forest on the same 15 features
     from sklearn.ensemble import IsolationForest
     import pickle
     log.info(f"Training Text Isolation Forest on {len(X)} CVE records…")
-    
-    # We set contamination to ~15% to flag the most complex/critical CVEs as anomalous
     text_iforest = IsolationForest(
-        n_estimators=300,
-        contamination=0.15,
-        max_samples="auto",
-        random_state=42,
-        n_jobs=-1
+        n_estimators=300, contamination=0.15, max_samples="auto",
+        random_state=42, n_jobs=-1
     )
     text_iforest.fit(X)
-    
-    # Save the new text isolation forest
     text_iforest_path = os.path.join(MODEL_DIR, "text_isolation_forest.pkl")
     with open(text_iforest_path, "wb") as f:
         pickle.dump(text_iforest, f)
     log.info(f"Saved Text Isolation Forest → {text_iforest_path}")
 
-    # Save XGBoost
     xgb_path = os.path.join(MODEL_DIR, "xgboost_severity.json")
     model.save_model(xgb_path)
     log.info(f"Saved Numerical XGBoost → {xgb_path}")
@@ -431,8 +476,9 @@ def train_numerical_xgboost(records):
         "mae": round(mae, 4),
         "rmse": round(rmse, 4),
         "r2": round(r2, 4),
-        "feature_importance": {n: round(float(i), 4) for n, i in zip(feature_names, importances)}
+        "feature_importance": {n: round(float(i), 4) for n, i in zip(FEATURE_NAMES_15, importances)}
     }
+
 
     return mae, r2
 

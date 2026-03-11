@@ -30,15 +30,25 @@
   "numerical_xgboost": {
     "train_size": 42500,
     "val_size": 7500,
-    "mae": 1.3564,
-    "rmse": 1.6629,
-    "r2": 0.1795,
+    "mae": 1.3274,
+    "rmse": 1.6362,
+    "r2": 0.2057,
     "feature_importance": {
-      "text_length": 0.0314,
-      "entity_count": 0.06,
-      "keyword_severity": 0.216,
-      "has_critical": 0.675,
-      "has_network": 0.0176
+      "text_length": 0.0217,
+      "entity_count": 0.0584,
+      "keyword_severity": 0.2002,
+      "has_critical": 0.5295,
+      "has_network": 0.0113,
+      "has_process": 0.016,
+      "has_registry": 0.0084,
+      "has_file_path": 0.0113,
+      "has_persistence": 0.008,
+      "has_lateral_movement": 0.0444,
+      "has_exfiltration": 0.0238,
+      "technique_id_count": 0.005,
+      "malware_name_count": 0.0047,
+      "has_exploit": 0.0445,
+      "sentence_count": 0.013
     }
   },
   "attack_keywords": {

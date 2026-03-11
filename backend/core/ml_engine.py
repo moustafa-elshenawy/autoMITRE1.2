@@ -46,6 +46,50 @@ _ENTITY_RE = re.compile(
     r'|https?://[^\s]+|[a-fA-F0-9]{32,64})',
     re.IGNORECASE
 )
+# NEW: Richer CTI-specific patterns
+_PROCESS_PATTERNS = re.compile(
+    r'(powershell|cmd\.exe|wscript|cscript|mshta|regsvr32|rundll32'
+    r'|wmic|lsass|svchost|ntdll|explorer|services\.exe|taskkill|net\.exe)',
+    re.IGNORECASE
+)
+_REGISTRY_PATTERNS = re.compile(
+    r'(HKLM|HKCU|HKEY_LOCAL_MACHINE|HKEY_CURRENT_USER'
+    r'|\\Software\\Microsoft|\\Run\\|\\RunOnce\\|registry|reg add|reg query)',
+    re.IGNORECASE
+)
+_FILE_PATH_PATTERNS = re.compile(
+    r'(C:\\|C:/|/etc/|/tmp/|/var/|AppData|System32|Temp\\|%APPDATA%'
+    r'|\.exe|\.dll|\.bat|\.ps1|\.vbs|\.js|\.sh)',
+    re.IGNORECASE
+)
+_PERSISTENCE_PATTERNS = re.compile(
+    r'(scheduled task|schtasks|cron|autorun|startup|boot|persistence'
+    r'|run key|at\.exe|taskschd|loginitem|launchd|init\.d)',
+    re.IGNORECASE
+)
+_LATERAL_MOVEMENT_PATTERNS = re.compile(
+    r'(lateral movement|psexec|wmiexec|pass.the.hash|pass.the.ticket'
+    r'|rdp|remote desktop|mimikatz|impacket|bloodhound|cobalt strike'
+    r'|empire|crackmapexec|spread|pivot)',
+    re.IGNORECASE
+)
+_EXFILTRATION_PATTERNS = re.compile(
+    r'(exfiltrat|upload|transfer|steal|dump|harvest|collect'
+    r'|compress|archive|zip|encrypted.*send|ftp.*upload|data.*theft)',
+    re.IGNORECASE
+)
+_MITRE_TECHNIQUE_RE = re.compile(r'\bT\d{4}(?:\.\d{3})?\b')
+_MALWARE_PATTERNS = re.compile(
+    r'(cobalt strike|metasploit|meterpreter|emotet|trickbot|ryuk|maze'
+    r'|revil|lockbit|blackcat|lazarus|apt28|apt29|fin7|carbanak'
+    r'|darkside|conti|lapsus|donut|sliver|havoc|brute ratel)',
+    re.IGNORECASE
+)
+_EXPLOIT_PATTERNS = re.compile(
+    r'(exploit|0.day|zero.day|CVE-|poc|proof.of.concept|shellcode'
+    r'|payload|weaponize|weaponized|dropper|stager|staged)',
+    re.IGNORECASE
+)
 
 
 class TextSeverityClassifier:
@@ -128,16 +172,26 @@ class EnsembleMLEngine:
     def _extract_features(self, text: str, entities: list, heuristic_score: float) -> np.ndarray:
         """
         Converts unstructured threat data into a numerical feature vector.
-        Features (aligned with CVE-derived training pipeline):
-          0: text_length      — proxy for threat complexity
-          1: entity_count     — regex count of CVEs, IPs, URLs, hashes + pre-extracted entities
-          2: keyword_severity — heuristic severity from critical keyword density (0-10)
-          3: has_critical      — binary: contains RCE, APT, ransomware, etc.
-          4: has_network       — binary: contains network/C2 indicators
+        Features (15-dimensional, aligned with CVE-derived training pipeline):
+          0:  text_length          — proxy for threat complexity
+          1:  entity_count         — regex count of CVEs, IPs, URLs, hashes
+          2:  keyword_severity     — heuristic severity from critical keyword density (0-10)
+          3:  has_critical         — binary: contains RCE, APT, ransomware, etc.
+          4:  has_network          — binary: contains network/C2 indicators
+          5:  has_process          — binary: contains process names (powershell, lsass, etc.)
+          6:  has_registry         — binary: contains registry paths/keys
+          7:  has_file_path        — binary: contains file system paths
+          8:  has_persistence      — binary: scheduled tasks, autorun, cron
+          9:  has_lateral_movement — binary: psexec, mimikatz, pass-the-hash
+          10: has_exfiltration     — binary: upload, data theft, exfil
+          11: technique_id_count   — count of T1xxx MITRE IDs in text
+          12: malware_name_count   — count of known malware family names
+          13: has_exploit          — binary: exploit, 0-day, shellcode
+          14: sentence_count       — rough complexity of the description
         """
         text_len = len(text)
 
-        # Regex-based entity extraction from raw text (complements pre-extracted entities)
+        # Regex-based entity extraction from raw text
         regex_entities = len(_ENTITY_RE.findall(text))
         num_entities = max(len(entities), regex_entities)
 
@@ -149,7 +203,23 @@ class EnsembleMLEngine:
         # Network/C2 indicator presence
         has_network = 1.0 if _NETWORK_PATTERNS.search(text) else 0.0
 
-        return np.array([[text_len, num_entities, keyword_severity, has_critical, has_network]])
+        # NEW: Richer CTI indicators
+        has_process    = 1.0 if _PROCESS_PATTERNS.search(text) else 0.0
+        has_registry   = 1.0 if _REGISTRY_PATTERNS.search(text) else 0.0
+        has_file_path  = 1.0 if _FILE_PATH_PATTERNS.search(text) else 0.0
+        has_persistence = 1.0 if _PERSISTENCE_PATTERNS.search(text) else 0.0
+        has_lateral    = 1.0 if _LATERAL_MOVEMENT_PATTERNS.search(text) else 0.0
+        has_exfil      = 1.0 if _EXFILTRATION_PATTERNS.search(text) else 0.0
+        technique_count = min(float(len(_MITRE_TECHNIQUE_RE.findall(text))), 20.0)
+        malware_count   = min(float(len(_MALWARE_PATTERNS.findall(text))), 10.0)
+        has_exploit    = 1.0 if _EXPLOIT_PATTERNS.search(text) else 0.0
+        sentence_count  = min(float(text.count('.') + text.count('\n')), 50.0)
+
+        return np.array([[
+            text_len, num_entities, keyword_severity, has_critical, has_network,
+            has_process, has_registry, has_file_path, has_persistence, has_lateral,
+            has_exfil, technique_count, malware_count, has_exploit, sentence_count
+        ]])
 
 
     def evaluate_threat(self, processed_input: Dict[str, Any], heuristic_score: float, deep_analysis: bool = False) -> Tuple[bool, Optional[float], Dict[str, Any]]:
