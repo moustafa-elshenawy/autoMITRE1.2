@@ -99,14 +99,14 @@ export default function Reports() {
             const token = localStorage.getItem('token')
             if (!token) throw new Error('Not authenticated')
 
-            // Direct browser navigation via hidden anchor (forces download without leaving page)
+            // Direct browser navigation via hidden anchor 
+            // We omit the 'download' attribute so the browser opens it in a new tab natively
+            // This is the most reliable way to show the user the file on strict browsers
             const url = `${API}/api/export/download/${fmt.id}?token=${token}`
             const a = document.createElement('a')
             a.style.display = 'none'
             a.href = url
             a.target = '_blank'
-            // The download attribute ensures it's treated as a file save
-            a.download = `autoMITRE_${fmt.id}_export`
             document.body.appendChild(a)
             a.click()
             
