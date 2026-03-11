@@ -19,6 +19,11 @@ IFOREST_PATH    = os.path.join(MODEL_DIR, 'text_isolation_forest.pkl')
 XGB_PATH        = os.path.join(MODEL_DIR, 'xgboost_severity.json')
 TFIDF_PATH      = os.path.join(MODEL_DIR, 'tfidf_vectorizer.pkl')
 TEXT_XGB_PATH   = os.path.join(MODEL_DIR, 'text_severity_xgb.json')
+# Supervised Anomaly Models
+ANOMALY_XGB_PATH = os.path.join(MODEL_DIR, 'nsl_kdd_classifier.json')
+CICIDS_XGB_PATH  = os.path.join(MODEL_DIR, 'cicids_classifier.json')
+CICIDS_SCALER    = os.path.join(MODEL_DIR, 'cicids_scaler.pkl')
+CICIDS_FEATURES  = os.path.join(MODEL_DIR, 'cicids_features.json')
 
 # Regex patterns for entity extraction (matches training pipeline)
 _CRITICAL_PATTERNS = re.compile(
@@ -94,27 +99,30 @@ class EnsembleMLEngine:
         """Loads pre-trained models if they exist."""
         os.makedirs(MODEL_DIR, exist_ok=True)
         
-        # Load Isolation Forest
+        # Load Supervised Anomaly Classifier (NSL-KDD)
+        if os.path.exists(ANOMALY_XGB_PATH):
+            try:
+                self.anomaly_clf = xgb.XGBClassifier()
+                self.anomaly_clf.load_model(ANOMALY_XGB_PATH)
+                logger.info("Loaded supervised NSL-KDD Anomaly Classifier.")
+            except Exception as e:
+                logger.error(f"Failed to load Anomaly Classifier: {e}")
+        
+        # Load isolation forest as fallback for text anomaly
         if os.path.exists(IFOREST_PATH):
             try:
                 with open(IFOREST_PATH, 'rb') as f:
                     self.iforest = pickle.load(f)
-                logger.info("Loaded pre-trained Isolation Forest model.")
-            except Exception as e:
-                logger.error(f"Failed to load Isolation Forest: {e}")
-        else:
-            logger.warning("No pre-trained Isolation Forest model found. Need to baseline.")
+            except: pass
 
-        # Load XGBoost
+        # Load XGBoost Severity
         if os.path.exists(XGB_PATH):
             try:
                 self.xgb_model = xgb.XGBRegressor()
                 self.xgb_model.load_model(XGB_PATH)
-                logger.info("Loaded pre-trained XGBoost model.")
+                logger.info("Loaded pre-trained XGBoost Severity model.")
             except Exception as e:
                 logger.error(f"Failed to load XGBoost: {e}")
-        else:
-            logger.warning("No pre-trained XGBoost model found. Need to baseline.")
 
 
     def _extract_features(self, text: str, entities: list, heuristic_score: float) -> np.ndarray:
@@ -167,9 +175,15 @@ class EnsembleMLEngine:
         try:
             # 1. Extraction & Anomaly Detection
             features = self._extract_features(text, entities, heuristic_score)
-            if self.iforest:
-                anomaly_pred = self.iforest.predict(features)[0]
-                is_anomalous = (anomaly_pred == -1)
+            
+            # Supervised Anomaly Prediction
+            if hasattr(self, 'anomaly_clf') and self.anomaly_clf:
+                # Returns 1 for Attack, 0 for Normal
+                anomaly_prob = self.anomaly_clf.predict_proba(features)[0][1]
+                is_anomalous = (anomaly_prob > 0.5)
+            elif self.iforest:
+                # Unsupervised Fallback
+                is_anomalous = (self.iforest.predict(features)[0] == -1)
 
             # 2. Numerical Score (XGBoost) - 0-10
             num_score = 5.0

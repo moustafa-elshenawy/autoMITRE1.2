@@ -86,3 +86,11 @@ INFO:     127.0.0.1:61794 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61791 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61811 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
 INFO:     127.0.0.1:61815 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61865 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61865 - "GET /api/framework/coverage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61863 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61863 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61861 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61861 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61864 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61861 - "GET /api/intelligence/feed HTTP/1.1" 200 OK

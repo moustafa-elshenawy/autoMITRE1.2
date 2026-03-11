@@ -46,35 +46,23 @@
     "categories": 10,
     "technique_pairs": 997
   },
-  "isolation_forest_nslkdd": {
+  "nsl_kdd_classifier": {
     "total_samples": 125973,
-    "normal": 67343,
-    "attack": 58630,
-    "contamination": 0.45,
-    "attack_recall": 0.0903,
-    "attack_precision": 0.0934,
-    "attack_f1": 0.0919,
+    "attack_recall": 0.9951,
+    "attack_precision": 0.9472,
+    "attack_f1": 0.9706,
     "confusion_matrix": {
-      "tn": 15956,
-      "fp": 51387,
-      "fn": 53333,
-      "tp": 5297
+      "tn": 12819,
+      "fp": 650,
+      "fn": 57,
+      "tp": 11669
     }
   },
-  "isolation_forest_cicids": {
+  "cicids_classifier": {
     "total_samples": 100000,
-    "benign": 98703,
-    "attack": 1297,
-    "features": 78,
-    "contamination": 0.013,
-    "attack_recall": 0.0,
-    "attack_precision": 0.0,
-    "attack_f1": 0.0,
-    "confusion_matrix": {
-      "tn": 97406,
-      "fp": 1297,
-      "fn": 1297,
-      "tp": 0
-    }
+    "attack_recall": 0.9961,
+    "attack_precision": 1.0,
+    "attack_f1": 0.9981,
+    "features": 78
   }
 }

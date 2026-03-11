@@ -562,11 +562,12 @@ NSL_COLS = [
     "dst_host_rerror_rate","dst_host_srv_rerror_rate","label","difficulty"
 ]
 
-def train_nslkdd_isolation_forest(data_path):
-    from sklearn.ensemble import IsolationForest
+def train_nslkdd_classifier(data_path):
+    import xgboost as xgb
+    from sklearn.model_selection import train_test_split
     from sklearn.metrics import classification_report, confusion_matrix
 
-    log.info("Loading NSL-KDD dataset…")
+    log.info("Loading NSL-KDD dataset for supervised training…")
     rows = []
     with open(data_path) as f:
         for line in f:
@@ -601,203 +602,114 @@ def train_nslkdd_isolation_forest(data_path):
     y = np.array(y_labels, dtype=int)
     X = np.clip(X, 0, None)
 
-    n_normal = (y == 0).sum()
-    n_attack = (y == 1).sum()
-    log.info(f"NSL-KDD matrix: {len(y)} rows | Normal: {n_normal} | Attack: {n_attack}")
+    X_tr, X_val, y_tr, y_val = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-    contamination = min(n_attack / len(y), 0.45)
-    log.info(f"Isolation Forest contamination = {contamination:.3f}")
-
-    iforest = IsolationForest(
-        n_estimators=300,
-        contamination=contamination,
-        max_samples="auto",
+    log.info("Training Supervised NSL-KDD XGBoost Classifier…")
+    model = xgb.XGBClassifier(
+        objective="binary:logistic",
+        n_estimators=500,
+        max_depth=5,
+        learning_rate=0.1,
         random_state=42,
         n_jobs=-1,
+        verbosity=0
     )
-    iforest.fit(X)
+    model.fit(X_tr, y_tr)
 
-    preds_raw = iforest.predict(X)
-    preds     = np.where(preds_raw == -1, 1, 0)
+    preds = model.predict(X_val)
+    report = classification_report(y_val, preds, target_names=["Normal", "Attack"], output_dict=True)
+    log.info("\n" + classification_report(y_val, preds, target_names=["Normal", "Attack"]))
 
-    log.info("NSL-KDD Isolation Forest — Classification Report:")
-    report = classification_report(y, preds, target_names=["Normal", "Attack"], output_dict=True)
-    log.info("\n" + classification_report(y, preds, target_names=["Normal", "Attack"]))
-
-    cm = confusion_matrix(y, preds)
+    cm = confusion_matrix(y_val, preds)
     tn, fp, fn, tp = cm.ravel()
-    recall_attack = tp / (tp + fn) if (tp + fn) > 0 else 0
+    
+    model_path = os.path.join(MODEL_DIR, "nsl_kdd_classifier.json")
+    model.save_model(model_path)
+    log.info(f"Saved NSL-KDD Classifier → {model_path}")
 
-    iforest_path = os.path.join(MODEL_DIR, "nsl_kdd_isolation_forest.pkl")
-    with open(iforest_path, "wb") as f:
-        pickle.dump(iforest, f)
-    log.info(f"Saved Isolation Forest (NSL-KDD) → {iforest_path}")
-
-    # Also save the scaler info for feature normalization
-    scaler_info = {
-        "features": ["src_bytes_scaled", "failed_logins_compromised", "dst_bytes_score", "has_root", "logged_in"],
-        "trained_on": "NSL-KDD",
-        "samples": len(y),
-    }
-    scaler_path = os.path.join(MODEL_DIR, "iforest_scaler.pkl")
-    with open(scaler_path, "wb") as f:
-        pickle.dump(scaler_info, f)
-
-    EVAL_RESULTS["isolation_forest_nslkdd"] = {
+    EVAL_RESULTS["nsl_kdd_classifier"] = {
         "total_samples": len(y),
-        "normal": int(n_normal),
-        "attack": int(n_attack),
-        "contamination": round(contamination, 4),
-        "attack_recall": round(recall_attack, 4),
+        "attack_recall": round(report["Attack"]["recall"], 4),
         "attack_precision": round(report["Attack"]["precision"], 4),
         "attack_f1": round(report["Attack"]["f1-score"], 4),
         "confusion_matrix": {"tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp)}
     }
 
-    return recall_attack, cm
+    return report["Attack"]["f1-score"], cm
 
 
 # ─────────────────────────────────────────────────────────────
 # PHASE 6 — CICIDS 2017 Enhanced Anomaly Detection (Kaggle)
 # ─────────────────────────────────────────────────────────────
 
-def train_cicids_isolation_forest(cicids_dir):
-    """Train a second Isolation Forest on CICIDS 2017 network flow features.
-    
-    CICIDS has richer, more modern attack patterns than NSL-KDD.
-    This model provides a secondary anomaly signal.
-    """
+def train_cicids_classifier(cicids_dir):
     import pandas as pd
-    from sklearn.ensemble import IsolationForest
+    import xgboost as xgb
     from sklearn.preprocessing import StandardScaler
     from sklearn.metrics import classification_report, confusion_matrix
+    from sklearn.model_selection import train_test_split
 
-    log.info("Loading CICIDS 2017 data…")
-
-    # Load all CSV files in the directory
+    log.info("Loading CICIDS 2017 data for supervised training…")
     dfs = []
     for f in sorted(os.listdir(cicids_dir)):
         if f.endswith('.csv'):
-            log.info(f"  Reading {f}…")
             try:
                 df = pd.read_csv(os.path.join(cicids_dir, f), low_memory=False, encoding='utf-8')
                 dfs.append(df)
             except Exception as e:
                 log.warning(f"  Could not read {f}: {e}")
 
-    if not dfs:
-        log.error("No CICIDS CSV files found")
-        return None, None
-
+    if not dfs: return None, None
     data = pd.concat(dfs, ignore_index=True)
-    log.info(f"CICIDS 2017: {len(data)} rows, {len(data.columns)} columns")
-
-    # Clean column names (CICIDS has messy whitespace in column names)
     data.columns = data.columns.str.strip()
+    label_col = next((c for c in data.columns if 'label' in c.lower()), None)
+    if label_col is None: return None, None
 
-    # Identify the label column
-    label_col = None
-    for col in data.columns:
-        if 'label' in col.lower():
-            label_col = col
-            break
-
-    if label_col is None:
-        log.error("No label column found in CICIDS data")
-        return None, None
-
-    # Create binary label: BENIGN=0, everything else = 1
     data['is_attack'] = (data[label_col].str.strip() != 'BENIGN').astype(int)
-
-    # Select numeric columns for features
     numeric_cols = data.select_dtypes(include=[np.number]).columns.tolist()
     feature_cols = [c for c in numeric_cols if c != 'is_attack']
-
-    # Drop columns with too many NaN/Inf
     data[feature_cols] = data[feature_cols].replace([np.inf, -np.inf], np.nan)
     valid_cols = [c for c in feature_cols if data[c].isna().mean() < 0.5]
 
-    if len(valid_cols) < 5:
-        log.error(f"Too few valid numeric columns ({len(valid_cols)})")
-        return None, None
-
-    # Fill remaining NaN with 0 and clip extreme values
     X = data[valid_cols].fillna(0).values
     y = data['is_attack'].values
 
-    # Clip extreme values
-    X = np.clip(X, -1e9, 1e9)
-
-    # Subsample if too large (>100K rows)
     if len(X) > 100000:
         rng = np.random.RandomState(42)
         idx = rng.choice(len(X), size=100000, replace=False)
-        X = X[idx]
-        y = y[idx]
-        log.info(f"Subsampled to 100K rows for training efficiency")
+        X, y = X[idx], y[idx]
 
-    n_normal = (y == 0).sum()
-    n_attack = (y == 1).sum()
-    log.info(f"CICIDS matrix: {len(y)} rows | Benign: {n_normal} | Attack: {n_attack}")
-
-    # Scale features
+    X_tr, X_val, y_tr, y_val = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    X_tr = scaler.fit_transform(X_tr)
+    X_val = scaler.transform(X_val)
 
-    contamination = min(max(n_attack / len(y), 0.01), 0.45)
-    log.info(f"CICIDS Isolation Forest contamination = {contamination:.3f}")
+    log.info("Training Supervised CICIDS XGBoost Classifier…")
+    model = xgb.XGBClassifier(n_estimators=300, max_depth=5, learning_rate=0.1, n_jobs=-1)
+    model.fit(X_tr, y_tr)
 
-    iforest = IsolationForest(
-        n_estimators=300,
-        contamination=contamination,
-        max_samples=min(len(X_scaled), 50000),
-        random_state=42,
-        n_jobs=-1,
-    )
-    iforest.fit(X_scaled)
+    preds = model.predict(X_val)
+    report = classification_report(y_val, preds, target_names=["Benign", "Attack"], output_dict=True)
+    log.info("\n" + classification_report(y_val, preds, target_names=["Benign", "Attack"]))
 
-    preds_raw = iforest.predict(X_scaled)
-    preds     = np.where(preds_raw == -1, 1, 0)
-
-    report = classification_report(y, preds, target_names=["Benign", "Attack"], output_dict=True)
-    log.info("CICIDS 2017 Isolation Forest — Classification Report:")
-    log.info("\n" + classification_report(y, preds, target_names=["Benign", "Attack"]))
-
-    cm = confusion_matrix(y, preds)
-    if cm.shape == (2, 2):
-        tn, fp, fn, tp = cm.ravel()
-        recall_attack = tp / (tp + fn) if (tp + fn) > 0 else 0
-    else:
-        recall_attack = 0
-        tn = fp = fn = tp = 0
-
-    # Save CICIDS model and scaler
-    cicids_model_path = os.path.join(MODEL_DIR, "cicids_iforest.pkl")
-    cicids_scaler_path = os.path.join(MODEL_DIR, "cicids_scaler.pkl")
-    cicids_cols_path = os.path.join(MODEL_DIR, "cicids_columns.json")
-
-    with open(cicids_model_path, "wb") as f:
-        pickle.dump(iforest, f)
-    with open(cicids_scaler_path, "wb") as f:
+    cm = confusion_matrix(y_val, preds)
+    tn, fp, fn, tp = cm.ravel()
+    
+    model_path = os.path.join(MODEL_DIR, "cicids_classifier.json")
+    model.save_model(model_path)
+    with open(os.path.join(MODEL_DIR, "cicids_scaler.pkl"), "wb") as f:
         pickle.dump(scaler, f)
-    with open(cicids_cols_path, "w") as f:
+    with open(os.path.join(MODEL_DIR, "cicids_features.json"), "w") as f:
         json.dump(valid_cols, f)
 
-    log.info(f"Saved CICIDS Isolation Forest → {cicids_model_path}")
-
-    EVAL_RESULTS["isolation_forest_cicids"] = {
+    EVAL_RESULTS["cicids_classifier"] = {
         "total_samples": len(y),
-        "benign": int(n_normal),
-        "attack": int(n_attack),
-        "features": len(valid_cols),
-        "contamination": round(contamination, 4),
-        "attack_recall": round(recall_attack, 4),
+        "attack_recall": round(report["Attack"]["recall"], 4) if "Attack" in report else 0,
         "attack_precision": round(report["Attack"]["precision"], 4) if "Attack" in report else 0,
         "attack_f1": round(report["Attack"]["f1-score"], 4) if "Attack" in report else 0,
-        "confusion_matrix": {"tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp)}
+        "features": len(valid_cols)
     }
-
-    return recall_attack, cm
+    return report["Attack"]["f1-score"] if "Attack" in report else 0, cm
 
 
 # ─────────────────────────────────────────────────────────────
@@ -840,17 +752,17 @@ if __name__ == "__main__":
     print("-"*65)
     expanded_kw = extract_attack_keywords(stix_data)
 
-    # Phase 5: NSL-KDD Isolation Forest
-    print("\n[Phase 5] Training Isolation Forest on NSL-KDD…")
+    # Phase 5: NSL-KDD XGBoost Classifier
+    print("\n[Phase 5] Training Supervised Classifier on NSL-KDD…")
     print("-"*65)
-    nsl_recall, nsl_cm = train_nslkdd_isolation_forest(nslkdd_path)
+    nsl_f1, nsl_cm = train_nslkdd_classifier(nslkdd_path)
 
-    # Phase 6: CICIDS 2017 (Optional)
-    cicids_recall = None
+    # Phase 6: CICIDS 2017 XGBoost Classifier
+    cicids_f1 = None
     if cicids_dir:
-        print("\n[Phase 6] Training CICIDS 2017 Isolation Forest…")
+        print("\n[Phase 6] Training Supervised Classifier on CICIDS 2017…")
         print("-"*65)
-        cicids_recall, cicids_cm = train_cicids_isolation_forest(cicids_dir)
+        cicids_f1, cicids_cm = train_cicids_classifier(cicids_dir)
     else:
         print("\n[Phase 6] Skipped — CICIDS 2017 not available")
 
@@ -869,11 +781,11 @@ if __name__ == "__main__":
     if num_mae is not None:
         print(f"  Numerical XGBoost         MAE={num_mae:.3f}  R²={num_r2:.3f}")
     print(f"  ATT&CK Keywords           {sum(len(v) for v in expanded_kw.values())} keywords / {len(expanded_kw)} categories")
-    print(f"  Isolation Forest (NSL-KDD)  Recall={nsl_recall*100:.1f}%")
-    if cicids_recall is not None:
-        print(f"  Isolation Forest (CICIDS)   Recall={cicids_recall*100:.1f}%")
+    print(f"  Anomaly Classifier (NSL-KDD)  F1-Score={nsl_f1*100:.1f}%")
+    if cicids_f1 is not None:
+        print(f"  Anomaly Classifier (CICIDS)   F1-Score={cicids_f1*100:.1f}%")
     else:
-        print(f"  Isolation Forest (CICIDS)   Skipped")
+        print(f"  Anomaly Classifier (CICIDS)   Skipped")
     print(f"\n  Models saved to: backend/data/models/")
     print(f"  Evaluation report: backend/data/training_report.json")
     print("="*65)
