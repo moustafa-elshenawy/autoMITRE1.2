@@ -1,11 +1,11 @@
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:30,  8.95it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1445.92it/s]
 Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-INFO:     Started server process [80441]
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<01:26,  3.12it/s]Loading weights:  87%|████████▋ | 237/272 [00:00<00:00, 714.75it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 582.34it/s]
+INFO:     Started server process [9098]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6217.54it/s]
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 1210.86it/s]
 [1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
 Key                     | Status     |  | 
 ------------------------+------------+--+-
@@ -13,249 +13,17 @@ embeddings.position_ids | UNEXPECTED |  |
 
 [3mNotes:
 - UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-INFO:     127.0.0.1:61550 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61552 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/users/profile HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61564 - "GET /api/users/profile HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61564 - "GET /api/dashboard/stats HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61563 - "GET /api/dashboard/activity HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61566 - "GET /api/intelligence/feed HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61568 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61564 - "GET /api/dashboard/stats HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61568 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61563 - "GET /api/intelligence/feed HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61570 - "GET /api/dashboard/activity HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61573 - "POST /api/auth/token HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61575 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61575 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61579 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61581 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61582 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61583 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61581 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61581 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61575 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61575 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61579 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61573 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61708 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61709 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61708 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61709 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61723 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61724 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61723 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61724 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61744 - "OPTIONS /api/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61744 - "POST /api/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61746 - "POST /api/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61755 - "POST /api/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61768 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61769 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61768 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61774 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61776 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61777 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61774 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61774 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61768 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61768 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61769 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61769 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61771 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61769 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61791 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61792 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61791 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61791 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61796 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61796 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61792 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61792 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61791 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61791 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61794 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61791 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61811 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61815 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61865 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61865 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61863 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61863 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61861 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61861 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61864 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61861 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62001 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 6634.26it/s]
-INFO:     127.0.0.1:62001 - "POST /api/analyze/text HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62016 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62017 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62016 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62017 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62017 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62016 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62017 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62026 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62027 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62028 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62026 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62026 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62017 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62017 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62016 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62016 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62019 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62016 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62048 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62049 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62048 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62048 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62049 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62048 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62048 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62049 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62051 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62051 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62056 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62056 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62049 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62049 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62051 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62051 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62048 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62051 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62127 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62128 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62127 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62128 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62193 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62198 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62201 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62201 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62204 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62201 - "GET /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62201 - "GET /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62206 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62206 - "PATCH /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62206 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62211 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62211 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62223 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62211 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62211 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62211 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62223 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62248 - "POST /api/settings HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:62256 - "PATCH /api/settings/osint HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62286 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62286 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62286 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62286 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62307 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62322 - "GET /api/osint/feed HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:62332 - "GET /api/intelligence/feed HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62342 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62342 - "GET /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62342 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62342 - "GET /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62342 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62344 - "PATCH /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62357 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62357 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62357 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62356 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62344 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62362 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62359 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62371 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62373 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62378 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62379 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62381 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62378 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62373 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62371 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62371 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62373 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62378 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62397 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62398 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62397 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62397 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62397 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62416 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62416 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62413 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62413 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62412 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62412 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62400 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-OTX fetch failed: Server error '502 Bad Gateway' for url 'https://otx.alienvault.com/api/v1/pulses/subscribed?limit=50&page=6'
-For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502
-INFO:     127.0.0.1:62415 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62430 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62432 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62432 - "OPTIONS /api/intelligence/osint-history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62430 - "GET /api/intelligence/osint-history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62430 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62430 - "GET /api/intelligence/osint-history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62430 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62432 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62432 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62430 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62420 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62439 - "OPTIONS /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62439 - "POST /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62424 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62441 - "POST /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62420 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62443 - "OPTIONS /api/export/csv HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62443 - "POST /api/export/csv HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62464 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62464 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62471 - "GET /api/users/history HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62466 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62466 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62466 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62477 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62486 - "POST /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62488 - "POST /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62488 - "POST /api/export/pdf HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:62492 - "OPTIONS /api/export/stix HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62492 - "POST /api/export/stix HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62494 - "OPTIONS /api/export/json HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62494 - "POST /api/export/json HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62494 - "POST /api/export/csv HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62498 - "OPTIONS /api/export/splunk HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62498 - "POST /api/export/splunk HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62507 - "POST /api/auth/login HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:62509 - "POST /api/auth/login HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:62520 - "POST /api/users/token HTTP/1.1" 404 Not Found
-INFO:     127.0.0.1:62522 - "GET /api/users/history HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62531 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62531 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62540 - "OPTIONS /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62540 - "POST /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62561 - "POST /api/export/pdf HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62582 - "POST /api/auth/token HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62584 - "POST /api/auth/token HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62588 - "OPTIONS /api/analyze/hash HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62588 - "POST /api/analyze/hash HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:62606 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62607 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62607 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62609 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62607 - "GET /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62607 - "GET /api/settings/osint HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62606 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63539 - "GET /api/dashboard/stats HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63555 - "GET /api/users/profile HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63555 - "GET /api/users/profile HTTP/1.1" 200 OK
+MISP fetch failed: All connection attempts failed
+MISP fetch failed: All connection attempts failed
+INFO:     127.0.0.1:63557 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63557 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63571 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63573 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczNzg5NjQ0fQ.CpTotrDtvJtQ-17-_mtYSGCce5Qd0iTEeisxXV7MUrg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63564 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63581 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczNzg5NjQ0fQ.CpTotrDtvJtQ-17-_mtYSGCce5Qd0iTEeisxXV7MUrg HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63584 - "HEAD /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzaG5vIiwiZXhwIjoxNzczNzg5NjQ0fQ.CpTotrDtvJtQ-17-_mtYSGCce5Qd0iTEeisxXV7MUrg HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:63587 - "POST /api/auth/token HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63592 - "GET /api/users/history HTTP/1.1" 200 OK

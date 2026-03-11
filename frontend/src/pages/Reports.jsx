@@ -99,9 +99,19 @@ export default function Reports() {
             const token = localStorage.getItem('token')
             if (!token) throw new Error('Not authenticated')
 
-            // Direct browser navigation for seamless file download, bypassing blob/CORS restrictions
+            // Direct browser navigation via hidden anchor (forces download without leaving page)
             const url = `${API}/api/export/download/${fmt.id}?token=${token}`
-            window.location.href = url
+            const a = document.createElement('a')
+            a.style.display = 'none'
+            a.href = url
+            a.target = '_blank'
+            // The download attribute ensures it's treated as a file save
+            a.download = `autoMITRE_${fmt.id}_export`
+            document.body.appendChild(a)
+            a.click()
+            
+            // Clean up
+            setTimeout(() => document.body.removeChild(a), 1000)
 
             setExported(p => ({ ...p, [fmt.id]: true }))
             setTimeout(() => setExported(p => ({ ...p, [fmt.id]: false })), 3000)
