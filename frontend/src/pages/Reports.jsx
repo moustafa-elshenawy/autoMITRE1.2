@@ -92,6 +92,7 @@ export default function Reports() {
     // Get token for native links
     const token = localStorage.getItem('token') || ''
 
+
     return (
         <div>
             {/* Header */}
@@ -121,8 +122,13 @@ export default function Reports() {
             {/* Export Cards */}
             <div className="grid-2" style={{ marginBottom: 28 }}>
                 {EXPORT_FORMATS.map(fmt => {
-                    // Generate the direct download URL with token
-                    const downloadUrl = `${API}/api/export/download/${fmt.id}?token=${token}`;
+                    // Force the browser to recognize the correct file extension cross-origin by putting it in the URL
+                    let ext = '.json';
+                    if (fmt.isPdf) ext = '.pdf';
+                    else if (fmt.id === 'csv') ext = '.csv';
+                    
+                    const filename = `autoMITRE_${fmt.id}_export${ext}`;
+                    const downloadUrl = `${API}/api/export/download/${fmt.id}/${filename}?token=${token}`;
 
                     return (
                         <div key={fmt.id} className="card" style={{ borderTop: `2px solid ${fmt.color}` }}>
@@ -163,15 +169,15 @@ export default function Reports() {
                             ) : (
                                 <a
                                     href={downloadUrl}
-                                    target="_blank"
-                                    rel="noreferrer"
                                     className="btn btn-secondary"
                                     style={{ 
                                         width: '100%', 
                                         justifyContent: 'center', 
                                         border: `1px solid ${fmt.color}33`,
-                                        textDecoration: 'none',
-                                        display: 'inline-flex'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        textDecoration: 'none'
                                     }}
                                 >
                                     <Download size={14} /> Export {fmt.name}

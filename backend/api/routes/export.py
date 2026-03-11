@@ -5,7 +5,7 @@ All endpoints return StreamingResponse with proper Content-Disposition headers
 so the browser triggers a real file download.
 """
 from fastapi import APIRouter, HTTPException, Depends, Query
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, Response
 import json
 import io
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -104,7 +104,8 @@ async def export_pdf(request: ExportRequest, current_user: User = Depends(get_cu
 
 
 @router.get("/download/{format}")
-async def export_download_get(format: str, token: str = Query(...), db: AsyncSession = Depends(get_db)):
+@router.get("/download/{format}/{filename}")
+async def export_download_get(format: str, token: str = Query(...), db: AsyncSession = Depends(get_db), filename: str = None):
     """
     Direct GET download endpoint for browser compatibility.
     Bypasses CORS/Blob restrictions by allowing direct navigation (window.location.href).
@@ -161,40 +162,42 @@ async def export_download_get(format: str, token: str = Query(...), db: AsyncSes
         if format == "stix":
             bundle = export_to_stix(real_threats)
             content = json.dumps(bundle, indent=2).encode("utf-8")
-            return StreamingResponse(
-                io.BytesIO(content),
+            return Response(
+                content=content,
                 media_type="application/json",
-                headers={"Content-Disposition": "inline; filename=autoMITRE_stix2.1.json"}
+                headers={"Content-Disposition": 'attachment; filename="autoMITRE_stix2.1.json"'}
             )
         elif format == "json":
             result = export_to_json(real_threats)
             content = json.dumps(result, indent=2).encode("utf-8")
-            return StreamingResponse(
-                io.BytesIO(content),
+            return Response(
+                content=content,
                 media_type="application/json",
-                headers={"Content-Disposition": "inline; filename=autoMITRE_export.json"}
+                headers={"Content-Disposition": 'attachment; filename="autoMITRE_export.json"'}
             )
         elif format == "csv":
             csv_content = export_to_csv(real_threats)
-            return StreamingResponse(
-                io.StringIO(csv_content),
+            content = csv_content.encode("utf-8")
+            return Response(
+                content=content,
                 media_type="text/csv",
-                headers={"Content-Disposition": "inline; filename=autoMITRE_export.csv"}
+                headers={"Content-Disposition": 'attachment; filename="autoMITRE_export.csv"'}
             )
         elif format == "splunk":
             result = format_for_splunk(real_threats)
             content = json.dumps({"events": result}, indent=2).encode("utf-8")
-            return StreamingResponse(
-                io.BytesIO(content),
+            return Response(
+                content=content,
                 media_type="application/json",
-                headers={"Content-Disposition": "inline; filename=autoMITRE_splunk_hec.json"}
+                headers={"Content-Disposition": 'attachment; filename="autoMITRE_splunk_hec.json"'}
             )
         elif format in ("executive", "technical", "managerial"):
             pdf_bytes = generate_pdf_report(real_threats, format)
-            return StreamingResponse(
-                pdf_bytes,
+            content = pdf_bytes.getvalue()
+            return Response(
+                content=content,
                 media_type="application/pdf",
-                headers={"Content-Disposition": f"attachment; filename=autoMITRE_{format}_report.pdf"}
+                headers={"Content-Disposition": f'attachment; filename="autoMITRE_{format}_report.pdf"'}
             )
         else:
             raise HTTPException(status_code=400, detail="Unknown format")
