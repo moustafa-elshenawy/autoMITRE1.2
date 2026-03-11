@@ -5,20 +5,27 @@ import axios from 'axios'
 
 const API = 'http://localhost:8000'
 
-const TACTIC_COVERAGE = [
-    { name: 'Initial Access', covered: 0, total: 10, color: '#ef4444' },
-    { name: 'Execution', covered: 0, total: 14, color: '#f97316' },
-    { name: 'Persistence', covered: 0, total: 20, color: '#f59e0b' },
-    { name: 'Priv. Escalation', covered: 0, total: 14, color: '#f59e0b' },
-    { name: 'Defense Evasion', covered: 0, total: 44, color: '#22c55e' },
-    { name: 'Credential Access', covered: 0, total: 17, color: '#3b82f6' },
-    { name: 'Discovery', covered: 0, total: 32, color: '#8b5cf6' },
-    { name: 'Lateral Movement', covered: 0, total: 9, color: '#06b6d4' },
-    { name: 'Collection', covered: 0, total: 17, color: '#ec4899' },
-    { name: 'C2', covered: 0, total: 18, color: '#10b981' },
-    { name: 'Exfiltration', covered: 0, total: 9, color: '#f43f5e' },
-    { name: 'Impact', covered: 0, total: 14, color: '#64748b' },
-]
+const TACTIC_COLORS = {
+    'Initial Access': '#ef4444',
+    'Execution': '#f97316',
+    'Persistence': '#f59e0b',
+    'Privilege Escalation': '#eab308',
+    'Defense Evasion': '#84cc16',
+    'Credential Access': '#10b981',
+    'Discovery': '#06b6d4',
+    'Lateral Movement': '#3b82f6',
+    'Collection': '#6366f1',
+    'Command and Control': '#8b5cf6',
+    'Exfiltration': '#a855f7',
+    'Impact': '#ec4899',
+    'Resource Development': '#64748b',
+    'Reconnaissance': '#94a3b8'
+}
+
+const TACTIC_DISPLAY_NAMES = {
+    'Command and Control': 'C2',
+    'Privilege Escalation': 'Priv. Escalation'
+}
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -44,7 +51,7 @@ export default function Dashboard() {
     })
     const [activity, setActivity] = useState([])
     const [recentThreats, setRecentThreats] = useState([])
-    const [tacticCoverage, setTacticCoverage] = useState(TACTIC_COVERAGE)
+    const [tacticCoverage, setTacticCoverage] = useState([])
 
     useEffect(() => {
         const token = localStorage.getItem('token')
@@ -70,17 +77,26 @@ export default function Dashboard() {
 
         axios.get(`${API}/api/framework/coverage`, { headers }).then(r => {
             if (r.data.attack && r.data.attack.by_tactic) {
-                const updated = TACTIC_COVERAGE.map(t => {
-                    // Handle naming inconsistencies between backend and frontend
-                    let backendName = t.name
-                    if (t.name === 'C2') backendName = 'Command and Control'
-                    if (t.name === 'Priv. Escalation') backendName = 'Privilege Escalation'
-                    
-                    const mapped = r.data.attack.by_tactic[backendName]
-                    if (mapped) return { ...t, covered: mapped.covered }
-                    return t
+                const tactics = Object.entries(r.data.attack.by_tactic).map(([name, stats]) => ({
+                    name: TACTIC_DISPLAY_NAMES[name] || name,
+                    fullName: name,
+                    covered: stats.covered,
+                    total: stats.total,
+                    color: TACTIC_COLORS[name] || '#64748b'
+                }))
+                // Sort by standard kill chain order if possible, or alphabetically
+                const sortOrder = [
+                    'Reconnaissance', 'Resource Development', 'Initial Access', 'Execution', 
+                    'Persistence', 'Priv. Escalation', 'Defense Evasion', 'Credential Access', 
+                    'Discovery', 'Lateral Movement', 'Collection', 'C2', 'Exfiltration', 'Impact'
+                ]
+                tactics.sort((a, b) => {
+                    const idxA = sortOrder.indexOf(a.name)
+                    const idxB = sortOrder.indexOf(b.name)
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB
+                    return a.name.localeCompare(b.name)
                 })
-                setTacticCoverage(updated)
+                setTacticCoverage(tactics)
             }
         }).catch(() => { })
 
@@ -128,7 +144,7 @@ export default function Dashboard() {
                     <div className="stat-label">ATT&CK Techniques</div>
                     <div className="stat-number">{stats.techniques_covered}</div>
                     <div className="stat-change" style={{ color: '#10b981' }}>
-                        <Activity size={11} /> 34 of 635 mapped
+                        <Activity size={11} /> {stats.techniques_covered} of {stats.total_techniques || stats.total_techniques_framework || 635} mapped
                     </div>
                 </div>
                 <div className="stat-card">

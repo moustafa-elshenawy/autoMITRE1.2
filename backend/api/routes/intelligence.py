@@ -14,6 +14,60 @@ from database.config import get_db
 from database.crud import get_dashboard_stats as get_db_stats, get_recent_threats, get_threat_activity, get_attack_tactic_coverage
 from api.dependencies import get_current_user
 from database.models import User
+import json
+import os
+
+# Cache for framework totals to avoid disk I/O on every request
+_FRAMEWORK_TOTALS_CACHE = {}
+
+def get_framework_data_totals():
+    global _FRAMEWORK_TOTALS_CACHE
+    if _FRAMEWORK_TOTALS_CACHE:
+        return _FRAMEWORK_TOTALS_CACHE
+
+    totals = {
+        "attack": {"total": 0, "by_tactic": {}},
+        "defend": 0,
+        "nist": 0,
+        "owasp": 0
+    }
+
+    try:
+        data_dir = "data"
+        # 1. ATT&CK
+        attack_path = os.path.join(data_dir, "mitre_attack.json")
+        if os.path.exists(attack_path):
+            with open(attack_path, "r") as f:
+                attack_data = json.load(f)
+                totals["attack"]["total"] = len(attack_data)
+                for item in attack_data:
+                    tactic = item.get("tactic", "Unknown")
+                    totals["attack"]["by_tactic"][tactic] = totals["attack"]["by_tactic"].get(tactic, 0) + 1
+
+        # 2. DEFEND
+        defend_path = os.path.join(data_dir, "mitre_defend.json")
+        if os.path.exists(defend_path):
+            with open(defend_path, "r") as f:
+                totals["defend"] = len(json.load(f))
+
+        # 3. NIST
+        nist_path = os.path.join(data_dir, "nist_controls.json")
+        if os.path.exists(nist_path):
+            with open(nist_path, "r") as f:
+                totals["nist"] = len(json.load(f))
+
+        # 4. OWASP
+        owasp_path = os.path.join(data_dir, "owasp_data.json")
+        if os.path.exists(owasp_path):
+            with open(owasp_path, "r") as f:
+                owasp_data = json.load(f)
+                totals["owasp"] = len(owasp_data.get("top10", [])) + len(owasp_data.get("asvs", []))
+
+        _FRAMEWORK_TOTALS_CACHE = totals
+    except Exception as e:
+        print(f"Error loading framework totals: {e}")
+    
+    return totals
 
 router = APIRouter(prefix="/api", tags=["intelligence"])
 
@@ -39,6 +93,8 @@ async def chat_with_ai(request: ChatRequest, current_user: User = Depends(get_cu
 async def get_dashboard_stats(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Get dashboard statistics."""
     stats = await get_db_stats(db, current_user.id)
+    framework_totals = get_framework_data_totals()
+    stats["total_techniques"] = framework_totals["attack"]["total"]
     stats["last_updated"] = datetime.utcnow().isoformat()
     return stats
 
@@ -201,58 +257,42 @@ async def get_feed_sources(current_user: User = Depends(get_current_user)):
 async def get_framework_coverage(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Get framework coverage statistics."""
     tactic_stats = await get_attack_tactic_coverage(db, current_user.id)
+    framework_totals = get_framework_data_totals()
     
-    # Mapping to handle backend names vs frontend expectation if needed, 
-    # but primarily ensuring values are dynamic.
-    by_tactic_template = {
-        "Initial Access": 10,
-        "Execution": 14,
-        "Persistence": 20,
-        "Privilege Escalation": 14,
-        "Defense Evasion": 44,
-        "Credential Access": 17,
-        "Discovery": 32,
-        "Lateral Movement": 9,
-        "Collection": 17,
-        "Command and Control": 18,
-        "Exfiltration": 9,
-        "Impact": 14
-    }
-    
+    # Process ATT&CK By Tactic
+    attack_totals = framework_totals["attack"]["by_tactic"]
     dynamic_by_tactic = {}
     normalized_tactic_stats = {k.lower(): v for k, v in tactic_stats.items()}
     
-    total_covered = 0
-    for name, total in by_tactic_template.items():
+    for name, total in attack_totals.items():
         covered = normalized_tactic_stats.get(name.lower(), 0)
         dynamic_by_tactic[name] = {"total": total, "covered": covered}
-        total_covered += covered
 
     # Get total unique techniques covered for the top level percentage
-    from database.crud import get_dashboard_stats
-    stats = await get_dashboard_stats(db, current_user.id)
+    stats = await get_db_stats(db, current_user.id)
     unique_techs = stats.get("techniques_covered", 0)
+    total_techs_in_framework = framework_totals["attack"]["total"]
 
     return {
         "attack": {
-            "total_techniques": 635,
+            "total_techniques": total_techs_in_framework,
             "covered": unique_techs,
-            "percentage": round((unique_techs / 635) * 100, 1) if 635 > 0 else 0,
+            "percentage": round((unique_techs / total_techs_in_framework) * 100, 1) if total_techs_in_framework > 0 else 0,
             "by_tactic": dynamic_by_tactic
         },
         "defend": {
-            "total_countermeasures": 58,
-            "covered": 15,
-            "percentage": 25.9
+            "total_countermeasures": framework_totals["defend"],
+            "covered": stats.get("defend_covered", 15), # Placeholder for real count if not in stats
+            "percentage": round((15 / framework_totals["defend"]) * 100, 1) if framework_totals["defend"] > 0 else 0
         },
         "nist": {
-            "total_controls": 1000,
-            "covered": 16,
-            "percentage": 1.6
+            "total_controls": framework_totals["nist"],
+            "covered": stats.get("nist_covered", 16),
+            "percentage": round((16 / framework_totals["nist"]) * 100, 1) if framework_totals["nist"] > 0 else 0
         },
         "owasp": {
-            "total_items": 20,
-            "covered": 10,
-            "percentage": 50.0
+            "total_items": framework_totals["owasp"],
+            "covered": stats.get("owasp_covered", 10),
+            "percentage": round((10 / framework_totals["owasp"]) * 100, 1) if framework_totals["owasp"] > 0 else 0
         }
     }
