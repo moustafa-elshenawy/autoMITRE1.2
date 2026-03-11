@@ -34,7 +34,7 @@ async def export_stix(request: ExportRequest, current_user: User = Depends(get_c
         return StreamingResponse(
             io.BytesIO(content),
             media_type="application/json",
-            headers={"Content-Disposition": "attachment; filename=autoMITRE_stix2.1.json"}
+            headers={"Content-Disposition": "inline; filename=autoMITRE_stix2.1.json"}
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -50,7 +50,7 @@ async def export_json(request: ExportRequest, current_user: User = Depends(get_c
         return StreamingResponse(
             io.BytesIO(content),
             media_type="application/json",
-            headers={"Content-Disposition": "attachment; filename=autoMITRE_export.json"}
+            headers={"Content-Disposition": "inline; filename=autoMITRE_export.json"}
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -65,7 +65,7 @@ async def export_csv(request: ExportRequest, current_user: User = Depends(get_cu
         return StreamingResponse(
             io.StringIO(csv_content),
             media_type="text/csv",
-            headers={"Content-Disposition": "attachment; filename=autoMITRE_export.csv"}
+            headers={"Content-Disposition": "inline; filename=autoMITRE_export.csv"}
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -81,7 +81,7 @@ async def export_splunk(request: ExportRequest, current_user: User = Depends(get
         return StreamingResponse(
             io.BytesIO(content),
             media_type="application/json",
-            headers={"Content-Disposition": "attachment; filename=autoMITRE_splunk_hec.json"}
+            headers={"Content-Disposition": "inline; filename=autoMITRE_splunk_hec.json"}
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -164,7 +164,7 @@ async def export_download_get(format: str, token: str = Query(...), db: AsyncSes
             return StreamingResponse(
                 io.BytesIO(content),
                 media_type="application/json",
-                headers={"Content-Disposition": "attachment; filename=autoMITRE_stix2.1.json"}
+                headers={"Content-Disposition": "inline; filename=autoMITRE_stix2.1.json"}
             )
         elif format == "json":
             result = export_to_json(real_threats)
@@ -172,14 +172,14 @@ async def export_download_get(format: str, token: str = Query(...), db: AsyncSes
             return StreamingResponse(
                 io.BytesIO(content),
                 media_type="application/json",
-                headers={"Content-Disposition": "attachment; filename=autoMITRE_export.json"}
+                headers={"Content-Disposition": "inline; filename=autoMITRE_export.json"}
             )
         elif format == "csv":
             csv_content = export_to_csv(real_threats)
             return StreamingResponse(
                 io.StringIO(csv_content),
                 media_type="text/csv",
-                headers={"Content-Disposition": "attachment; filename=autoMITRE_export.csv"}
+                headers={"Content-Disposition": "inline; filename=autoMITRE_export.csv"}
             )
         elif format == "splunk":
             result = format_for_splunk(real_threats)
@@ -187,7 +187,7 @@ async def export_download_get(format: str, token: str = Query(...), db: AsyncSes
             return StreamingResponse(
                 io.BytesIO(content),
                 media_type="application/json",
-                headers={"Content-Disposition": "attachment; filename=autoMITRE_splunk_hec.json"}
+                headers={"Content-Disposition": "inline; filename=autoMITRE_splunk_hec.json"}
             )
         elif format in ("executive", "technical", "managerial"):
             pdf_bytes = generate_pdf_report(real_threats, format)

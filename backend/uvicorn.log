@@ -1,77 +1,0 @@
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:50,  5.34it/s]Loading weights:  94%|█████████▍| 255/272 [00:00<00:00, 1071.87it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 887.60it/s] 
-INFO:     Started server process [11688]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6791.49it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-INFO:     127.0.0.1:63899 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63900 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63899 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63899 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63902 - "POST /api/auth/token HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63902 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63902 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63904 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63902 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63907 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63909 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63911 - "OPTIONS /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63912 - "OPTIONS /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63902 - "OPTIONS /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63907 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-MISP fetch failed: All connection attempts failed
-INFO:     127.0.0.1:63907 - "GET /api/dashboard/activity HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63904 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63911 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63904 - "GET /api/dashboard/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63911 - "GET /api/framework/coverage HTTP/1.1" 200 OK
-MISP fetch failed: All connection attempts failed
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 3060.15it/s]
-Industrial ML evaluation failed: Feature shape mismatch, expected: 5, got 15
-INFO:     127.0.0.1:63938 - "POST /api/analyze/text HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63909 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63924 - "GET /api/intelligence/feed HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63924 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63924 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63949 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63959 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63961 - "GET /api/export/download/stix?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63978 - "GET /api/export/download/json?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63982 - "GET /api/export/download/csv?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63996 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63996 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63996 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64000 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63996 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64000 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63985 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64004 - "GET /api/export/download/technical?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64007 - "GET /api/export/download/managerial?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64027 - "POST /api/auth/token HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:64029 - "POST /api/auth/token HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64031 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64033 - "GET /api/export/download/technical?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5OTIyN30.Nnp8Mee3IfAUW22rHd2y73zuXcB0oH15uy2bSadfT7o HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64035 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5OTIyN30.Nnp8Mee3IfAUW22rHd2y73zuXcB0oH15uy2bSadfT7o HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64090 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64091 - "OPTIONS /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64090 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64090 - "GET /api/users/profile HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64091 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64090 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64095 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64093 - "GET /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64163 - "GET /api/export/download/managerial?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64163 - "GET /api/export/download/executive?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64163 - "GET /api/export/download/csv?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64163 - "GET /api/export/download/managerial?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc3Mzc5ODc1MH0.Ask2rTQfeSE-xejrJLHa1fMpOBb4sBs2RhDHPuXy0oE HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64187 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64187 - "GET /api/users/history HTTP/1.1" 200 OK
