@@ -245,3 +245,17 @@ INFO:     127.0.0.1:62520 - "POST /api/users/token HTTP/1.1" 404 Not Found
 INFO:     127.0.0.1:62522 - "GET /api/users/history HTTP/1.1" 401 Unauthorized
 INFO:     127.0.0.1:62531 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62531 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62540 - "OPTIONS /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62540 - "POST /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62561 - "POST /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62582 - "POST /api/auth/token HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62584 - "POST /api/auth/token HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62588 - "OPTIONS /api/analyze/hash HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62588 - "POST /api/analyze/hash HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:62606 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "OPTIONS /api/intelligence/feed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62609 - "OPTIONS /api/settings/osint HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "GET /api/settings/osint HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62607 - "GET /api/settings/osint HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62606 - "GET /api/intelligence/feed HTTP/1.1" 200 OK

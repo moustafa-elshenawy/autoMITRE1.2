@@ -97,48 +97,11 @@ export default function Reports() {
 
         try {
             const token = localStorage.getItem('token')
-            const payload = { threat_ids: threatIds, format: fmt.id }
+            if (!token) throw new Error('Not authenticated')
 
-            // Use native fetch — more reliable than axios for blob downloads on macOS
-            const response = await fetch(`${API}${fmt.endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                },
-                body: JSON.stringify(payload),
-            })
-
-            if (!response.ok) {
-                const errText = await response.text()
-                let msg = `Server error ${response.status}`
-                try { msg = JSON.parse(errText).detail || msg } catch (_) {}
-                throw new Error(msg)
-            }
-
-            // Get filename from Content-Disposition header, or fall back to default
-            const disposition = response.headers.get('content-disposition') || ''
-            const match = disposition.match(/filename=([^\s;]+)/)
-            const filename = match
-                ? match[1]
-                : `autoMITRE_${fmt.id}_export.${fmt.isPdf ? 'pdf' : fmt.id === 'csv' ? 'csv' : 'json'}`
-
-            const blob = await response.blob()
-            const url = URL.createObjectURL(blob)
-
-            // Most reliable cross-browser download trigger
-            const a = document.createElement('a')
-            a.style.display = 'none'
-            a.href = url
-            a.download = filename
-            document.body.appendChild(a)
-            a.click()
-
-            // Small delay before cleanup to allow the browser to start the download
-            setTimeout(() => {
-                document.body.removeChild(a)
-                URL.revokeObjectURL(url)
-            }, 1000)
+            // Direct browser navigation for seamless file download, bypassing blob/CORS restrictions
+            const url = `${API}/api/export/download/${fmt.id}?token=${token}`
+            window.location.href = url
 
             setExported(p => ({ ...p, [fmt.id]: true }))
             setTimeout(() => setExported(p => ({ ...p, [fmt.id]: false })), 3000)
@@ -147,6 +110,7 @@ export default function Reports() {
         }
         setExporting(p => ({ ...p, [fmt.id]: false }))
     }
+
 
     return (
         <div>
