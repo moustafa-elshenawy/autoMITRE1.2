@@ -37,8 +37,32 @@ logger = logging.getLogger(__name__)
 
 MISP_URL        = os.getenv("MISP_URL", "").rstrip("/")
 MISP_API_KEY    = os.getenv("MISP_API_KEY", "")
-OTX_API_KEY     = os.getenv("OTX_API_KEY", "")
 CACHE_TTL       = int(os.getenv("OSINT_CACHE_TTL", "300"))   # seconds
+
+def _get_otx_key() -> str:
+    """Dynamically resolve OTX API key — checks runtime config first, then reloads .env."""
+    # 1. Runtime config (set via settings UI)
+    if RUNTIME_CONFIG.get("otx_api_key"):
+        return RUNTIME_CONFIG["otx_api_key"]
+    # 2. Already in environment
+    env_key = os.getenv("OTX_API_KEY", "")
+    if env_key:
+        return env_key
+    # 3. Hot-reload from .env file (picks up changes without restart)
+    try:
+        import pathlib
+        env_path = pathlib.Path(__file__).resolve().parent.parent / ".env"
+        if env_path.exists():
+            for line in env_path.read_text().splitlines():
+                if line.startswith("OTX_API_KEY="):
+                    val = line.split("=", 1)[1].strip()
+                    if val:
+                        os.environ["OTX_API_KEY"] = val
+                        return val
+    except Exception:
+        pass
+    return ""
+
 
 URLHAUS_API     = "https://urlhaus.abuse.ch/downloads/json_online/"
 BAZAAR_CSV      = "https://bazaar.abuse.ch/export/csv/recent/"
@@ -430,95 +454,97 @@ async def fetch_bazaar(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
 # ── AlienVault OTX ───────────────────────────────────────────────────────────
 
 async def fetch_otx(client: httpx.AsyncClient) -> List[ThreatFeedItem]:
-    key = RUNTIME_CONFIG.get("otx_api_key") or OTX_API_KEY
+    key = _get_otx_key()
     if not key:
         logger.info("OTX: No API key configured, skipping.")
         return []
 
-    # Temporary cache bust for debugging
     cache_key = f"otx_{key[:8]}_ref"
     cached = _cached(cache_key)
     if cached is not None:
-        logger.info(f"OTX: Returning cached result for {cache_key}")
         return cached
+
     limit = int(RUNTIME_CONFIG.get("osint_limit", 50))
     min_sev = RUNTIME_CONFIG.get("osint_min_severity", "Low")
-
-    url = f"{OTX_BASE}/pulses/subscribed"
-    params = {"limit": 50}
+    headers = {"X-OTX-API-KEY": key, "User-Agent": "autoMITRE/1.2"}
     items: List[ThreatFeedItem] = []
 
-    while url and len(items) < limit:
-        try:
-            logger.info(f"OTX: Fetching from {url} (Key: {key[:4]}...)")
-            resp = await client.get(
-                url,
-                headers={"X-OTX-API-KEY": key, "User-Agent": "autoMITRE/1.2"},
-                params=params,
-                timeout=15.0,
-            )
-            logger.info(f"OTX: Status {resp.status_code}")
-            resp.raise_for_status()
-            data = resp.json()
-            pulses = data.get("results", [])
-            logger.info(f"OTX: Pulses found: {len(pulses)}")
-            url = data.get("next")
-            params = None  # the 'next' URL already contains pagination params
-        except Exception as exc:
-            logger.error("OTX fetch failed: %s", exc)
-            break
+    # Try subscribed feed first, fall back to global activity feed
+    endpoints_to_try = [
+        f"{OTX_BASE}/pulses/subscribed",
+        f"{OTX_BASE}/pulses/activity",
+    ]
 
-        if not pulses:
-            break
+    for endpoint in endpoints_to_try:
+        if items:
+            break  # Already have data from a previous endpoint
+        url: Optional[str] = endpoint
+        params: Optional[dict] = {"limit": 50}
 
-        for p in pulses:
-            if len(items) >= limit: break
-            pulse_id  = p.get("id", str(uuid.uuid4()))
-            name      = p.get("name", "Unknown pulse")
-            created   = p.get("created", "")
-            tags      = p.get("tags", [])
-            iocs_raw  = p.get("indicators", [])
-            tlp       = p.get("tlp", "green")
+        while url and len(items) < limit:
+            try:
+                logger.info(f"OTX: Fetching {url}")
+                resp = await client.get(url, headers=headers, params=params, timeout=15.0)
+                resp.raise_for_status()
+                data = resp.json()
+                pulses = data.get("results", [])
+                logger.info(f"OTX: {len(pulses)} pulses from {url}")
+                url = data.get("next")
+                params = None
+            except Exception as exc:
+                logger.error("OTX fetch failed: %s", exc)
+                break
 
-            iocs = [i.get("indicator", "") for i in iocs_raw if i.get("indicator")][:4]
+            if not pulses:
+                break
 
-            # TLP → severity
-            sev_map = {"red": "Critical", "amber": "High", "green": "Medium", "white": "Low"}
-            severity = sev_map.get(tlp.lower(), "Medium")
+            for p in pulses:
+                if len(items) >= limit:
+                    break
+                pulse_id = p.get("id", str(uuid.uuid4()))
+                name     = p.get("name", "Unknown pulse")
+                created  = p.get("created", "")
+                tags     = p.get("tags", [])
+                iocs_raw = p.get("indicators", [])
+                tlp      = p.get("tlp", "green")
 
-            # Extract ATT&CK references
-            attack_ids = p.get("attack_ids", [])
-            first_attack = attack_ids[0] if attack_ids else None
-            if isinstance(first_attack, dict):
-                technique = first_attack.get("id", "")
-                tactic    = (first_attack.get("tactic") or {}).get("name", "")
-            elif isinstance(first_attack, str):
-                technique = first_attack
-                tactic    = ""
-            else:
-                technique = ""
-                tactic    = ""
+                iocs = [i.get("indicator", "") for i in iocs_raw if i.get("indicator")][:4]
 
-            item = ThreatFeedItem(
-                id=f"otx_{pulse_id}",
-                title=name,
-                severity=severity,
-                technique=technique,
-                tactic=tactic or "Intelligence",
-                timestamp=_relative_time(created) if created else "recent",
-                source="AlienVault OTX",
-                source_key="otx",
-                iocs=iocs,
-                frameworks=["ATT&CK"] if technique else [],
-                tags=tags[:4],
-                description=p.get("description", "")[:200],
-                external_url=f"https://otx.alienvault.com/pulse/{pulse_id}",
-            )
-            
-            if _sev_to_int(severity) >= _sev_to_int(min_sev):
-                items.append(item)
-                
-    _store(f"otx_{key[:8]}", items)
+                sev_map  = {"red": "Critical", "amber": "High", "green": "Medium", "white": "Low"}
+                severity = sev_map.get(tlp.lower(), "Medium")
+
+                attack_ids  = p.get("attack_ids", [])
+                first_attack = attack_ids[0] if attack_ids else None
+                if isinstance(first_attack, dict):
+                    technique = first_attack.get("id", "")
+                    tactic    = (first_attack.get("tactic") or {}).get("name", "")
+                elif isinstance(first_attack, str):
+                    technique = first_attack
+                    tactic    = ""
+                else:
+                    technique = ""
+                    tactic    = ""
+
+                item = ThreatFeedItem(
+                    id=f"otx_{pulse_id}",
+                    title=name,
+                    severity=severity,
+                    technique=technique,
+                    tactic=tactic or "Intelligence",
+                    timestamp=_relative_time(created) if created else "recent",
+                    source="AlienVault OTX",
+                    source_key="otx",
+                    iocs=iocs,
+                    frameworks=["ATT&CK"] if technique else [],
+                    tags=tags[:4],
+                    description=p.get("description", "")[:200],
+                    external_url=f"https://otx.alienvault.com/pulse/{pulse_id}",
+                )
+                if _sev_to_int(severity) >= _sev_to_int(min_sev):
+                    items.append(item)
+
+    _store(cache_key, items)
+    logger.info(f"OTX: Total items fetched: {len(items)}")
     return items
 
 
@@ -635,7 +661,7 @@ def get_source_status() -> List[Dict[str, Any]]:
         {
             "key": "otx",
             "label": "AlienVault OTX",
-            "configured": bool(RUNTIME_CONFIG.get("otx_api_key") or OTX_API_KEY),
+            "configured": bool(_get_otx_key()),
             "url": "https://otx.alienvault.com",
             "description": "Open Threat Exchange community intelligence",
         },
