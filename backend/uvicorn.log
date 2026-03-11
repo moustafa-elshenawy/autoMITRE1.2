@@ -229,3 +229,19 @@ INFO:     127.0.0.1:62466 - "GET /api/users/profile HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62466 - "GET /api/users/profile HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62466 - "GET /api/users/history HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62477 - "GET /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62486 - "POST /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62488 - "POST /api/export/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62488 - "POST /api/export/pdf HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:62492 - "OPTIONS /api/export/stix HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62492 - "POST /api/export/stix HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62494 - "OPTIONS /api/export/json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62494 - "POST /api/export/json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62494 - "POST /api/export/csv HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62498 - "OPTIONS /api/export/splunk HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62498 - "POST /api/export/splunk HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62507 - "POST /api/auth/login HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62509 - "POST /api/auth/login HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62520 - "POST /api/users/token HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:62522 - "GET /api/users/history HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62531 - "OPTIONS /api/users/history HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62531 - "GET /api/users/history HTTP/1.1" 200 OK

@@ -1,6 +1,8 @@
 """
 Export API Routes
 Handles threat intelligence export to STIX, JSON, CSV, and SIEM platforms.
+All endpoints return StreamingResponse with proper Content-Disposition headers
+so the browser triggers a real file download.
 """
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import StreamingResponse
@@ -21,22 +23,32 @@ router = APIRouter(prefix="/api/export", tags=["export"])
 
 @router.post("/stix")
 async def export_stix(request: ExportRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    """Export threat intelligence as STIX 2.1 bundle."""
+    """Export threat intelligence as STIX 2.1 bundle (downloadable JSON file)."""
     try:
         real_threats = await _get_real_threats(request.threat_ids, db)
         bundle = export_to_stix(real_threats)
-        return bundle
+        content = json.dumps(bundle, indent=2).encode("utf-8")
+        return StreamingResponse(
+            io.BytesIO(content),
+            media_type="application/json",
+            headers={"Content-Disposition": "attachment; filename=autoMITRE_stix2.1.json"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/json")
 async def export_json(request: ExportRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    """Export threat intelligence as structured JSON."""
+    """Export threat intelligence as structured JSON (downloadable file)."""
     try:
         real_threats = await _get_real_threats(request.threat_ids, db)
         result = export_to_json(real_threats)
-        return result
+        content = json.dumps(result, indent=2).encode("utf-8")
+        return StreamingResponse(
+            io.BytesIO(content),
+            media_type="application/json",
+            headers={"Content-Disposition": "attachment; filename=autoMITRE_export.json"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -58,11 +70,16 @@ async def export_csv(request: ExportRequest, current_user: User = Depends(get_cu
 
 @router.post("/splunk")
 async def export_splunk(request: ExportRequest, current_user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    """Format threats for Splunk HEC ingestion."""
+    """Format threats for Splunk HEC ingestion (downloadable JSON file)."""
     try:
         real_threats = await _get_real_threats(request.threat_ids, db)
         result = format_for_splunk(real_threats)
-        return {"events": result}
+        content = json.dumps({"events": result}, indent=2).encode("utf-8")
+        return StreamingResponse(
+            io.BytesIO(content),
+            media_type="application/json",
+            headers={"Content-Disposition": "attachment; filename=autoMITRE_splunk_hec.json"}
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -72,11 +89,8 @@ async def export_pdf(request: ExportRequest, current_user: User = Depends(get_cu
     """Export threat intelligence as a formatted PDF report."""
     try:
         real_threats = await _get_real_threats(request.threat_ids, db)
-        # request format field can double as the report_type: 'executive', 'technical', 'managerial'
-        report_type = request.format if request.format else "executive"
-        
+        report_type = request.format if request.format in ("executive", "technical", "managerial") else "executive"
         pdf_bytes = generate_pdf_report(real_threats, report_type)
-        
         return StreamingResponse(
             pdf_bytes,
             media_type="application/pdf",
@@ -96,7 +110,7 @@ async def _get_real_threats(threat_ids: list, db: AsyncSession) -> list:
                 "id": record.id,
                 "title": record.title,
                 "description": record.description,
-                "timestamp": record.timestamp,
+                "timestamp": str(record.timestamp),
                 "confidence": 100,
                 "risk_score": {"score": record.risk_score, "severity": record.severity},
                 "attack_techniques": [

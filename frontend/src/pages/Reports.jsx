@@ -96,46 +96,54 @@ export default function Reports() {
         setExportError(p => ({ ...p, [fmt.id]: null }))
 
         try {
+            const token = localStorage.getItem('token')
             const payload = { threat_ids: threatIds, format: fmt.id }
-            const isBinary = fmt.isPdf || fmt.id === 'csv'
 
-            const r = await axios.post(`${API}${fmt.endpoint}`, payload, {
-                headers: authHeader(),
-                responseType: isBinary ? 'blob' : 'json',
+            // Use native fetch — more reliable than axios for blob downloads on macOS
+            const response = await fetch(`${API}${fmt.endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify(payload),
             })
 
-            if (isBinary) {
-                // PDF / CSV — trigger browser download
-                const blob = new Blob([r.data], {
-                    type: fmt.isPdf ? 'application/pdf' : 'text/csv',
-                })
-                const url = URL.createObjectURL(blob)
-                const a = document.createElement('a')
-                a.href = url
-                a.download = `autoMITRE_${fmt.id}_report.${fmt.isPdf ? 'pdf' : 'csv'}`
-                document.body.appendChild(a)
-                a.click()
-                document.body.removeChild(a)
-                URL.revokeObjectURL(url)
-            } else {
-                // JSON / STIX / Splunk — stringify and download as .json
-                const text = JSON.stringify(r.data, null, 2)
-                const blob = new Blob([text], { type: 'application/json' })
-                const url = URL.createObjectURL(blob)
-                const a = document.createElement('a')
-                a.href = url
-                a.download = `autoMITRE_${fmt.id}_export.json`
-                document.body.appendChild(a)
-                a.click()
-                document.body.removeChild(a)
-                URL.revokeObjectURL(url)
+            if (!response.ok) {
+                const errText = await response.text()
+                let msg = `Server error ${response.status}`
+                try { msg = JSON.parse(errText).detail || msg } catch (_) {}
+                throw new Error(msg)
             }
+
+            // Get filename from Content-Disposition header, or fall back to default
+            const disposition = response.headers.get('content-disposition') || ''
+            const match = disposition.match(/filename=([^\s;]+)/)
+            const filename = match
+                ? match[1]
+                : `autoMITRE_${fmt.id}_export.${fmt.isPdf ? 'pdf' : fmt.id === 'csv' ? 'csv' : 'json'}`
+
+            const blob = await response.blob()
+            const url = URL.createObjectURL(blob)
+
+            // Most reliable cross-browser download trigger
+            const a = document.createElement('a')
+            a.style.display = 'none'
+            a.href = url
+            a.download = filename
+            document.body.appendChild(a)
+            a.click()
+
+            // Small delay before cleanup to allow the browser to start the download
+            setTimeout(() => {
+                document.body.removeChild(a)
+                URL.revokeObjectURL(url)
+            }, 1000)
 
             setExported(p => ({ ...p, [fmt.id]: true }))
             setTimeout(() => setExported(p => ({ ...p, [fmt.id]: false })), 3000)
         } catch (err) {
-            const msg = err.response?.data?.detail || err.message || 'Export failed'
-            setExportError(p => ({ ...p, [fmt.id]: msg }))
+            setExportError(p => ({ ...p, [fmt.id]: err.message || 'Export failed' }))
         }
         setExporting(p => ({ ...p, [fmt.id]: false }))
     }
