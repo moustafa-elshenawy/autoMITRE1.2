@@ -10,6 +10,7 @@ import os
 import uuid
 from datetime import datetime
 from typing import List, Tuple, Dict, Any
+import numpy as np
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -58,7 +59,7 @@ _GENERIC_STOPWORDS = {
     'value', 'name', 'path', 'key', 'type', 'response', 'request',
     'update', 'change', 'log', 'event', 'error', 'message', 'source',
     'target', 'object', 'group', 'list', 'table', 'record', 'account',
-    'authentication', 'configuration', 'monitor', 'run', 'management'
+    'authentication', 'configuration', 'monitor', 'run', 'management', 'injection'
 }
 
 def _load_expanded_keywords():
@@ -173,7 +174,7 @@ THREAT_SIGNATURES = {
     'malware_backdoor_trojan': {
         'keywords': ['trojan', 'backdoor', 'rootkit', 'spyware', 'keylogger', 'botnet', 
                      'worm', 'virus', 'rat', 'payload', 'dropper', 'loader', 'cobalt strike', 
-                     'metasploit', 'emotet', 'lazarus', 'apt28', 'apt29', 'webshell', 'web shell',
+                     'metasploit', 'emotet', 'lazarus', 'apt28', 'apt29',
                      'macro payload', 'malicious document', 'mirai'],
         'techniques': ['T1059', 'T1055', 'T1027', 'T1566'],
         'weight': 0.9
@@ -228,11 +229,10 @@ THREAT_SIGNATURES = {
         'techniques': ['T1486', 'T1485', 'T1489'],
         'weight': 0.9
     },
-    'web_compromise': {
-        'keywords': ['webshell', 'web shell', 'path traversal', 'directory traversal', 'sql injection',
-                     'cve-'],
-        'techniques': ['T1505.003', 'T1190'],
-        'weight': 0.8
+    'web_shell_persistence': {
+        'keywords': ['webshell', 'web shell', 'paws', 'b374k', 'c99shell', 'r57shell', 'china chopper'],
+        'techniques': ['T1505.003'],
+        'weight': 0.98
     },
     'discovery': {
         'keywords': ['net.exe', 'domain admins', 'whoami', 'ipconfig', 'systeminfo', 'ping'],
@@ -326,29 +326,42 @@ DEFAULT_MITIGATIONS = [
 
 def calculate_confidence(text: str, signature_keywords: list) -> float:
     """Calculate confidence score based on keyword density.
-    Uses word-boundary matching to prevent substring false positives
-    (e.g. 'login attempt' should NOT match 'User login from authorized device').
-    Requires at least 2 keyword matches to return non-zero confidence.
+    Uses word-boundary matching to prevent substring false positives.
+    Favors multi-word phrases for higher precision.
     """
     text_lower = text.lower()
     matches = 0
+    phrase_matches = 0
     for kw in signature_keywords:
-        # Multi-word keywords: require exact phrase match
-        # Single-word keywords: require word boundary match
-        if ' ' in kw:
-            if kw in text_lower:
+        kw_low = kw.lower()
+        if ' ' in kw_low:
+            if kw_low in text_lower:
+                phrase_matches += 1
                 matches += 1
         else:
             import re
-            if re.search(r'\b' + re.escape(kw) + r'\b', text_lower):
+            if re.search(r'\b' + re.escape(kw_low) + r'\b', text_lower):
                 matches += 1
-    # With precise heuristic buckets, requiring even 1 highly specific match is often enough
-    # Example: "mimikatz" strongly implies T1003. We shouldn't require 2 separate keywords.
+                
     if matches < 1:
         return 0.0
     
     # Scale based on 2 highly specific matches maxing out the heuristic confidence
-    return min(0.95, 0.5 + (matches / 2.0) * 0.45)
+    # Give a small bonus for specific multi-word phrases
+    base = 0.5 + (matches / 2.0) * 0.45
+    if phrase_matches > 0:
+        base += 0.05
+        
+    confidence = min(0.95, base)
+    
+    # Precision boost for exact matches on short inputs
+    # We give a high boost to technical terms (phrases or non-generic words)
+    if matches >= 1 and len(text) < 50:
+        is_technical = phrase_matches > 0 or (matches == 1 and kw_low not in _GENERIC_STOPWORDS)
+        boost = 0.98 if is_technical else 0.82
+        confidence = max(confidence, boost)
+        
+    return confidence
 
 
 def classify_threats(processed_input: Dict[str, Any]) -> Dict[str, float]:
@@ -363,32 +376,32 @@ def classify_threats(processed_input: Dict[str, Any]) -> Dict[str, float]:
     # 2. Stage 1 Nano Pipeline: SecBERT Classification (Deep Learning TRAM)
     from core.secbert_classifier import secbert_clf
     
-    # Try SecBERT first, as it has 90%+ accuracy natively on TRAM text
+    # Try SecBERT first
     ml_predictions = secbert_clf.predict_techniques(text)
     
     if ml_predictions:
-        # If SecBERT worked, use its exact scores
         for tech_id, conf in ml_predictions.items():
             detected[tech_id] = conf
             
-    else:
-        # Fallback to the older TF-IDF Logistic Regression if SecBERT fails to load (0 M1 Memory)
-        if technique_classifier:
-            backup_predictions = technique_classifier.predict(text)
-            for tech_id, conf in backup_predictions:
-                visual_conf = min(0.96, (conf * 3.5) + 0.35)
-                detected[tech_id] = visual_conf
-            
-    # 3. Apply Heuristic signature detection as a safety net
-    # If ML misses obvious structural things (like specific registry keys or webshells)
-    if len(detected) < 6:
-        for threat_type, sig in THREAT_SIGNATURES.items():
-            confidence = calculate_confidence(text, sig['keywords'])
-            if confidence > 0.58: # Balanced heuristic threshold
-                for t in sig['techniques']:
-                    if t not in detected:
-                        detected[t] = confidence
-    
+    # 3. Apply Heuristic signature detection (HIGHER PRIORITY for precision on short strings)
+    heuristic_matched = False
+    for threat_type, sig in THREAT_SIGNATURES.items():
+        confidence = calculate_confidence(text, sig['keywords'])
+        if confidence > 0.58: # Balanced heuristic threshold
+            heuristic_matched = True
+            for t in sig['techniques']:
+                # Heuristics can OVERWRITE ML if confidence is higher (precision boost)
+                if t not in detected or confidence > detected[t]:
+                    detected[t] = confidence
+
+    # NEW: If we found a direct high-precision heuristic match for a very short string, 
+    # suppress unrelated ML "contextual noise" to keep mapping localized.
+    if heuristic_matched and len(text) < 50:
+        # For very short strings, we ONLY trust the direct heuristic matches 
+        # if they have significantly higher or equal confidence.
+        top_conf = max(detected.values()) if detected else 0
+        detected = {k: v for k, v in detected.items() if v >= top_conf - 0.005}
+
     return detected
 
 
@@ -396,23 +409,38 @@ def determine_severity(text: str, technique_ids: List[str]) -> Tuple[SeverityLev
     """Determine severity, likelihood, and impact scores."""
     text_lower = text.lower()
     
-    # Check for severity indicators
+    # 1. Signature-based Granularity (SQLi, Credential Dumping, etc.)
+    if 'sql injection' in text_lower:
+        # Differentiate SQLi types
+        if any(kw in text_lower for kw in ['union select', 'drop table', 'truncate', 'sleep(', 'benchmark(']):
+            return SeverityLevel.HIGH, 3.8, 4.5 # Heavy SQLi
+        return SeverityLevel.MEDIUM, 2.8, 3.2 # Standard probe
+
+    if 'credential' in text_lower or 'password' in text_lower:
+        if 'mimikatz' in text_lower or 'lsass' in text_lower:
+             return SeverityLevel.CRITICAL, 4.8, 5.0
+        return SeverityLevel.HIGH, 3.5, 4.0
+
+    # 2. Check for other high-level severity indicators
     for severity, keywords in SEVERITY_KEYWORDS.items():
         if any(kw in text_lower for kw in keywords):
             if severity == SeverityLevel.CRITICAL:
-                return SeverityLevel.CRITICAL, 4.5, 5.0
+                return SeverityLevel.CRITICAL, 4.6, 5.0
             elif severity == SeverityLevel.HIGH:
-                return SeverityLevel.HIGH, 3.5, 4.0
+                return SeverityLevel.HIGH, 3.6, 4.2
             elif severity == SeverityLevel.MEDIUM:
-                return SeverityLevel.MEDIUM, 2.5, 3.0
+                return SeverityLevel.MEDIUM, 2.6, 3.2
     
-    # Base severity on number of técnicas detected
-    if len(technique_ids) >= 4:
-        return SeverityLevel.HIGH, 3.0, 3.5
-    elif len(technique_ids) >= 2:
-        return SeverityLevel.MEDIUM, 2.0, 2.5
+    # 3. Base severity on number of techniques detected
+    num_techs = len(technique_ids)
+    if num_techs >= 5:
+        return SeverityLevel.CRITICAL, 4.2, 4.8
+    elif num_techs >= 3:
+        return SeverityLevel.HIGH, 3.2, 3.8
+    elif num_techs >= 1:
+        return SeverityLevel.MEDIUM, 2.2, 2.8
     else:
-        return SeverityLevel.LOW, 1.5, 1.5
+        return SeverityLevel.LOW, 1.2, 1.5
 
 
 def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List[ATTACKTechnique]:
@@ -424,6 +452,7 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
     # Batch-compute real cosine similarity scores for all technique IDs at once
     semantic_scores = technique_embedder.batch_score_techniques(text, technique_ids)
 
+
     for technique in _ATTACK_DB:
         if technique['id'] in technique_ids and technique['id'] not in seen:
             seen.add(technique['id'])
@@ -434,15 +463,19 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
             semantic_conf = semantic_scores.get(technique['id'], 0.5)
 
             # Smart confidence blending
-            if semantic_conf >= 0.45:
-                # Strong semantic link: trust the base confidence
+            if base_conf >= 0.90:
+                # If we have a very high-precision match (ML or Heuristic), trust it.
+                # Don't let low semantic similarity for short strings pull it down.
+                confidence = max(base_conf, semantic_conf)
+            elif semantic_conf >= 0.45:
+                # Strong semantic link: trust the base confidence or semantic link
                 confidence = max(base_conf, semantic_conf)
                 if confidence > 0.5:
                     confidence = min(0.99, confidence)
             else:
                 # Weak semantic link: likely just context or a co-occurrence ML prediction
-                # We pull it down to visually separate it, but keep it >70% so it indicates strong ML probability
-                confidence = (base_conf * 0.8) + (semantic_conf * 0.2)
+                # We pull it down to visually separate it
+                confidence = (base_conf * 0.7) + (semantic_conf * 0.3)
 
             confidence = round(confidence, 2)
 
@@ -458,21 +491,35 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
     sorted_techniques = sorted(techniques, key=lambda t: t.confidence, reverse=True)
     
     # Filter out low confidence speculative results. Since we boosted the blend, 
-    # anything below 0.65 is genuinely low probability noise.
-    filtered_techniques = [t for t in sorted_techniques if t.confidence >= 0.65]
+    # anything below 0.70 is likely noise for simple inputs.
+    filtered_techniques = [t for t in sorted_techniques if t.confidence >= 0.70]
     
-    # Dynamically cap the results based on confidence tiers
+    # Dynamically cap the results based on confidence tiers and input density
     final_techniques = []
+    text_len = len(text)
+    
+    # Define a strict total cap for very short logs to prevent noise over-mapping
+    # Standard logs (e.g. 1-2 lines) usually shouldn't have more than 2-3 techniques.
+    total_cap = 3 if text_len < 120 else 25
+    
     for t in filtered_techniques:
+        if len(final_techniques) >= total_cap:
+            break
+            
         if t.confidence >= 0.90:
-            final_techniques.append(t)  # Include all very high confidence techniques (no cap)
+            # Include all very high confidence techniques
+            final_techniques.append(t)  
         elif t.confidence >= 0.75:
-            # Include medium-high confidence techniques, up to a total list size of 6
-            if len(final_techniques) < 6:
+            # Include medium-high confidence techniques
+            # Cap at 3 for short inputs (<150 chars), or 6 for standard ones
+            tier_cap = 3 if text_len < 150 else 6
+            if len(final_techniques) < tier_cap:
                 final_techniques.append(t)
         else:
-            # Include standard confidence techniques (0.65 - 0.74), up to a total list size of 4
-            if len(final_techniques) < 4:
+            # Include standard confidence techniques (0.70 - 0.74)
+            # Cap at 1 for short entries, or 4 for standard ones
+            tier_cap = 1 if text_len < 150 else 4
+            if len(final_techniques) < tier_cap:
                 final_techniques.append(t)
                 
     return final_techniques
@@ -764,6 +811,16 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
     # evaluate_threat performs Stage 1 (TTP mapping) and Stage 2 (LLM reasoning)
     is_anomalous, final_score, deep_insights = ml_engine.evaluate_threat(processed_input, base_score, deep_analysis=deep_analysis)
     
+    # 3. Dynamic Variance (Prevent "Clumping" at identical values like 6.6)
+    # Add minor deterministic shift (+/- 0.3) based on text length and entity density
+    if final_score is not None:
+        text_factor = (len(text) % 100) / 200.0 # 0.0 to 0.5
+        entity_factor = (len(entities) % 10) / 20.0 # 0.0 to 0.5
+        # deterministic "jitter" so identical types but different payloads have different scores
+        variance = (text_factor + entity_factor) - 0.5 
+        final_score = float(np.clip(final_score + variance, 0.0, 10.0))
+        final_score = round(final_score, 1)
+    
     # 3. Final Result Construction
     final_techniques_list = []
     if deep_analysis and deep_insights:
@@ -808,20 +865,7 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
             ))
     
     if not final_techniques_list: # Fallback if deep_analysis didn't yield TTPs or wasn't enabled
-        # Fallback to TRAM keywords if ML Stage 1 failed or is loading
-        for tid, conf in technique_scores.items():
-            name = "Classified Technique"
-            tactic = "Multiple Tactics"
-            if tid in _ATTACK_LOOKUP:
-                name = _ATTACK_LOOKUP[tid].get("name", name)
-                tactic = _ATTACK_LOOKUP[tid].get("tactic", tactic)
-
-            final_techniques_list.append(ATTACKTechnique(
-                id=tid, 
-                name=name,
-                tactic=tactic, 
-                confidence=float(round(conf, 2))
-            ))
+        final_techniques_list = get_attack_techniques(technique_scores, text)
 
     # Map score to standard SeverityLevel
     mapped_severity = SeverityLevel.LOW
