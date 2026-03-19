@@ -1,21 +1,0 @@
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-`torch_dtype` is deprecated! Use `dtype` instead!
-Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:   0%|          | 1/272 [00:00<00:37,  7.18it/s]Loading weights:  91%|█████████ | 247/272 [00:00<00:00, 1245.13it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 1067.15it/s]
-INFO:     Started server process [24609]
-INFO:     Waiting for application startup.
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 6800.04it/s]
-[1mBertModel LOAD REPORT[0m from: sentence-transformers/all-MiniLM-L6-v2
-Key                     | Status     |  | 
-------------------------+------------+--+-
-embeddings.position_ids | UNEXPECTED |  | 
-
-[3mNotes:
-- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
-INFO:     127.0.0.1:50978 - "OPTIONS /api/analyze/extract-attacks HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50978 - "POST /api/analyze/extract-attacks HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50982 - "OPTIONS /api/analyze/text HTTP/1.1" 200 OK
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 7174.07it/s]
-Industrial ML evaluation failed: Feature shape mismatch, expected: 5, got 15
-INFO:     127.0.0.1:50982 - "POST /api/analyze/text HTTP/1.1" 200 OK
