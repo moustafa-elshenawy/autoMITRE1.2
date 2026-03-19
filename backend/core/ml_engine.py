@@ -261,8 +261,9 @@ class EnsembleMLEngine:
                 num_score = float(np.clip(self.xgb_model.predict(features)[0], 0.0, 10.0))
 
             if not deep_analysis:
-                # Standard Blend: 40% Heuristic, 60% XGBoost
-                final_severity = (0.40 * heuristic_score) + (0.60 * num_score)
+                # Standard Blend: 60% Heuristic (Dynamic), 40% XGBoost (Structural)
+                # Why? Heuristic is better at catching specific payload nuances (UNION vs standard SQL)
+                final_severity = (0.60 * heuristic_score) + (0.40 * num_score)
                 return is_anomalous, float(np.clip(final_severity, 0.0, 10.0)), deep_insights
 
             # 3. Deep Intelligence Stage 1: SecBERT TTP Mapping
@@ -369,14 +370,19 @@ class EnsembleMLEngine:
         crit_net    = np.random.binomial(1, 0.75, n_crit).astype(float)
         crit_scores = np.random.uniform(9.0, 10.0, n_crit)
 
-        # Combine all
-        X = np.column_stack([
+        # Combine all (15 features schema)
+        # We'll fill the remaining 10 features with zeros for basic baseline
+        feature_base = np.column_stack([
             np.concatenate([low_len, med_len, high_len, crit_len]),
             np.concatenate([low_ent, med_ent, high_ent, crit_ent]),
             np.concatenate([low_kwsev, med_kwsev, high_kwsev, crit_kwsev]),
             np.concatenate([low_crit, med_crit, high_crit, crit_crit]),
             np.concatenate([low_net, med_net, high_net, crit_net]),
         ])
+        
+        # Add 10 columns of zeros to reach 15 features
+        X = np.hstack([feature_base, np.zeros((feature_base.shape[0], 10))])
+
         y = np.concatenate([low_scores, med_scores, high_scores, crit_scores])
         X = np.maximum(X, 0)
 

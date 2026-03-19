@@ -1,54 +1,54 @@
 {
   "text_severity": {
-    "train_size": 42500,
-    "val_size": 7500,
+    "train_size": 85000,
+    "val_size": 15000,
     "tfidf_features": 12000,
-    "mae": 0.9834,
-    "rmse": 1.2797,
-    "r2": 0.5139,
-    "cv_mae_mean": 0.9866,
-    "cv_mae_std": 0.0035,
+    "mae": 0.9736,
+    "rmse": 1.2783,
+    "r2": 0.5165,
+    "cv_mae_mean": 0.975,
+    "cv_mae_std": 0.0037,
     "per_bin": {
       "Low (0-3.9)": {
-        "count": 267,
-        "mae": 2.378
+        "count": 555,
+        "mae": 2.424
       },
       "Medium (4-6.9)": {
-        "count": 3404,
-        "mae": 0.896
+        "count": 6820,
+        "mae": 0.864
       },
       "High (7-8.9)": {
-        "count": 2746,
-        "mae": 0.726
+        "count": 5467,
+        "mae": 0.724
       },
       "Critical (9-10)": {
-        "count": 1083,
-        "mae": 1.567
+        "count": 2158,
+        "mae": 1.58
       }
     }
   },
   "numerical_xgboost": {
-    "train_size": 42500,
-    "val_size": 7500,
-    "mae": 1.3274,
-    "rmse": 1.6362,
-    "r2": 0.2057,
+    "train_size": 85000,
+    "val_size": 15000,
+    "mae": 1.3158,
+    "rmse": 1.624,
+    "r2": 0.2172,
     "feature_importance": {
-      "text_length": 0.0217,
-      "entity_count": 0.0584,
-      "keyword_severity": 0.2002,
-      "has_critical": 0.5295,
-      "has_network": 0.0113,
-      "has_process": 0.016,
-      "has_registry": 0.0084,
-      "has_file_path": 0.0113,
-      "has_persistence": 0.008,
-      "has_lateral_movement": 0.0444,
-      "has_exfiltration": 0.0238,
-      "technique_id_count": 0.005,
-      "malware_name_count": 0.0047,
-      "has_exploit": 0.0445,
-      "sentence_count": 0.013
+      "text_length": 0.0233,
+      "entity_count": 0.0566,
+      "keyword_severity": 0.2434,
+      "has_critical": 0.48,
+      "has_network": 0.014,
+      "has_process": 0.0155,
+      "has_registry": 0.0042,
+      "has_file_path": 0.0089,
+      "has_persistence": 0.0066,
+      "has_lateral_movement": 0.0457,
+      "has_exfiltration": 0.0305,
+      "technique_id_count": 0.0057,
+      "malware_name_count": 0.0045,
+      "has_exploit": 0.0473,
+      "sentence_count": 0.0139
     }
   },
   "attack_keywords": {

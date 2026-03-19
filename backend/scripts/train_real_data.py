@@ -770,7 +770,7 @@ if __name__ == "__main__":
     # Phase 1: Download all datasets
     print("\n[Phase 1] Downloading datasets…")
     print("-"*65)
-    nvd_records  = load_cve_data(max_results=50000)
+    nvd_records  = load_cve_data(max_results=100000)
     stix_data    = fetch_attack_stix()
     nslkdd_path  = fetch_nslkdd()
     cicids_dir   = fetch_cicids_2017()

@@ -116,6 +116,51 @@ async def analyze_hash(request: HashLookupRequest, db: AsyncSession = Depends(ge
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/extract-attacks", response_model=None) # Returning ExtractedAttacksResponse
+async def extract_attacks(file: UploadFile = File(...), context: Optional[str] = Form(None), db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """Analyze an uploaded file and extract a list of discrete attacks."""
+    try:
+        filename = file.filename.lower() if file.filename else ""
+        content = await file.read()
+        
+        text_content = ""
+        
+        # Binary PCAP routing (support common extensions)
+        pcap_exts = (".pcap", ".pcapng", ".cap", ".dmp")
+        if filename.endswith(pcap_exts):
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            
+            # Scapy binary decode to textual representation
+            text_content = parse_pcap_bytes(temp_path)
+            
+            # Safely cleanup binary temp file
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+        else:
+            # Handle Standard Text/JSON Logs
+            # Safety limit: don't decode > 2MB as text for extraction
+            trimmed_content = content[:2000000] # 2MB absolute cap
+            text_content = trimmed_content.decode('utf-8', errors='ignore')
+            
+        if context:
+            text_content = f"Context: {context}\n\n{text_content}"
+
+            
+        from core.nano_llm_engine import nano_llm
+        attacks = nano_llm.identify_attacks(text_content)
+        
+        from models.schemas import ExtractedAttacksResponse, ExtractedAttack
+        # Enforce schema structure
+        validated_attacks = [ExtractedAttack(**a) for a in attacks]
+        
+        return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/file")
 async def analyze_file(file: UploadFile = File(...), context: Optional[str] = Form(None), db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Analyze an uploaded file (JSON, STIX, text log)."""

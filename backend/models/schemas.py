@@ -26,6 +26,20 @@ class TextAnalysisRequest(BaseModel):
     deep_analysis: bool = False
 
 
+class ExtractedAttack(BaseModel):
+    id: str
+    title: str
+    description: str
+    raw_snippet: str
+    severity_estimate: str
+
+
+class ExtractedAttacksResponse(BaseModel):
+    success: bool
+    attacks: List[ExtractedAttack] = []
+    error: Optional[str] = None
+
+
 class HashLookupRequest(BaseModel):
     hash: str
     hash_type: Optional[str] = "sha256"

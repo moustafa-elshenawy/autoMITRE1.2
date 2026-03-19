@@ -21,6 +21,14 @@ DATASETS = {
     "cve_logs": {
         "url": "https://raw.githubusercontent.com/CVEProject/cvelist/master/cvelist.csv", 
         "file": "raw_cve_logs.csv"
+    },
+    "web_attacks_csic": {
+        "url": "https://raw.githubusercontent.com/lim-re-cycle/CSIC-2010-Dataset/master/csic_2010.csv",
+        "file": "raw_web_attacks.csv"
+    },
+    "iot_botnet": {
+        "url": "https://raw.githubusercontent.com/stricaud/trafficanalyzer/master/datasets/botnet/botnet_iot.csv",
+        "file": "raw_iot_botnet.csv"
     }
 }
 
@@ -221,6 +229,39 @@ def build_log_analysis(raw_path):
     print(f"Saved {len(log_data)} log entries to {target_csv}")
 
 
+def build_web_attack_features(raw_path):
+    target_csv = DATA_DIR / "web_attack_features.csv"
+    print("Formatting CSIC 2010 into web attack features...")
+    try:
+        df = pd.read_csv(raw_path)
+        # Simplify CSIC 2010 for our engine
+        # Focus on method, url length, and payload suspiciousness
+        df['url_len'] = df['URL'].str.len()
+        df['has_sql'] = df['URL'].str.contains("SELECT|UNION|INSERT|UPDATE|DELETE", case=False).astype(int)
+        df['has_xss'] = df['URL'].str.contains("<script|alert|onload", case=False).astype(int)
+        
+        # Binary label for training
+        df['label'] = df['Classification'].apply(lambda x: 1 if x == "Anomalous" else 0)
+        
+        df[['url_len', 'has_sql', 'has_xss', 'label']].to_csv(target_csv, index=False)
+        print(f"Saved {len(df)} web attack records.")
+    except Exception as e:
+        print(f"Web attack build failed: {e}")
+
+
+def build_iot_features(raw_path):
+    target_csv = DATA_DIR / "iot_features.csv"
+    print("Formatting BoT-IoT into IoT threat features...")
+    try:
+        df = pd.read_csv(raw_path)
+        # Map BoT-IoT columns to our unified schema if possible
+        # Or create a specialized IoT feature set
+        df.to_csv(target_csv, index=False)
+        print(f"Saved {len(df)} IoT records.")
+    except Exception as e:
+        print(f"IoT build failed: {e}")
+
+
 def main():
     print("Starting autoMITRE Real Dataset Downloader API...")
     raw_dir = getattr(DATA_DIR, "parent", DATA_DIR) / "raw"
@@ -249,6 +290,16 @@ def main():
         build_log_analysis(raw_dir / DATASETS["cve_logs"]["file"])
     except Exception as e:
         print(f"Log analysis build failed: {e}")
+        
+    try:
+        build_web_attack_features(raw_dir / DATASETS["web_attacks_csic"]["file"])
+    except Exception as e:
+        print(f"Web attack build failed: {e}")
+
+    try:
+        build_iot_features(raw_dir / DATASETS["iot_botnet"]["file"])
+    except Exception as e:
+        print(f"IoT build failed: {e}")
         
     print("Dataset real-world grounding complete.")
 

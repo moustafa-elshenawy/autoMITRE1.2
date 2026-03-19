@@ -168,6 +168,88 @@ class NanoLLMEngine:
         
         return self._fallback_narrative(techniques)
 
+    def identify_attacks(self, raw_text: str) -> List[Dict[str, Any]]:
+        """
+        Reads a raw file content (or PCAP text parsed output) and extracts a list of discrete attacks.
+        Returns a list of dictionaries matching the ExtractedAttack schema.
+        """
+        # Multi-tiered Truncation: 
+        # Cloud (Groq) can handle more, but Local (Phi-3.5) is capped at 4k tokens.
+        # 12k chars is ~3k-4k tokens. 6k chars is safer for local.
+        is_cloud = bool(os.getenv("GROQ_API_KEY")) or self.use_cloud
+        max_chars = 12000 if is_cloud else 6000
+        safe_text = raw_text[:max_chars] if len(raw_text) > max_chars else raw_text
+
+        prompt = (
+            f"SYSTEM: You are a Tier-3 SOC Lead. Your task is to identify and list EXACT attack names from the raw packet/log data below.\n"
+            f"RULES:\n"
+            f"1. Be extremely specific (e.g., 'SQL Injection (OR 1=1)', 'Nmap Scan', 'Log4Shell Attempt').\n"
+            f"2. If multiple IPs are doing different things, list them as separate attacks.\n"
+            f"3. Return ONLY a valid JSON object. DO NOT include any text before or after the JSON.\n"
+            f"JSON FORMAT:\n"
+            f"{{\n"
+            f"  \"attacks\": [\n"
+            f"    {{ \"id\": \"id\", \"title\": \"EXACT ATTACK NAME\", \"description\": \"Summary of target and intent\", \"severity_estimate\": \"Critical/High/Medium/Low\", \"raw_snippet\": \"relevant packet/log snippet\" }}\n"
+            f"  ]\n"
+            f"}}\n\n"
+            f"DATA TO EXTRACT FROM:\n{safe_text}\n"
+        )
+        
+        use_cloud = bool(os.getenv("GROQ_API_KEY")) or self.use_cloud
+        def clean_and_parse(text_in):
+            if not text_in: return []
+            try:
+                # Remove markdown blocks
+                if "```json" in text_in:
+                    text_in = text_in.split("```json")[1].split("```")[0]
+                elif "```" in text_in:
+                    text_in = text_in.split("```")[1].split("```")[0]
+                
+                # Strip control characters
+                text_in = "".join(ch for ch in text_in if ord(ch) >= 32 or ch in "\n\r\t")
+                
+                # Find first { and matching last }
+                # Note: rfind might fail if there's trailing junk like "Here is the JSON: {}"
+                # We slice based on first { and last }
+                start = text_in.find('{')
+                end = text_in.rfind('}') + 1
+                if start == -1 or end == 0:
+                    return []
+                
+                json_str = text_in[start:end].strip()
+                parsed = json.loads(json_str)
+                attacks = parsed.get("attacks", [])
+                return [a for a in attacks if isinstance(a, dict) and "raw_snippet" in a]
+            except Exception as e:
+                log.warning(f"JSON Parse Error: {e} | Content starts with: {text_in[:50]}...")
+                return []
+
+        if use_cloud:
+            cloud_response = self._query_groq(prompt)
+            results = clean_and_parse(cloud_response)
+            if results: return results
+
+        # Local Fallback
+        try:
+            local_prompt = f"<|system|>\nYou are a CTI analyst. JSON ONLY.<|user|>\n{prompt}\nJSON OUTPUT:\n<|assistant|>\n{{"
+            output = self.local_llm(local_prompt, max_tokens=1000, temperature=0.1, stop=["<|end|>", "}"], include_stop=True)
+            
+            if output and output['choices']:
+                text = "{" + output['choices'][0]['text']
+                results = clean_and_parse(text)
+                if results: return results
+        except Exception as e:
+            log.warning(f"Local inference failed in identify_attacks: {e}")
+
+        # Ultimate fallback
+        return [{
+            "id": "attack-1",
+            "title": "General Threat Activity",
+            "description": "The system detected suspicious patterns but could not separate them into discrete incidents. Proceeding with a full-file assessment.",
+            "severity_estimate": "Medium",
+            "raw_snippet": raw_text[:2000]
+        }]
+
     def _fallback_narrative(self, techniques: list) -> dict:
         return {
             "title": "Industrial Threat Insight",

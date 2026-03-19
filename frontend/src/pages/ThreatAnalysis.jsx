@@ -370,6 +370,8 @@ export default function ThreatAnalysis() {
     const [hash, setHash] = useState('')
     const [loading, setLoading] = useState(false)
     const [deepAnalysis, setDeepAnalysis] = useState(true)
+    const [extractedAttacks, setExtractedAttacks] = useState([])
+    const [savedAttacksList, setSavedAttacksList] = useState([]) // New state to hold list while analyzing
     const [result, setResult] = useState(null)
     const [error, setError] = useState(null)
 
@@ -395,18 +397,35 @@ export default function ThreatAnalysis() {
         if (!files[0]) return
         const fd = new FormData()
         fd.append('file', files[0])
-        setLoading(true); setError(null); setResult(null)
+        setLoading(true); setError(null); setResult(null); setExtractedAttacks([]); setSavedAttacksList([])
         try {
             const token = localStorage.getItem('token')
             const headers = token ? { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } : { 'Content-Type': 'multipart/form-data' }
-            const r = await axios.post(`${API}/api/analyze/file`, fd, { headers })
-            if (r.data.success) setResult(r.data.threat_result)
-            else setError(r.data.error)
+            const r = await axios.post(`${API}/api/analyze/extract-attacks`, fd, { headers })
+            if (r.data.success && r.data.attacks && r.data.attacks.length > 0) {
+                setExtractedAttacks(r.data.attacks)
+            } else {
+                setError(r.data.error || 'No attacks could be extracted from this file.')
+            }
         } catch (e) {
-            setError('Backend unavailable — start the API server first')
+            setError(e.response?.data?.detail || 'Backend unavailable — start the API server first')
         }
         setLoading(false)
     }, [])
+
+    const analyzeExtractedAttack = (attack) => {
+        setSavedAttacksList([...extractedAttacks])
+        setExtractedAttacks([]) // Hide the UI list to show the analyzer
+        setText(attack.raw_snippet)
+        analyze({ text: attack.raw_snippet, deep_analysis: true }, '/api/analyze/text')
+    }
+    
+    const handleBackToList = () => {
+        setExtractedAttacks([...savedAttacksList])
+        setSavedAttacksList([])
+        setResult(null) // Clear result to go back to list cleanly
+    }
+
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -475,13 +494,58 @@ export default function ThreatAnalysis() {
 
                 {tab === 'file' && (
                     <div>
-                        <div {...getRootProps()} className={`upload-zone ${isDragActive ? 'drag-active' : ''}`}>
-                            <input {...getInputProps()} />
-                            <Upload className="upload-zone-icon" />
-                            <div className="upload-zone-title">Drop files here or click to browse</div>
-                            <div className="upload-zone-sub">Supports: JSON, STIX 2.1, CSV, text logs, PCAP/PCAPNG network captures</div>
-                        </div>
-                        {loading && <div style={{ textAlign: 'center', padding: 20 }}><div className="spinner" style={{ margin: '0 auto' }} /></div>}
+                        {extractedAttacks.length > 0 ? (
+                            <div className="extracted-attacks-list">
+                                <h3 style={{ marginBottom: 16, fontSize: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <AlertTriangle size={18} color="#f59e0b" />
+                                    Detected Multiple Threats ({extractedAttacks.length})
+                                </h3>
+                                <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 20 }}>
+                                    Select a specific attack block from the file to perform deep technical analysis and framework mapping.
+                                </p>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    {extractedAttacks.map((attack) => (
+                                        <div 
+                                            key={attack.id} 
+                                            className="card" 
+                                            style={{ cursor: 'pointer', padding: 16, transition: 'all 0.2s', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                                            onClick={() => analyzeExtractedAttack(attack)}
+                                            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--accent-blue)'; e.currentTarget.style.background = 'rgba(0,212,255,0.05)' }}
+                                            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.background = 'var(--bg-secondary)' }}
+                                        >
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+                                                    <SeverityBadge severity={attack.severity_estimate} />
+                                                    <span style={{ fontWeight: 600, fontSize: 15, color: '#f8fafc' }}>{attack.title}</span>
+                                                </div>
+                                                <p style={{ fontSize: 13, color: '#94a3b8', margin: 0 }}>{attack.description}</p>
+                                            </div>
+                                            <div style={{ marginLeft: 16, color: 'var(--accent-blue)', opacity: 0.8 }}>
+                                                <ChevronRight size={20} />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <button 
+                                    className="btn btn-secondary" 
+                                    style={{ marginTop: 20 }}
+                                    onClick={() => setExtractedAttacks([])}
+                                >
+                                    Cancel & Upload Different File
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <div {...getRootProps()} className={`upload-zone ${isDragActive ? 'drag-active' : ''}`}>
+                                    <input {...getInputProps()} />
+                                    <Upload className="upload-zone-icon" />
+                                    <div className="upload-zone-title">Drop files here or click to browse</div>
+                                    <div className="upload-zone-sub">Supports: JSON, STIX 2.1, CSV, text logs, PCAP/PCAPNG network captures</div>
+                                </div>
+                                {loading && <div style={{ textAlign: 'center', padding: 20 }}><div className="spinner" style={{ margin: '0 auto' }} /></div>}
+                            </>
+                        )}
                     </div>
                 )}
 
@@ -494,6 +558,17 @@ export default function ThreatAnalysis() {
             </div>
 
             <ThreatResultPanel result={result} />
+            
+            {result && savedAttacksList.length > 0 && (
+                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'center' }}>
+                    <button 
+                        className="btn btn-secondary" 
+                        onClick={handleBackToList}
+                    >
+                        ← Back to Analyzed File Attacks
+                    </button>
+                </div>
+            )}
         </div>
     )
 }
