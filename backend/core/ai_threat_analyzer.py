@@ -162,7 +162,7 @@ THREAT_SIGNATURES = {
     },
     'credential_kerberos': {
         'keywords': ['kerberoasting', 'golden ticket', 'silver ticket', 'dcsync'],
-        'techniques': ['T1558'],
+        'techniques': ['T1558', 'T1003'],
         'weight': 0.89
     },
     'malware_ransomware': {
@@ -332,6 +332,8 @@ def calculate_confidence(text: str, signature_keywords: list) -> float:
     text_lower = text.lower()
     matches = 0
     phrase_matches = 0
+    has_technical_single_word = False
+    
     for kw in signature_keywords:
         kw_low = kw.lower()
         if ' ' in kw_low:
@@ -342,6 +344,8 @@ def calculate_confidence(text: str, signature_keywords: list) -> float:
             import re
             if re.search(r'\b' + re.escape(kw_low) + r'\b', text_lower):
                 matches += 1
+                if kw_low not in _GENERIC_STOPWORDS:
+                    has_technical_single_word = True
                 
     if matches < 1:
         return 0.0
@@ -354,11 +358,13 @@ def calculate_confidence(text: str, signature_keywords: list) -> float:
         
     confidence = min(0.95, base)
     
-    # Precision boost for exact matches on short inputs
-    # We give a high boost to technical terms (phrases or non-generic words)
-    if matches >= 1 and len(text) < 50:
-        is_technical = phrase_matches > 0 or (matches == 1 and kw_low not in _GENERIC_STOPWORDS)
-        boost = 0.98 if is_technical else 0.82
+    # Precision boost for exact matches
+    if phrase_matches > 0:
+        # Multi-word phrases (e.g. "web shell", "sql injection") ALWAYS get top boost mapping regardless of text length
+        confidence = max(confidence, 0.98)
+    elif matches >= 1 and len(text) < 50:
+        # For single words in short texts, boost if technical (e.g. "webshell", "mimikatz")
+        boost = 0.98 if has_technical_single_word else 0.82
         confidence = max(confidence, boost)
         
     return confidence
@@ -386,13 +392,15 @@ def classify_threats(processed_input: Dict[str, Any]) -> Dict[str, float]:
     # 3. Apply Heuristic signature detection (HIGHER PRIORITY for precision on short strings)
     heuristic_matched = False
     for threat_type, sig in THREAT_SIGNATURES.items():
-        confidence = calculate_confidence(text, sig['keywords'])
-        if confidence > 0.58: # Balanced heuristic threshold
+        base_confidence = calculate_confidence(text, sig['keywords'])
+        if base_confidence > 0.58: # Balanced heuristic threshold
             heuristic_matched = True
-            for t in sig['techniques']:
+            for i, t in enumerate(sig['techniques']):
                 # Heuristics can OVERWRITE ML if confidence is higher (precision boost)
-                if t not in detected or confidence > detected[t]:
-                    detected[t] = confidence
+                # Apply positional decay: 1st technique gets full boost, subsequent drop by 3%
+                decayed_conf = max(0.60, base_confidence - (i * 0.03))
+                if t not in detected or decayed_conf > detected[t]:
+                    detected[t] = decayed_conf
 
     # NEW: If we found a direct high-precision heuristic match for a very short string, 
     # suppress unrelated ML "contextual noise" to keep mapping localized.
@@ -406,41 +414,50 @@ def classify_threats(processed_input: Dict[str, Any]) -> Dict[str, float]:
 
 
 def determine_severity(text: str, technique_ids: List[str]) -> Tuple[SeverityLevel, float, float]:
-    """Determine severity, likelihood, and impact scores."""
+    """Determine severity, likelihood, and impact scores by evaluating all risk factors and taking the maximum."""
     text_lower = text.lower()
     
+    potential_scores = []
+
     # 1. Signature-based Granularity (SQLi, Credential Dumping, etc.)
     if 'sql injection' in text_lower:
         # Differentiate SQLi types
         if any(kw in text_lower for kw in ['union select', 'drop table', 'truncate', 'sleep(', 'benchmark(']):
-            return SeverityLevel.HIGH, 3.8, 4.5 # Heavy SQLi
-        return SeverityLevel.MEDIUM, 2.8, 3.2 # Standard probe
+            potential_scores.append((SeverityLevel.HIGH, 3.8, 4.5)) # Heavy SQLi
+        else:
+            potential_scores.append((SeverityLevel.MEDIUM, 2.8, 3.2)) # Standard probe
 
     if 'credential' in text_lower or 'password' in text_lower:
         if 'mimikatz' in text_lower or 'lsass' in text_lower:
-             return SeverityLevel.CRITICAL, 4.8, 5.0
-        return SeverityLevel.HIGH, 3.5, 4.0
+             potential_scores.append((SeverityLevel.CRITICAL, 4.8, 5.0))
+        else:
+             potential_scores.append((SeverityLevel.HIGH, 3.5, 4.0))
 
     # 2. Check for other high-level severity indicators
     for severity, keywords in SEVERITY_KEYWORDS.items():
         if any(kw in text_lower for kw in keywords):
             if severity == SeverityLevel.CRITICAL:
-                return SeverityLevel.CRITICAL, 4.6, 5.0
+                potential_scores.append((SeverityLevel.CRITICAL, 4.6, 5.0))
             elif severity == SeverityLevel.HIGH:
-                return SeverityLevel.HIGH, 3.6, 4.2
+                potential_scores.append((SeverityLevel.HIGH, 3.6, 4.2))
             elif severity == SeverityLevel.MEDIUM:
-                return SeverityLevel.MEDIUM, 2.6, 3.2
+                potential_scores.append((SeverityLevel.MEDIUM, 2.6, 3.2))
     
     # 3. Base severity on number of techniques detected
     num_techs = len(technique_ids)
     if num_techs >= 5:
-        return SeverityLevel.CRITICAL, 4.2, 4.8
+        potential_scores.append((SeverityLevel.CRITICAL, 4.2, 4.8))
     elif num_techs >= 3:
-        return SeverityLevel.HIGH, 3.2, 3.8
+        potential_scores.append((SeverityLevel.HIGH, 3.2, 3.8))
     elif num_techs >= 1:
-        return SeverityLevel.MEDIUM, 2.2, 2.8
+        potential_scores.append((SeverityLevel.MEDIUM, 2.2, 2.8))
     else:
-        return SeverityLevel.LOW, 1.2, 1.5
+        potential_scores.append((SeverityLevel.LOW, 1.2, 1.5))
+
+    # Determine the maximum score
+    # Severity enum values are strings, so we rank them by the sum of likelihood + impact
+    best_score = max(potential_scores, key=lambda x: x[1] + x[2], default=(SeverityLevel.LOW, 1.2, 1.5))
+    return best_score
 
 
 def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List[ATTACKTechnique]:
@@ -463,9 +480,9 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
             semantic_conf = semantic_scores.get(technique['id'], 0.5)
 
             # Smart confidence blending
-            if base_conf >= 0.90:
+            if base_conf >= 0.80:
                 # If we have a very high-precision match (ML or Heuristic), trust it.
-                # Don't let low semantic similarity for short strings pull it down.
+                # Don't let low semantic similarity for short strings pull down our decayed heuristic pipeline.
                 confidence = max(base_conf, semantic_conf)
             elif semantic_conf >= 0.45:
                 # Strong semantic link: trust the base confidence or semantic link
@@ -502,25 +519,30 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
     # Standard logs (e.g. 1-2 lines) usually shouldn't have more than 2-3 techniques.
     total_cap = 3 if text_len < 120 else 25
     
+    tier_2_count = 0
+    tier_3_count = 0
+
     for t in filtered_techniques:
         if len(final_techniques) >= total_cap:
             break
             
-        if t.confidence >= 0.90:
-            # Include all very high confidence techniques
+        if t.confidence >= 0.80:
+            # Include all high confidence techniques (including our new decayed heuristics)
             final_techniques.append(t)  
         elif t.confidence >= 0.75:
             # Include medium-high confidence techniques
             # Cap at 3 for short inputs (<150 chars), or 6 for standard ones
             tier_cap = 3 if text_len < 150 else 6
-            if len(final_techniques) < tier_cap:
+            if tier_2_count < tier_cap:
                 final_techniques.append(t)
+                tier_2_count += 1
         else:
             # Include standard confidence techniques (0.70 - 0.74)
             # Cap at 1 for short entries, or 4 for standard ones
             tier_cap = 1 if text_len < 150 else 4
-            if len(final_techniques) < tier_cap:
+            if tier_3_count < tier_cap:
                 final_techniques.append(t)
+                tier_3_count += 1
                 
     return final_techniques
 
