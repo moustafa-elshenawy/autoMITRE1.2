@@ -41,7 +41,7 @@ export function DataViewProvider({ children }) {
         const token = localStorage.getItem('token')
         if (!token) { setGroupLoaded(true); return }
         try {
-            const res = await fetch('http://localhost:8000/api/groups/mine', {
+            const res = await fetch('http://localhost:8080/api/groups/mine', {
                 headers: { Authorization: `Bearer ${token}` },
             })
             if (res.ok) {

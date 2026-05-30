@@ -24,7 +24,7 @@ const Login = () => {
             formData.append('username', email);
             formData.append('password', password);
 
-            const response = await fetch('http://localhost:8000/api/auth/token', {
+            const response = await fetch('http://localhost:8080/api/auth/token', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -39,7 +39,7 @@ const Login = () => {
             const data = await response.json();
 
             // Get user profile after successful token fetch
-            const userResponse = await fetch('http://localhost:8000/api/auth/me', {
+            const userResponse = await fetch('http://localhost:8080/api/auth/me', {
                 headers: {
                     'Authorization': `Bearer ${data.access_token}`
                 }

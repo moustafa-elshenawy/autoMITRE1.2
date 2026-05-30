@@ -6,5 +6,6 @@ res = secbert_clf.predict_techniques("The attackers used mimikatz to dump creden
 print(res)
 
 from core.ai_threat_analyzer import calculate_confidence, THREAT_SIGNATURES
-conf = calculate_confidence("The attackers used mimikatz to dump credentials", THREAT_SIGNATURES['credential_attack']['keywords'])
+conf = calculate_confidence("The attackers used mimikatz to dump credentials", THREAT_SIGNATURES['credential_dumping']['keywords'])
 print("Heuristic confidence:", conf)
+

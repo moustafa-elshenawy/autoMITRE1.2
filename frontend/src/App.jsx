@@ -34,7 +34,7 @@ function NotificationBell() {
   const fetchInvites = async () => {
     if (!token) return
     try {
-      const res = await fetch('http://localhost:8000/api/groups/invitations', {
+      const res = await fetch('http://localhost:8080/api/groups/invitations', {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (res.ok) {
@@ -58,7 +58,7 @@ function NotificationBell() {
   }, [])
 
   const respond = async (invId, action) => {
-    const res = await fetch(`http://localhost:8000/api/groups/invitations/${invId}/${action}`, {
+    const res = await fetch(`http://localhost:8080/api/groups/invitations/${invId}/${action}`, {
       method: 'POST', headers: { Authorization: `Bearer ${token}` }
     })
     const data = await res.json()

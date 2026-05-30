@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
             setUser(JSON.parse(storedUser));
 
             // Refresh profile data from server in background
-            fetch('http://localhost:8000/api/users/profile', {
+            fetch('http://localhost:8080/api/users/profile', {
                 headers: { 'Authorization': `Bearer ${storedToken}` }
             }).then(res => {
                 if (res.ok) return res.json();

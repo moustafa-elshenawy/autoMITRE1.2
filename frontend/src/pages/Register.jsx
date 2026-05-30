@@ -35,7 +35,7 @@ const Register = () => {
         setIsLoading(true);
         try {
             // 1. Register account
-            const regResponse = await fetch('http://localhost:8000/api/auth/register', {
+            const regResponse = await fetch('http://localhost:8080/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password }),
@@ -49,7 +49,7 @@ const Register = () => {
             const formData = new URLSearchParams();
             formData.append('username', username);
             formData.append('password', password);
-            const loginResponse = await fetch('http://localhost:8000/api/auth/token', {
+            const loginResponse = await fetch('http://localhost:8080/api/auth/token', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: formData,
@@ -57,7 +57,7 @@ const Register = () => {
             if (!loginResponse.ok) throw new Error('Auto-login failed. Please log in manually.');
             const data = await loginResponse.json();
 
-            const userResponse = await fetch('http://localhost:8000/api/auth/me', {
+            const userResponse = await fetch('http://localhost:8080/api/auth/me', {
                 headers: { 'Authorization': `Bearer ${data.access_token}` }
             });
             if (!userResponse.ok) throw new Error('Failed to fetch user profile');
@@ -65,7 +65,7 @@ const Register = () => {
 
             // 3. Create group if requested
             if (groupChoice === 'create' && groupName.trim()) {
-                await fetch('http://localhost:8000/api/groups/', {
+                await fetch('http://localhost:8080/api/groups/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

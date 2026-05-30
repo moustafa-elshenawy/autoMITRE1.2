@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useDataView } from '../contexts/DataViewContext'
 import AIPipelineAnimation from '../components/AIPipelineAnimation'
 
-const API = 'http://localhost:8000'
+const API = 'http://localhost:8080'
 
 const FRAMEWORK_LABELS = { attack: 'MITRE ATT&CK', defend: 'D3FEND', nist: 'NIST SP 800-53', owasp: 'OWASP' }
 

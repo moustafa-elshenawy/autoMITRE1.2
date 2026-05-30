@@ -10,21 +10,21 @@ rm -f backend/uvicorn.pid frontend/frontend.pid
 
 echo "🚀 Starting autoMITRE Backend..."
 cd backend
-./venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+./venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8080 > uvicorn.log 2>&1 &
 BACKEND_PID=$!
 echo $BACKEND_PID > uvicorn.pid
 cd ..
 
 echo "🚀 Starting autoMITRE Frontend..."
 cd frontend
-npm run dev > vite.log 2>&1 &
+npm run dev -- --port 5174 > vite.log 2>&1 &
 FRONTEND_PID=$!
 echo $FRONTEND_PID > frontend.pid
 cd ..
 
 echo "✅ Application started!"
-echo "📡 Backend: http://localhost:8000"
-echo "🌐 Frontend: http://localhost:5173"
+echo "📡 Backend: http://localhost:8080"
+echo "🌐 Frontend: http://localhost:5174"
 echo "📝 Logs: backend/uvicorn.log, frontend/vite.log"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "Press Ctrl+C to stop both services."
