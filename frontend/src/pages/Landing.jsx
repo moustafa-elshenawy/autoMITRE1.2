@@ -229,7 +229,7 @@ export default function Landing() {
             color: 'rgba(255,255,255,0.65)', lineHeight: 1.75,
             maxWidth: 500, marginBottom: 44
           }}>
-            autoMITRE prevents attacks across enterprise networks using self-learning AI and autonomous MITRE ATT&CK mapping with blockchain-powered visibility.
+            autoMITRE prevents attacks by combining AI-driven threat analysis with automated MITRE ATT&CK mapping — giving security teams instant, structured intelligence on any threat.
           </p>
 
           {/* CTAs */}
@@ -305,7 +305,7 @@ export default function Landing() {
           {[
             { v: accuracy + '%', label: 'DETECTION ACCURACY', sub: 'SecBERT + XGBoost' },
             { v: frameworks, label: 'FRAMEWORKS', sub: 'ATT&CK, D3FEND, NIST, OWASP' },
-            { v: analysts.toLocaleString() + '+', label: 'ANALYST SESSIONS', sub: 'Across deployments' },
+            { v: analysts.toLocaleString() + '+', label: 'TECHNIQUES MAPPED', sub: 'MITRE ATT&CK v14' },
             { v: '< 2s', label: 'ANALYSIS TIME', sub: 'Avg per threat report' },
           ].map((s, i) => (
             <div key={i} style={{ padding: '36px 32px', borderRight: i < 3 ? '1px solid rgba(0,255,65,0.08)' : 'none' }}>
@@ -359,16 +359,16 @@ export default function Landing() {
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 11, color: 'rgba(0,255,65,0.4)', letterSpacing: '0.12em', marginBottom: 14 }}>&gt;_ // SERVICES</div>
           <h2 style={{ fontFamily: "'Archivo Black', sans-serif", fontSize: 'clamp(28px,4vw,48px)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.02em', lineHeight: 1.05, margin: '0 0 24px', color: '#00ff41', textShadow: '0 0 30px rgba(0,255,65,0.2)' }}>WHAT WE OFFER</h2>
           <p style={{ fontFamily: 'Archivo, sans-serif', fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.8, marginBottom: 44, maxWidth: 680 }}>
-            From continuous threat monitoring to on-demand red-team simulation, autoMITRE delivers end-to-end cybersecurity services powered by AI. Our platform integrates directly into your existing SOC workflow — providing real-time MITRE ATT&amp;CK mapping, risk prioritization, and actionable intelligence with zero configuration overhead.
+            autoMITRE is an AI-powered threat intelligence platform. Submit any text, CVE, log, or indicator and receive a structured MITRE ATT&CK-mapped report in seconds — with risk scoring, framework coverage, and team collaboration built in.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 0, border: '1px solid rgba(0,255,65,0.08)' }}>
             {[
-              { tag: '[S1]', title: 'THREAT MONITORING', desc: '24/7 autonomous surveillance of your attack surface. Ingests OSINT feeds, CVE advisories, and internal telemetry — alerts trigger in under 2 seconds.' },
-              { tag: '[S2]', title: 'INCIDENT ANALYSIS', desc: 'On-demand deep-dive reports. Submit any log, payload, or indicator and receive a structured MITRE ATT&CK-mapped threat report within seconds.' },
-              { tag: '[S3]', title: 'RED TEAM SIMULATION', desc: 'Automated adversary emulation using the MITRE ATT&CK framework. Test your defenses against real-world TTPs without deploying a physical red team.' },
-              { tag: '[S4]', title: 'COMPLIANCE MAPPING', desc: 'Automatically correlate your threat posture against NIST CSF, ISO 27001, and OWASP controls. Generate audit-ready compliance reports in one click.' },
-              { tag: '[S5]', title: 'STIX / TAXII EXPORT', desc: 'Share threat intelligence across your SIEM, SOAR, and partner networks via STIX 2.1 and TAXII 2.1 — fully automated and always up to date.' },
-              { tag: '[S6]', title: 'ANALYST TRAINING', desc: 'Guided cyber ranges and live threat walkthroughs. Upskill your SOC team on real attack chains drawn from the latest ATT&CK techniques.' },
+              { tag: '[S1]', title: 'AI THREAT ANALYSIS', desc: 'Submit any text description, CVE identifier, or raw indicator and receive an instant MITRE ATT&CK-mapped threat report — powered by SecBERT and a local or cloud LLM.' },
+              { tag: '[S2]', title: 'MITRE ATT&CK MAPPING', desc: 'Multi-label technique classification across ATT&CK v14. Each analysis returns matched technique IDs, tactic categories, and confidence scores.' },
+              { tag: '[S3]', title: 'RISK SCORING', desc: 'XGBoost ensemble severity scoring rates every threat from 0–10. Risk Heatmaps visualise your posture across tactics and time periods.' },
+              { tag: '[S4]', title: 'LIVE OSINT FEED', desc: 'Real-time threat intelligence from AlienVault OTX and other public OSINT sources, enriched with MITRE ATT&CK context and severity labels.' },
+              { tag: '[S5]', title: 'MULTI-FORMAT EXPORT', desc: 'Export your threat intelligence as STIX 2.1, JSON, CSV, Splunk HEC, Executive PDF, Managerial PDF, or Technical PDF — in one click.' },
+              { tag: '[S6]', title: 'TEAM WORKSPACES', desc: 'Create groups, invite analysts, and share threat libraries with role-based access. Admins manage members; analysts collaborate on shared views.' },
             ].map((s, i) => (
               <div key={i}
                 style={{ padding: '36px 32px', borderRight: (i % 3 < 2) ? '1px solid rgba(0,255,65,0.08)' : 'none', borderBottom: i < 3 ? '1px solid rgba(0,255,65,0.08)' : 'none', transition: 'background 0.2s', cursor: 'default' }}
