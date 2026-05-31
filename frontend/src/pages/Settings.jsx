@@ -100,7 +100,8 @@ export default function Settings() {
     }
 
     return (
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 120px)' }}>
+            <div style={{ maxWidth: 700, width: '100%', margin: '0 auto' }}>
             {/* Role Access Banner */}
             {!isAdmin && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: 8, padding: '12px 16px', marginBottom: 20 }}>
