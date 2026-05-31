@@ -10,7 +10,7 @@ rm -f backend/uvicorn.pid frontend/frontend.pid
 
 echo "🚀 Starting autoMITRE Backend..."
 cd backend
-./venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8080 > uvicorn.log 2>&1 &
+./venv/bin/python3 -m uvicorn main:app --host 0.0.0.0 --port 8001 > uvicorn.log 2>&1 &
 BACKEND_PID=$!
 echo $BACKEND_PID > uvicorn.pid
 cd ..
@@ -23,7 +23,7 @@ echo $FRONTEND_PID > frontend.pid
 cd ..
 
 echo "✅ Application started!"
-echo "📡 Backend: http://localhost:8080"
+echo "📡 Backend: http://localhost:8001"
 echo "🌐 Frontend: http://localhost:5174"
 echo "📝 Logs: backend/uvicorn.log, frontend/vite.log"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

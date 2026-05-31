@@ -8,8 +8,8 @@ export default function Settings() {
     const { viewParam, isContextualAdmin } = useDataView()
     const isAdmin = user?.role === 'admin'
     const [saved, setSaved] = useState(false)
-    const [backendUrl, setBackendUrl] = useState('http://localhost:8080')
-    const [attackVersion, setAttackVersion] = useState('v14')
+    const [backendUrl, setBackendUrl] = useState(() => localStorage.getItem('backendUrl') || 'http://127.0.0.1:8001')
+    const [attackVersion, setAttackVersion] = useState(() => localStorage.getItem('attackVersion') || 'v14')
 
     // API Keys Settings
     const [mispUrl, setMispUrl] = useState('')
@@ -55,6 +55,8 @@ export default function Settings() {
     const handleSave = async () => {
         const token = localStorage.getItem('token')
         try {
+            localStorage.setItem('backendUrl', backendUrl)
+            localStorage.setItem('attackVersion', attackVersion)
             const response = await fetch(`${backendUrl}/api/settings/osint${viewParam}`, {
                 method: 'PATCH',
                 headers: {
@@ -98,7 +100,7 @@ export default function Settings() {
     }
 
     return (
-        <div style={{ maxWidth: 700 }}>
+        <div style={{ maxWidth: 700, margin: '0 auto' }}>
             {/* Role Access Banner */}
             {!isAdmin && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.35)', borderRadius: 8, padding: '12px 16px', marginBottom: 20 }}>
@@ -119,7 +121,7 @@ export default function Settings() {
                 <div className="form-group">
                     <label className="form-label">Backend API URL</label>
                     <input className="form-input" value={backendUrl} onChange={e => setBackendUrl(e.target.value)} disabled={!isAdmin} />
-                    <span style={{ fontSize: 11, color: '#475569' }}>Default: http://localhost:8080 — change for remote deployment</span>
+                    <span style={{ fontSize: 11, color: '#475569' }}>Default: http://127.0.0.1:8001 — change for remote deployment</span>
                 </div>
 
                 <div className="form-group" style={{ marginTop: 15 }}>
@@ -227,19 +229,21 @@ export default function Settings() {
                     </div>
                 </div>
 
-                <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
-                    {saved && <div style={{ color: '#10b981', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} /> Settings Saved!</div>}
-                    {isAdmin && (
-                        <button className="btn btn-primary" onClick={handleSave}>
-                            <Save size={16} /> Save Configurations
-                        </button>
-                    )}
-                    {!isAdmin && (
-                        <div style={{ fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <Lock size={12} /> Contact an Administrator to make changes
-                        </div>
-                    )}
-                </div>
+            </div>
+
+            {/* Save Button Fixed at Bottom */}
+            <div className="card" style={{ marginBottom: 20, padding: 16, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12 }}>
+                {saved && <div style={{ color: '#10b981', fontSize: 13, display: 'flex', alignItems: 'center', gap: 6 }}><CheckCircle size={14} /> Settings Saved!</div>}
+                {isAdmin && (
+                    <button className="btn btn-primary" onClick={handleSave}>
+                        <Save size={16} /> Save Configurations
+                    </button>
+                )}
+                {!isAdmin && (
+                    <div style={{ fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Lock size={12} /> Contact an Administrator to make changes
+                    </div>
+                )}
             </div>
 
             {/* About */}

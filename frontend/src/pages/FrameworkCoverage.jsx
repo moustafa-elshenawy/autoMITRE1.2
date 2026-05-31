@@ -1,9 +1,11 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Shield, Target, BookOpen, AlertTriangle, ExternalLink, Loader2, ChevronRight, Activity, Zap, CheckCircle2 } from 'lucide-react'
+import { Shield, Target, BookOpen, AlertTriangle, ExternalLink, Loader2, ChevronRight, Activity, Zap, CheckCircle2, XCircle } from 'lucide-react'
 import { useDataView } from '../contexts/DataViewContext'
 
 // Original static definitions for fallback/reference
 const ALL_TACTICS = [
+    { id: 'TA0043', name: 'Reconnaissance', techniques: ['T1595', 'T1592', 'T1589'], color: '#6366f1' },
+    { id: 'TA0042', name: 'Resource Dev.', techniques: ['T1583', 'T1584', 'T1588'], color: '#a855f7' },
     { id: 'TA0001', name: 'Initial Access', techniques: ['T1190', 'T1133', 'T1078', 'T1566'], color: '#ef4444' },
     { id: 'TA0002', name: 'Execution', techniques: ['T1059', 'T1059.001', 'T1059.003', 'T1204'], color: '#f97316' },
     { id: 'TA0003', name: 'Persistence', techniques: ['T1053', 'T1543', 'T1547'], color: '#f59e0b' },
@@ -71,7 +73,7 @@ export default function FrameworkCoverage() {
             setLoading(true)
             try {
                 const token = localStorage.getItem('token')
-                const res = await fetch(`http://localhost:8080/api/users/history${viewParam}`, {
+                const res = await fetch(`http://127.0.0.1:8001/api/users/history${viewParam}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
                 if (res.ok) {
@@ -80,10 +82,9 @@ export default function FrameworkCoverage() {
 
                     const techSet = new Set()
                     const tacticSet = new Set()
-                    let subs = 0
 
                     const newD3fend = new Set()
-                    const newNist = { AC: 0, AU: 0, CM: 0, IA: 0, IR: 0, RA: 0, SC: 0, SI: 0 }
+                    const nistSetMap = { AC: new Set(), AU: new Set(), CM: new Set(), IA: new Set(), IR: new Set(), RA: new Set(), SC: new Set(), SI: new Set() }
                     const newOwasp = new Set()
 
                     // Text-based heuristics
@@ -105,7 +106,7 @@ export default function FrameworkCoverage() {
                         'T1190': ['SI', 'SC'], 'T1110': ['IA', 'AC'], 'T1003': ['AC', 'SC'],
                         'T1078': ['IA', 'AC'], 'T1555': ['SC', 'IA'], 'T1059': ['CM', 'SI'],
                         'T1486': ['IR', 'SI'], 'T1485': ['IR', 'SI'], 'T1070': ['AU', 'SI'],
-                        'T1566': ['SI', 'SC', 'AT'] // AT not in default list 
+                        'T1566': ['SI', 'SC'] 
                     }
 
                     items.forEach(threat => {
@@ -116,13 +117,13 @@ export default function FrameworkCoverage() {
                             threat.mitigations.forEach(m => {
                                 // Match simple heuristics to D3FEND concepts by text content
                                 const mText = `${m.title} ${m.description}`.toLowerCase()
-                                if (mText.includes('auth') || mText.includes('mfa')) newD3fend.add('Authentication')
-                                if (mText.includes('firewall') || mText.includes('waf')) newD3fend.add('Network Filtering')
-                                if (mText.includes('patch') || mText.includes('update')) newD3fend.add('Patch Management')
-                                if (mText.includes('backup') || mText.includes('offline')) newD3fend.add('File Backup')
-                                if (mText.includes('isolate') || mText.includes('segment')) newD3fend.add('Network Isolation')
-                                if (mText.includes('monitor') || mText.includes('edr')) newD3fend.add('Process Analysis')
-                                if (mText.includes('password') || mText.includes('credential')) newD3fend.add('Credential Eviction')
+                                if (mText.includes('auth') || mText.includes('mfa')) newD3fend.add('Multi-factor Auth (D3-IAM)')
+                                if (mText.includes('firewall') || mText.includes('waf') || mText.includes('filter')) newD3fend.add('Network Traffic Filtering (D3-NTF)')
+                                if (mText.includes('patch') || mText.includes('update')) newD3fend.add('Software Updates (D3-SR)')
+                                if (mText.includes('backup') || mText.includes('offline')) newD3fend.add('Backup (D3-BA)')
+                                if (mText.includes('isolate') || mText.includes('segment')) newD3fend.add('Inbound Filtering (D3-IPAM)')
+                                if (mText.includes('monitor') || mText.includes('edr') || mText.includes('detect')) newD3fend.add('Endpoint Monitoring (D3-EM)')
+                                if (mText.includes('password') || mText.includes('credential')) newD3fend.add('Password Hashing (D3-PH)')
                             })
                         }
 
@@ -134,10 +135,6 @@ export default function FrameworkCoverage() {
 
                                 techSet.add(techId)
 
-                                if (typeof techId === 'string' && techId.includes('.')) {
-                                    subs++
-                                }
-
                                 ALL_TACTICS.forEach(tactic => {
                                     if (tactic.techniques && tactic.techniques.includes(techId)) {
                                         tacticSet.add(tactic.id)
@@ -148,7 +145,7 @@ export default function FrameworkCoverage() {
                                 const mappedNist = nistMap[techId]
                                 if (mappedNist) {
                                     mappedNist.forEach(cat => {
-                                        if (newNist[cat] !== undefined) newNist[cat]++
+                                        if (nistSetMap[cat]) nistSetMap[cat].add(techId)
                                     })
                                 }
                             })
@@ -164,10 +161,19 @@ export default function FrameworkCoverage() {
 
                     setDiscoveredTechniques(techSet)
                     setDiscoveredTactics(tacticSet)
-                    setSubTechniqueCount(subs)
+                    setSubTechniqueCount(Array.from(techSet).filter(t => t.includes('.')).length)
 
                     setD3fendCoverage(newD3fend)
-                    setNistCoverage(newNist)
+                    setNistCoverage({
+                        AC: nistSetMap.AC.size,
+                        AU: nistSetMap.AU.size,
+                        CM: nistSetMap.CM.size,
+                        IA: nistSetMap.IA.size,
+                        IR: nistSetMap.IR.size,
+                        RA: nistSetMap.RA.size,
+                        SC: nistSetMap.SC.size,
+                        SI: nistSetMap.SI.size
+                    })
                     setOwaspCoverage(newOwasp)
                 }
             } catch (error) {
@@ -205,10 +211,10 @@ export default function FrameworkCoverage() {
             {/* Framework switcher */}
             <div className="tabs" style={{ marginBottom: 24 }}>
                 {[
-                    ['attack', '🎯 MITRE ATT&CK'],
-                    ['defend', '🛡️ MITRE D3FEND'],
-                    ['nist', '📋 NIST SP 800-53'],
-                    ['owasp', '🌐 OWASP Top 10']
+                    ['attack', 'MITRE ATT&CK'],
+                    ['defend', 'MITRE D3FEND'],
+                    ['nist', 'NIST SP 800-53'],
+                    ['owasp', 'OWASP Top 10']
                 ].map(([id, label]) => (
                     <button key={id} className={`tab ${activeFramework === id ? 'active' : ''}`} onClick={() => setActiveFramework(id)}>
                         {label}
@@ -402,7 +408,7 @@ export default function FrameworkCoverage() {
                         <div className="stat-card">
                             <div className="stat-label">ASVS Requirements</div>
                             <div className="stat-number" style={{ fontSize: 28 }}>{owaspCoverage.size}</div>
-                            <div style={{ fontSize: 10, color: '#475569' }}>{owaspCoverage.size} of 20 ASVS categories</div>
+                            <div style={{ fontSize: 10, color: '#475569' }}>{owaspCoverage.size} of 14 ASVS categories</div>
                         </div>
                     </div>
                     <div className="card">
@@ -417,7 +423,9 @@ export default function FrameworkCoverage() {
                                 const isCovered = owaspCoverage.has(item.id)
                                 return (
                                     <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: isCovered ? 'rgba(16,185,129,0.06)' : 'rgba(255,255,255,0.02)', borderRadius: 6, border: `1px solid ${isCovered ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.05)'}` }}>
-                                        <span style={{ fontSize: 18 }}>{isCovered ? '✅' : '❌'}</span>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            {isCovered ? <CheckCircle2 size={16} color="#10b981" /> : <XCircle size={16} color="#ef4444" />}
+                                        </div>
                                         <div>
                                             <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 10, color: isCovered ? '#34d399' : '#64748b', marginBottom: 2 }}>{item.id}</div>
                                             <div style={{ fontSize: 12, color: isCovered ? '#f0f4ff' : '#94a3b8', fontWeight: 500 }}>{item.name}</div>

@@ -18,6 +18,7 @@ from api.routes.settings import router as settings_router
 from api.routes.admin import router as admin_router
 from api.routes.groups import router as groups_router
 from api.routes.audit import router as audit_router
+from api.routes.dashboard import router as dashboard_router
 from database.config import engine, Base
 import contextlib
 
@@ -56,6 +57,7 @@ app.include_router(intelligence_router)
 app.include_router(admin_router)
 app.include_router(groups_router)
 app.include_router(audit_router)
+app.include_router(dashboard_router)
 
 
 @app.get("/")
@@ -84,4 +86,4 @@ async def global_exception_handler(request, exc):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8080, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)

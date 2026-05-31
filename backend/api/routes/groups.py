@@ -4,7 +4,7 @@ Admins create groups, invite analysts, and manage membership.
 Analysts can accept/deny invitations and view team data.
 """
 import datetime
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import and_, or_
@@ -15,6 +15,7 @@ from typing import Optional
 from database.config import get_db
 from database.models import Group, GroupMembership, GroupInvitation, User
 from api.dependencies import get_current_user
+from core.audit import log_event
 
 router = APIRouter(prefix="/api/groups", tags=["groups"])
 
@@ -45,6 +46,7 @@ async def get_user_group(user_id: str, db: AsyncSession) -> Optional[GroupMember
 @router.post("/")
 async def create_group(
     payload: GroupCreate,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -72,6 +74,13 @@ async def create_group(
     db.add(membership)
     await db.commit()
     await db.refresh(group)
+
+    background_tasks.add_task(
+        log_event,
+        category="TEAM", action="create_group",
+        username=current_user.username, status="success",
+        details={"group_name": group.name}
+    )
 
     return {
         "id": group.id,
@@ -128,6 +137,7 @@ async def get_my_group(
                 "user_id": m.user_id,
                 "username": m.user.username if m.user else "Unknown",
                 "full_name": m.user.full_name if m.user else None,
+                "avatar_url": m.user.avatar_url if m.user else None,
                 "role": m.role,
                 "joined_at": m.joined_at,
             }
@@ -149,6 +159,7 @@ async def get_my_group(
 async def invite_user(
     group_id: str,
     payload: InviteRequest,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -198,6 +209,13 @@ async def invite_user(
     invitee_name = invitee.username  # capture before commit expires the object
     await db.commit()
 
+    background_tasks.add_task(
+        log_event,
+        category="TEAM", action="invite_user",
+        username=current_user.username, status="success",
+        details={"invited_user": invitee_name, "group_id": group_id}
+    )
+
     return {"success": True, "message": f"Invitation sent to '{invitee_name}'."}
 
 
@@ -232,6 +250,7 @@ async def get_my_invitations(
 @router.post("/invitations/{invitation_id}/accept")
 async def accept_invitation(
     invitation_id: str,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -254,6 +273,13 @@ async def accept_invitation(
     joined_group_id = inv.group_id  # capture before commit expires the object
     db.add(inv)
     await db.commit()
+
+    background_tasks.add_task(
+        log_event,
+        category="TEAM", action="join_group",
+        username=current_user.username, status="success",
+        details={"group_id": joined_group_id}
+    )
 
     return {"success": True, "message": "You have joined the group.", "group_id": joined_group_id}
 
@@ -284,6 +310,7 @@ async def deny_invitation(
 async def remove_member(
     group_id: str,
     user_id: str,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -310,11 +337,20 @@ async def remove_member(
 
     await db.delete(target)
     await db.commit()
+    
+    background_tasks.add_task(
+        log_event,
+        category="TEAM", action="remove_member",
+        username=current_user.username, status="success",
+        details={"removed_user_id": user_id, "group_id": group_id}
+    )
+    
     return {"success": True, "message": "Member removed from the group."}
 
 
 @router.post("/leave")
 async def leave_group(
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -338,12 +374,20 @@ async def leave_group(
 
     await db.delete(membership)
     await db.commit()
+    
+    background_tasks.add_task(
+        log_event,
+        category="TEAM", action="leave_group",
+        username=current_user.username, status="success"
+    )
+    
     return {"success": True, "message": "You have left the group."}
 
 
 @router.delete("/{group_id}")
 async def delete_group(
     group_id: str,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -358,6 +402,14 @@ async def delete_group(
 
     await db.delete(group)
     await db.commit()
+    
+    background_tasks.add_task(
+        log_event,
+        category="TEAM", action="delete_group",
+        username=current_user.username, status="warning",
+        details={"group_id": group_id}
+    )
+    
     return {"success": True, "message": "Group deleted."}
 
 

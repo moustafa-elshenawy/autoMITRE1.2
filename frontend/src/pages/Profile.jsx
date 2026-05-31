@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Shield, Key, LogOut, Save, AlertCircle, CheckCircle, Activity, Calendar, Clock } from 'lucide-react';
+import { User, Shield, Key, LogOut, Save, AlertCircle, CheckCircle, Activity, Calendar, Clock, Upload } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = localStorage.getItem('backendUrl') || 'http://127.0.0.1:8001';
 
 export default function Profile() {
     const { user, token, logout, updateUser } = useAuth();
@@ -50,6 +50,45 @@ export default function Profile() {
             .catch(() => { })
             .finally(() => setStatsLoading(false));
     }, [token]);
+
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 256;
+                const MAX_HEIGHT = 256;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                setForm(f => ({ ...f, avatar_url: dataUrl }));
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    };
 
     const handleProfileSave = async (e) => {
         e.preventDefault();
@@ -105,6 +144,32 @@ export default function Profile() {
         }
     };
 
+    const [isDeleting, setIsDeleting] = useState(false);
+    
+    const handleDeleteAccount = async () => {
+        const confirmDelete = window.confirm(
+            "Are you absolutely sure you want to permanently delete your account? This action cannot be undone. All your personal data and threat records will be permanently removed."
+        );
+        if (!confirmDelete) return;
+
+        setIsDeleting(true);
+        try {
+            const res = await fetch(`${API_BASE}/api/users/profile`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            if (!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.detail || 'Failed to delete account');
+            }
+            // Success: log out the user
+            logout();
+        } catch (err) {
+            alert(`Error deleting account: ${err.message}`);
+            setIsDeleting(false);
+        }
+    };
+
     const avatarLetter = (user?.full_name || user?.username || 'U')[0].toUpperCase();
 
     const formatDate = (isoStr) => {
@@ -118,10 +183,6 @@ export default function Profile() {
 
     return (
         <div>
-            <div className="page-header" style={{ marginBottom: 24 }}>
-                <h1>User Profile</h1>
-                <p>Manage your account settings, profile data, and security</p>
-            </div>
 
             {/* ── Account Overview ── */}
             <div className="card" style={{ marginBottom: 20 }}>
@@ -198,6 +259,23 @@ export default function Profile() {
 
                         <form onSubmit={handleProfileSave}>
                             <div className="form-group">
+                                <label className="form-label">Profile Picture</label>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                                    {form.avatar_url && (
+                                        <img src={form.avatar_url} alt="preview" style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', border: '2px solid rgba(0,212,255,0.3)' }} />
+                                    )}
+                                    <label className="btn btn-secondary" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, cursor: 'pointer', margin: 0 }}>
+                                        <Upload size={14} /> Upload Image
+                                        <input 
+                                            type="file" 
+                                            accept="image/*" 
+                                            style={{ display: 'none' }}
+                                            onChange={handleImageUpload}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="form-group">
                                 <label className="form-label">Full Name</label>
                                 <input className="form-input" type="text" value={form.full_name} onChange={e => setForm(f => ({ ...f, full_name: e.target.value }))} placeholder="Your full name" />
                             </div>
@@ -208,10 +286,6 @@ export default function Profile() {
                             <div className="form-group">
                                 <label className="form-label">Bio</label>
                                 <textarea className="form-input" rows={3} value={form.bio} onChange={e => setForm(f => ({ ...f, bio: e.target.value }))} placeholder="Short bio or description..." style={{ resize: 'vertical', fontFamily: 'inherit' }} />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">Avatar URL</label>
-                                <input className="form-input" type="url" value={form.avatar_url} onChange={e => setForm(f => ({ ...f, avatar_url: e.target.value }))} placeholder="https://example.com/avatar.png" />
                             </div>
 
                             <button type="submit" className="btn btn-primary" disabled={profileSaving} style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
@@ -304,21 +378,35 @@ export default function Profile() {
                         </div>
                     </div>
 
-                    {/* Sign Out */}
+                    {/* Sign Out and Delete Account */}
                     <div className="card">
                         <div className="card-header">
-                            <div className="card-title"><LogOut size={16} color="#ef4444" /> Session</div>
+                            <div className="card-title"><LogOut size={16} color="#ef4444" /> Account Management</div>
                         </div>
                         <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
                             You are signed in as <strong style={{ color: 'var(--text-primary)' }}>{user?.username}</strong>. Signing out will clear your session.
                         </p>
                         <button
                             className="btn"
-                            style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)', width: '100%', display: 'flex', justifyContent: 'center', gap: 8 }}
+                            style={{ background: 'rgba(239,68,68,0.1)', color: '#ef4444', border: '1px solid rgba(239,68,68,0.2)', width: '100%', display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}
                             onClick={logout}
                         >
                             <LogOut size={16} /> Sign Out
                         </button>
+
+                        <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 16 }}>
+                            <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginBottom: 16 }}>
+                                Permanently delete your account and all personal data. This action cannot be undone.
+                            </p>
+                            <button
+                                className="btn"
+                                style={{ background: '#ef4444', color: '#fff', border: '1px solid #ef4444', width: '100%', display: 'flex', justifyContent: 'center', gap: 8 }}
+                                onClick={handleDeleteAccount}
+                                disabled={isDeleting}
+                            >
+                                <AlertCircle size={16} /> {isDeleting ? 'Deleting Account...' : 'Delete Account'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

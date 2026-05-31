@@ -4,9 +4,11 @@ Allows users to configure MISP URL/key and OTX key from the frontend
 without editing environment files.
 """
 import os
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from typing import Optional
 from pydantic import BaseModel
+
+from core.audit import log_event
 
 from api.dependencies import get_current_user, require_admin
 from database.models import User
@@ -73,6 +75,7 @@ async def get_osint_config(current_user: User = Depends(get_current_user)):
 @router.patch("/osint")
 async def update_osint_config(
     config: OsintConfigUpdate,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(require_admin),
 ):
     """Update runtime OSINT configuration (Admin only). Persists until server restart.
@@ -126,6 +129,14 @@ async def update_osint_config(
     if config.framework_owasp is not None:
         update_runtime_config("framework_owasp", str(config.framework_owasp).lower())
         updated.append("framework_owasp")
+
+    if updated:
+        background_tasks.add_task(
+            log_event,
+            category="SETTINGS", action="update_config",
+            username=current_user.username, status="success",
+            details={"updated_fields": updated}
+        )
 
     return {
         "updated": updated,

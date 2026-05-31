@@ -2,7 +2,7 @@
 Intelligence API Routes
 Handles chat, dashboard stats, and threat feed.
 """
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 import asyncio
@@ -14,6 +14,7 @@ from database.config import get_db
 from database.crud import get_dashboard_stats as get_db_stats, get_recent_threats, get_threat_activity, get_attack_tactic_coverage, get_trend_analysis
 from api.dependencies import get_current_user, get_workspace, WorkspaceState
 from database.models import User
+from core.audit import log_event
 import json
 import os
 
@@ -73,13 +74,22 @@ router = APIRouter(prefix="/api", tags=["intelligence"])
 
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat_with_ai(request: ChatRequest, current_user: User = Depends(get_current_user)):
+async def chat_with_ai(
+    request: ChatRequest,
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user)
+):
     """General cyber threat intelligence chat."""
     try:
         result = generate_chat_response(
             request.message,
             request.history,
             request.threat_context
+        )
+        background_tasks.add_task(
+            log_event,
+            category="THREAT", action="chat_query",
+            username=current_user.username, status="success"
         )
         return ChatResponse(
             response=result['response'],
@@ -325,11 +335,23 @@ async def get_framework_coverage(db: AsyncSession = Depends(get_db), current_use
 
 
 @router.delete("/intelligence/osint/{item_id}")
-async def delete_osint_item_endpoint(item_id: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+async def delete_osint_item_endpoint(
+    item_id: str,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """Delete a historical OSINT item from the local database."""
     from database.crud import delete_osint_item
     success = await delete_osint_item(db, item_id)
     if not success:
         raise HTTPException(status_code=404, detail="OSINT item not found or failed to delete.")
         
+    background_tasks.add_task(
+        log_event,
+        category="THREAT", action="delete_osint_item",
+        username=current_user.username, status="warning",
+        details={"item_id": item_id}
+    )
+    
     return {"success": True, "message": "OSINT item deleted successfully."}

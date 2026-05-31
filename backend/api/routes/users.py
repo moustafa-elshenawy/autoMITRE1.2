@@ -4,7 +4,7 @@ Each authenticated user can retrieve and update their own profile,
 change their password, and view per-account statistics.
 """
 import datetime
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import func, desc
@@ -16,7 +16,9 @@ from models.schemas import ThreatHistoryResponse
 from core.security import verify_password, get_password_hash
 from api.dependencies import get_current_user, get_workspace, WorkspaceState
 import database.crud as crud
+import database.crud as crud
 from api.routes.analysis import map_record_to_result
+from core.audit import log_event
 
 router = APIRouter(prefix="/api/users", tags=["users"])
 
@@ -30,6 +32,7 @@ async def get_profile(current_user: User = Depends(get_current_user)):
 @router.patch("/profile", response_model=UserProfile)
 async def update_profile(
     profile_update: UserProfileUpdate,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
@@ -41,17 +44,30 @@ async def update_profile(
     db.add(current_user)
     await db.commit()
     await db.refresh(current_user)
+    
+    background_tasks.add_task(
+        log_event,
+        category="USER", action="update_profile",
+        username=current_user.username, status="success"
+    )
+    
     return current_user
 
 
 @router.post("/change-password")
 async def change_password(
     payload: ChangePasswordRequest,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Allow a user to change their own password after verifying the current one."""
     if not verify_password(payload.current_password, current_user.hashed_password):
+        await log_event(
+            category="USER", action="change_password",
+            username=current_user.username, status="failure",
+            details={"reason": "incorrect_current_password"}
+        )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Current password is incorrect",
@@ -60,6 +76,13 @@ async def change_password(
     current_user.hashed_password = get_password_hash(payload.new_password)
     db.add(current_user)
     await db.commit()
+    
+    background_tasks.add_task(
+        log_event,
+        category="USER", action="change_password",
+        username=current_user.username, status="success"
+    )
+    
     return {"message": "Password updated successfully"}
 
 
@@ -134,3 +157,55 @@ async def get_user_stats(
         "member_since": current_user.created_at,
         "last_login": current_user.last_login_at,
     }
+
+
+@router.delete("/profile")
+async def delete_user_account(
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Permanently delete the authenticated user's account and personal data."""
+    from database.models import GroupMembership, GroupInvitation
+    uid = current_user.id
+    username = current_user.username
+
+    # Delete personal threats
+    personal_threats_q = await db.execute(
+        select(ThreatRecord).where(ThreatRecord.user_id == uid, ThreatRecord.group_id == None)
+    )
+    for pt in personal_threats_q.scalars().all():
+        await db.delete(pt)
+
+    # Anonymize group threats
+    group_threats_q = await db.execute(
+        select(ThreatRecord).where(ThreatRecord.user_id == uid, ThreatRecord.group_id != None)
+    )
+    for gt in group_threats_q.scalars().all():
+        gt.user_id = None
+
+    # Delete memberships
+    memberships_q = await db.execute(select(GroupMembership).where(GroupMembership.user_id == uid))
+    for m in memberships_q.scalars().all():
+        await db.delete(m)
+
+    # Delete invitations
+    invitations_q = await db.execute(
+        select(GroupInvitation).where(
+            (GroupInvitation.inviter_id == uid) | (GroupInvitation.invitee_id == uid)
+        )
+    )
+    for inv in invitations_q.scalars().all():
+        await db.delete(inv)
+
+    # Finally delete the user
+    await db.delete(current_user)
+    await db.commit()
+
+    background_tasks.add_task(
+        log_event,
+        category="USER", action="delete_account",
+        username=username, status="success"
+    )
+
+    return {"success": True, "message": "Account deleted successfully"}

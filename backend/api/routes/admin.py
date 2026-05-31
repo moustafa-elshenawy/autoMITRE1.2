@@ -1,7 +1,7 @@
 """
 Admin Routes — User management endpoints restricted to administrators.
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from pydantic import BaseModel
@@ -10,6 +10,7 @@ from typing import Optional
 from database.config import get_db
 from database.models import User
 from api.dependencies import require_admin
+from core.audit import log_event
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -48,6 +49,7 @@ async def list_all_users(
 async def update_user_role(
     user_id: str,
     payload: RoleUpdate,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(require_admin),
     db: AsyncSession = Depends(get_db),
 ):
@@ -76,6 +78,13 @@ async def update_user_role(
     await db.commit()
     await db.refresh(target_user)
 
+    background_tasks.add_task(
+        log_event,
+        category="ADMIN", action="update_user_role",
+        username=current_user.username, status="success",
+        details={"target_user": target_user.username, "new_role": payload.role}
+    )
+
     return {
         "success": True,
         "user_id": user_id,
@@ -87,6 +96,7 @@ async def update_user_role(
 @router.patch("/users/{user_id}/toggle-active")
 async def toggle_user_active(
     user_id: str,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(require_admin),
     db: AsyncSession = Depends(get_db),
 ):
@@ -104,5 +114,13 @@ async def toggle_user_active(
     db.add(target_user)
     await db.commit()
 
-    status = "activated" if target_user.is_active else "deactivated"
-    return {"success": True, "user_id": user_id, "is_active": target_user.is_active, "message": f"User '{target_user.username}' {status}."}
+    status_msg = "activated" if target_user.is_active else "deactivated"
+    
+    background_tasks.add_task(
+        log_event,
+        category="ADMIN", action="toggle_user_active",
+        username=current_user.username, status="success",
+        details={"target_user": target_user.username, "new_status": status_msg}
+    )
+    
+    return {"success": True, "user_id": user_id, "is_active": target_user.is_active, "message": f"User '{target_user.username}' {status_msg}."}

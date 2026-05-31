@@ -4,13 +4,17 @@ from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy import update as sql_update
+from sqlalchemy import update as sql_update, func
 
 from database.config import get_db, SessionLocal
-from database.models import User
-from models.auth import UserCreate, UserResponse, Token
-from core.security import verify_password, get_password_hash, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from database.models import User, AuditLog
+from core.security import (
+    verify_password, get_password_hash, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES,
+    create_password_reset_token, verify_password_reset_token
+)
+from core.email import send_reset_password_email
 from api.dependencies import get_current_user
+from models.auth import UserCreate, UserResponse, Token, ForgotPasswordRequest, ResetPasswordRequest
 from core.audit import log_event
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
@@ -83,12 +87,34 @@ async def login_for_access_token(
         user = result.scalars().first()
     
     if not user or not verify_password(form_data.password, user.hashed_password):
-        # Log failed login before raising
-        background_tasks.add_task(log_event,
+        # Log failed login synchronously because raising HTTPException skips BackgroundTasks
+        await log_event(
             category="AUTH", action="login_failure",
             username=form_data.username, status="failure",
             details={"reason": "Invalid credentials"}
         )
+
+        # Check for multiple failed attempts
+        two_mins_ago = (datetime.datetime.utcnow() - datetime.timedelta(minutes=2)).isoformat()
+        count_result = await db.execute(
+            select(func.count(AuditLog.id))
+            .filter(
+                AuditLog.action == "login_failure",
+                AuditLog.username == form_data.username,
+                AuditLog.timestamp >= two_mins_ago
+            )
+        )
+        failure_count = count_result.scalar() or 0
+        
+        # We just added one asynchronously, but it's not in DB yet, so failure_count is past failures.
+        # If past failures >= 2, total failures now >= 3.
+        if failure_count >= 2:
+            await log_event(
+                category="AUTH", action="brute_force_warning",
+                username=form_data.username, status="warning",
+                details={"reason": f"Multiple failed login attempts ({failure_count + 1} attempts in 2 minutes)"}
+            )
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username/email or password",
@@ -114,3 +140,64 @@ async def login_for_access_token(
 @router.get("/me", response_model=UserResponse)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.post("/forgot-password")
+async def forgot_password(
+    request: ForgotPasswordRequest,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db)
+):
+    """Generate a password reset token and send an email."""
+    result = await db.execute(select(User).filter(User.email == request.email))
+    user = result.scalars().first()
+
+    # Even if the user doesn't exist, return a generic success message
+    # to prevent email enumeration attacks.
+    if user:
+        reset_token = create_password_reset_token(user.email)
+        
+        # In a real setup, frontend_url would be read from ENV.
+        frontend_url = "http://localhost:5174"
+        reset_url = f"{frontend_url}/reset-password?token={reset_token}"
+        
+        background_tasks.add_task(send_reset_password_email, user.email, reset_url)
+        
+        background_tasks.add_task(log_event,
+            category="AUTH", action="forgot_password",
+            username=user.username, status="success"
+        )
+        
+    return {"message": "If an account with that email exists, a password reset link has been sent."}
+
+@router.post("/reset-password")
+async def reset_password(
+    request: ResetPasswordRequest,
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db)
+):
+    """Reset the user's password using the token sent to their email."""
+    email = verify_password_reset_token(request.token)
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token."
+        )
+
+    result = await db.execute(select(User).filter(User.email == email))
+    user = result.scalars().first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User no longer exists."
+        )
+
+    user.hashed_password = get_password_hash(request.new_password)
+    db.add(user)
+    await db.commit()
+
+    background_tasks.add_task(log_event,
+        category="AUTH", action="reset_password",
+        username=user.username, status="success"
+    )
+
+    return {"message": "Password successfully reset."}
