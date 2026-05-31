@@ -194,13 +194,13 @@ export default function Landing() {
           onMouseEnter={e => { e.currentTarget.style.background = '#00ff41'; e.currentTarget.style.color = '#000'; e.currentTarget.style.boxShadow = '0 0 24px rgba(0,255,65,0.5)' }}
           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#00ff41'; e.currentTarget.style.boxShadow = '0 0 12px rgba(0,255,65,0.1)' }}
         >
-          REQUEST A DEMO /&gt;
+          SIGN UP / LOGIN /&gt;
         </button>
       </nav>
 
       {/* ── HERO ── */}
       <section ref={homeRef} style={{ position: 'relative', zIndex: 1, minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '60px 40px 0', scrollMarginTop: '80px' }}>
-        <div style={{ maxWidth: 780 }}>
+        <div style={{ maxWidth: 780, paddingBottom: 160 }}>
           {/* Terminal tag */}
           <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 12, color: 'rgba(0,255,65,0.4)', marginBottom: 28, letterSpacing: '0.06em' }}>
             &gt;_ v1.2.0 · AI THREAT INTELLIGENCE PLATFORM{tick ? '█' : ' '}
@@ -247,7 +247,7 @@ export default function Landing() {
               onMouseEnter={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#00ff41' }}
               onMouseLeave={e => { e.currentTarget.style.background = '#00ff41'; e.currentTarget.style.color = '#000' }}
             >
-              REQUEST A DEMO /&gt;
+              SIGN UP /&gt;
             </button>
             <button
               onClick={() => navigate('/register')}
@@ -261,7 +261,7 @@ export default function Landing() {
               onMouseEnter={e => { e.currentTarget.style.borderColor = '#00ff41'; e.currentTarget.style.color = '#00ff41' }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,255,65,0.3)'; e.currentTarget.style.color = 'rgba(0,255,65,0.6)' }}
             >
-              GET A WHITEPAPER /&gt;
+              REGISTER /&gt;
             </button>
           </div>
 
