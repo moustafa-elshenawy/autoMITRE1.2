@@ -902,10 +902,16 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
 
 
 
-def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False) -> ThreatResult:
+def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False,
+                   pipeline_mode: str = "auto") -> ThreatResult:
     """
     Main industrial-grade threat analysis function.
     Orchestrates the two-stage AI pipeline (SecBERT + Phi-3.5) with heuristic baselines.
+
+    ``pipeline_mode`` selects the technique-mapping engine: "auto" (intake router
+    decides by input structure), "rag" (3-layer RAG + constraint engine), or
+    "deep_learning" (SecureBERT + bi-encoder classifier). The chosen engine and
+    its rationale are recorded in ``raw_indicators["routing_decision"]``.
     """
     text = processed_input.get('normalized_text', '')
     entities = processed_input.get('entities', [])
@@ -979,6 +985,60 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
     if not final_techniques_list: # Fallback if deep_analysis didn't yield TTPs or wasn't enabled
         final_techniques_list = get_attack_techniques(technique_scores, text)
 
+    # --- Engine selection (intake router) ---------------------------------
+    # The chosen engine's mapping supersedes the legacy SecBERT/heuristic list
+    # above; narrative fields (title, summary, predicted_steps) from deep_insights
+    # are still used. "auto" routes structured telemetry -> RAG + constraint
+    # engine and prose CTI -> SecureBERT + bi-encoder DL classifier. Every step
+    # degrades gracefully: DL failure -> RAG, RAG failure -> the legacy list, so
+    # a request never hard-fails here. AUTOMITRE_USE_RAG=0 still disables RAG.
+    import logging as _logging
+    from core.intake_router import route as _route_intake, ENGINE_DEEP_LEARNING, ENGINE_RAG
+
+    routing_decision = _route_intake(text, pipeline_mode)
+    engine = routing_decision["engine"]
+
+    def _to_attack_techniques(techs):
+        return [
+            ATTACKTechnique(
+                id=t["id"],
+                name=t["name"] or "Classified Technique",
+                tactic=t.get("tactic", "Multiple Tactics"),
+                confidence=float(round(t.get("confidence", 0.5), 2)),
+                verified=t.get("verified", True),
+                evidence=t.get("evidence", []),
+            )
+            for t in techs
+        ]
+
+    if engine == ENGINE_DEEP_LEARNING:
+        try:
+            from core import dl_classifier
+            dl_techs = dl_classifier.predict_techniques(text)
+            if dl_techs:
+                final_techniques_list = _to_attack_techniques(dl_techs)
+            else:
+                routing_decision["note"] = "DL classifier accepted no techniques; kept baseline list."
+            routing_decision["engine_used"] = ENGINE_DEEP_LEARNING
+        except Exception as dl_err:  # noqa: BLE001 — fall back to RAG
+            _logging.getLogger("ai_threat_analyzer").warning(
+                "DL classifier unavailable, falling back to RAG: %s", dl_err)
+            routing_decision["fallback"] = f"deep_learning_unavailable: {dl_err}"
+            engine = ENGINE_RAG
+
+    if engine == ENGINE_RAG and os.getenv("AUTOMITRE_USE_RAG", "1") == "1":
+        try:
+            from core.threat_pipeline import map_log_to_attack_techniques
+            rag_techs = map_log_to_attack_techniques(text)
+            if rag_techs:
+                final_techniques_list = _to_attack_techniques(rag_techs)
+            routing_decision["engine_used"] = ENGINE_RAG
+        except Exception as rag_err:  # noqa: BLE001 — keep legacy techniques on any failure
+            _logging.getLogger("ai_threat_analyzer").warning(
+                "RAG pipeline unavailable, retaining legacy techniques: %s", rag_err)
+            routing_decision.setdefault("fallback", f"rag_unavailable: {rag_err}")
+            routing_decision["engine_used"] = "legacy"
+
     # Map score to standard SeverityLevel
     mapped_severity = SeverityLevel.LOW
     if final_score >= 9.0: mapped_severity = SeverityLevel.CRITICAL
@@ -1036,7 +1096,8 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False)
             "is_anomaly": bool(is_anomalous),
             "deep_extraction": deep_insights.get("terms", []),
             "technical_dive": deep_insights.get("analysis", ""),
-            "llm_summary": deep_insights.get("summary", "")
+            "llm_summary": deep_insights.get("summary", ""),
+            "routing_decision": routing_decision
         }
     )
     return result

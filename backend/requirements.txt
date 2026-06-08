@@ -61,6 +61,15 @@ groq==1.0.0
 llama_cpp_python==0.3.16
 ollama==0.6.1
 
+# ── threat_pipeline: Layer 1 LLM-as-NLP extractor (Apple Silicon) ─────────────
+# mlx-lm is the preferred local-inference backend on M-series Macs. If it is
+# unavailable the extractor degrades to a deterministic regex parser, so this is
+# effectively optional on non-Apple-Silicon hosts.
+mlx-lm==0.31.3
+
+# ── threat_pipeline: Layer 2 vector store (RAG retrieval) ─────────────────────
+chromadb==1.5.9
+
 # ── STIX / CTI Standards ──────────────────────────────────────────────────────
 stix2==3.0.2
 stix2-patterns==2.1.2
@@ -97,3 +106,4 @@ dnspython==2.8.0
 rich==14.3.3
 psutil==7.2.2
 anyio==4.12.1
+matplotlib>=3.7

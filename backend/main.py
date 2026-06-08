@@ -22,11 +22,32 @@ from api.routes.dashboard import router as dashboard_router
 from database.config import engine, Base
 import contextlib
 
+import logging
+
+_startup_log = logging.getLogger("automitre.startup")
+
+
 @contextlib.asynccontextmanager
 async def lifespan(app: FastAPI):
     # Create all tables on startup if they don't exist
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+    # Preload the deep-learning ATT&CK classifier (499MB SecureBERT checkpoint)
+    # onto the Apple-Silicon MPS backend (CPU fallback). This is exception-safe:
+    # if the model can't be loaded, the app still boots and the RAG engine keeps
+    # serving — DL/auto→DL requests fall back to RAG. Set AUTOMITRE_DL_ENABLED=0
+    # to skip preload (e.g. on memory-constrained boxes; it then lazy-loads on
+    # first deep_learning request).
+    try:
+        from core import dl_classifier
+        if dl_classifier.load():
+            _startup_log.info("DL classifier preloaded: %s", dl_classifier.status())
+        else:
+            _startup_log.warning("DL classifier not preloaded: %s", dl_classifier.status())
+    except Exception as e:  # noqa: BLE001 — never block startup
+        _startup_log.warning("DL classifier preload skipped due to error: %s", e)
+
     yield
 
 app = FastAPI(

@@ -4,6 +4,11 @@ __pycache__/
 *.log
 *.gguf
 *.safetensors
+*.pt
+*.pkl
 *.pid
 *.db
 test_pdf.py
+
+# Generated ML artifacts (regenerable; too large or noisy for git)
+backend/data/chroma_mitre/

@@ -20,10 +20,20 @@ class InputType(str, Enum):
     LOG = "log"
 
 
+class PipelineMode(str, Enum):
+    AUTO = "auto"               # intelligent intake router picks the engine
+    RAG = "rag"                 # 3-layer RAG + constraint engine
+    DEEP_LEARNING = "deep_learning"  # SecureBERT + bi-encoder classifier
+
+
 class TextAnalysisRequest(BaseModel):
     text: str
     context: Optional[str] = None
     deep_analysis: bool = False
+    # Which technique-mapping engine to use. "auto" (default) routes structured
+    # telemetry to the RAG/constraint engine and prose CTI reports to the
+    # SecureBERT deep-learning classifier. See core.intake_router.
+    pipeline_mode: PipelineMode = PipelineMode.AUTO
 
 
 class ExtractedAttack(BaseModel):
@@ -141,6 +151,9 @@ class AnalysisResponse(BaseModel):
     success: bool
     threat_result: Optional[ThreatResult] = None
     error: Optional[str] = None
+    # Which engine processed the request and why (populated by the intake
+    # router). Also mirrored into threat_result.raw_indicators["routing_decision"].
+    routing_decision: Optional[Dict[str, Any]] = None
 
 
 class ChatMessage(BaseModel):

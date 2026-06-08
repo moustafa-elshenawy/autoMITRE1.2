@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 
 /**
- * AIPipelineAnimation — SOTA Pipeline Visualizer
+ * AIPipelineAnimation — Three-Layer Pipeline Visualizer
  * Shows the live stages of the AI threat analysis pipeline while loading.
- * Stages mirror the actual backend pipeline:
+ * Stages mirror the actual backend pipeline (core/threat_pipeline + analyze_threat):
  *   1. Input Normalization
- *   2. Entity Extraction (NER/Regex)
- *   3. SecBERT Classification (Stage 1 ML)
- *   4. Semantic Embedding (MPNet)
- *   5. Adaptive-K Filtering
- *   6. CVSS Severity Regression
- *   7. Framework Mapping (ATT&CK, D3FEND, NIST, OWASP)
+ *   2. Context Extraction (deterministic: OS, ports, protocols, credentials)
+ *   3. Semantic Extraction — LAYER 1 (mlx-lm LLM-as-NLP: Action → Tool → Target)
+ *   4. Vector Retrieval — LAYER 2 (ChromaDB + MPNet, top-5 ATT&CK by cosine)
+ *   5. Constraint Engine — LAYER 3 (protocol / dependency / platform rules)
+ *   6. Severity Scoring (ML risk regression)
+ *   7. Framework Mapping (D3FEND, NIST, OWASP)
  *   8. Report Assembly
  */
 
@@ -18,57 +18,57 @@ const PIPELINE_STAGES = [
     {
         id: 'input',
         label: 'Input Normalization',
-        sublabel: 'Tokenizing & cleaning threat text',
+        sublabel: 'Tokenizing & cleaning raw telemetry',
         icon: '01',
         color: '#00ff41',
-        duration: 800,
+        duration: 700,
     },
     {
-        id: 'ner',
-        label: 'Entity Extraction',
-        sublabel: 'Running NER — IPs, CVEs, domains, tools',
+        id: 'context',
+        label: 'Context Extraction',
+        sublabel: 'Parsing OS · ports · protocols · credentials',
         icon: '02',
+        color: '#38bdf8',
+        duration: 700,
+    },
+    {
+        id: 'extract',
+        label: 'Semantic Extraction · Layer 1',
+        sublabel: 'mlx-lm extracting Action → Tool → Target relations',
+        icon: '03',
         color: '#a78bfa',
+        duration: 1600,
+    },
+    {
+        id: 'retrieve',
+        label: 'Vector Retrieval · Layer 2',
+        sublabel: 'ChromaDB cosine search · MPNet · top-5 ATT&CK',
+        icon: '04',
+        color: '#34d399',
+        duration: 1100,
+    },
+    {
+        id: 'constrain',
+        label: 'Constraint Engine · Layer 3',
+        sublabel: 'Protocol · dependency · platform rules → confidence',
+        icon: '05',
+        color: '#fbbf24',
         duration: 900,
     },
     {
-        id: 'secbert',
-        label: 'SecBERT Classification',
-        sublabel: 'Stage 1 ML — TTP mapping via TRAM dataset',
-        icon: '03',
-        color: '#f472b6',
-        duration: 1400,
-    },
-    {
-        id: 'mpnet',
-        label: 'MPNet Semantic Embedder',
-        sublabel: 'Computing cosine similarity against ATT&CK v14',
-        icon: '04',
-        color: '#34d399',
-        duration: 1200,
-    },
-    {
-        id: 'adaptivek',
-        label: 'Adaptive-K Filtering',
-        sublabel: 'Pruning low-confidence noise techniques',
-        icon: '05',
-        color: '#fbbf24',
-        duration: 600,
-    },
-    {
-        id: 'cvss',
-        label: 'CVSS Severity Regression',
-        sublabel: 'Scoring via ML model trained on 277k CVEs',
+        id: 'severity',
+        label: 'Severity Scoring',
+        sublabel: 'ML risk regression — likelihood × impact',
         icon: '06',
         color: '#fb923c',
-        duration: 800,
+        duration: 700,
     },
     {
         id: 'frameworks',
         label: 'Framework Mapping',
         sublabel: 'Cross-referencing D3FEND · NIST 800-53 · OWASP',
         icon: '07',
-        color: '#00ff41',
+        color: '#f472b6',
         duration: 900,
     },
     {
@@ -364,10 +364,10 @@ export default function AIPipelineAnimation({ visible }) {
                     display: 'flex', gap: 8, flexWrap: 'wrap',
                 }}>
                     {[
-                        { label: 'SecBERT', desc: 'jackaduma/SecBERT · TRAM', color: '#f472b6' },
-                        { label: 'MPNet', desc: 'all-mpnet-base-v2 · 420MB', color: '#34d399' },
-                        { label: 'CVSS ML', desc: 'RF Regressor · 277k CVEs', color: '#fb923c' },
-                        { label: 'ATT&CK v14', desc: 'MITRE Enterprise Matrix', color: '#00ff41' },
+                        { label: 'mlx-lm', desc: 'Llama-3.2-3B · Apple Silicon', color: '#a78bfa' },
+                        { label: 'MPNet', desc: 'all-mpnet-base-v2 · embeddings', color: '#34d399' },
+                        { label: 'ChromaDB', desc: 'MITRE vector store · cosine', color: '#38bdf8' },
+                        { label: 'Constraint Engine', desc: 'deterministic rules', color: '#fbbf24' },
                     ].map(m => (
                         <div key={m.label} style={{
                             display: 'flex', alignItems: 'center', gap: 6,

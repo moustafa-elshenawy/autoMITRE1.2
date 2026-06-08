@@ -1,0 +1,15 @@
+text,label
+"The actor used PowerShell to download and execute a malicious payload on the host.",T1059.001
+"A scheduled task was created to maintain persistence across reboots.",T1053.005
+"Adversaries ran cmd.exe to enumerate local accounts and system information.","T1059.003, T1087, T1082"
+"The malware dumped credentials from the LSASS process memory using a known tool.",T1003.001
+"Brute force attempts were observed against the exposed RDP service.","T1110, T1021.001"
+"The phishing email contained a malicious attachment that, once opened, executed code.","T1566.001, T1204.002"
+"Data was exfiltrated over an encrypted HTTPS channel to an external server.","T1041, T1071.001"
+"The ransomware encrypted files across network shares and deleted shadow copies.","T1486, T1490"
+"PowerShell was used again to disable Windows Defender and clear event logs.","T1059.001, T1562.001, T1070.001"
+"Lateral movement was performed using valid administrator credentials over SMB.","T1021.002, T1078"
+"A web shell was deployed on the public-facing server to gain initial access.","T1190, T1505.003"
+"The attacker queried Active Directory to discover privileged accounts.",T1059.001
+"Reconnaissance scans mapped open ports before the intrusion.",T1046
+"This row references a revoked technique that should be dropped gracefully.",T1999.001

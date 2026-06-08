@@ -85,17 +85,19 @@ async def analyze_text(request: TextAnalysisRequest, background_tasks: Backgroun
     """Analyze a text description of a threat."""
     try:
         processed = process_input(request.text, InputType.TEXT)
-        threat = analyze_threat(processed, deep_analysis=request.deep_analysis)
+        pipeline_mode = request.pipeline_mode.value if hasattr(request.pipeline_mode, "value") else str(request.pipeline_mode)
+        threat = analyze_threat(processed, deep_analysis=request.deep_analysis, pipeline_mode=pipeline_mode)
         technique_ids = threat.raw_indicators.get('technique_ids', [])
         threat = enrich_threat_result(threat, technique_ids)
 
+        routing_decision = threat.raw_indicators.get('routing_decision')
         await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
         background_tasks.add_task(log_event,
             category="ANALYSIS", action="analyze_text",
             user_id=current_user.id, username=current_user.username,
-            details={"threat_id": threat.id, "severity": threat.risk_score.get("severity") if isinstance(threat.risk_score, dict) else None, "techniques": len(threat.attack_techniques)}
+            details={"threat_id": threat.id, "severity": threat.risk_score.get("severity") if isinstance(threat.risk_score, dict) else None, "techniques": len(threat.attack_techniques), "engine": (routing_decision or {}).get("engine_used") or (routing_decision or {}).get("engine")}
         )
-        return AnalysisResponse(success=True, threat_result=threat)
+        return AnalysisResponse(success=True, threat_result=threat, routing_decision=routing_decision)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
