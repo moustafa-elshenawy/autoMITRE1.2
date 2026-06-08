@@ -67,6 +67,46 @@ _SIEM_FIELD_RE = re.compile(
 # Sentence-ish prose detector: words ending a clause with terminal punctuation.
 _SENTENCE_RE = re.compile(r"[A-Za-z][^.!?]{15,}?[.!?](?:\s|$)")
 
+# --- raw command-line execution signals -------------------------------------
+# Known shells, LOLBins, and offensive binaries. When one of these is invoked as
+# a *raw command* — at the start of the input/line, followed by CLI args, or with
+# mimikatz/DCOM "module::command" syntax — the payload is unambiguous structured
+# telemetry even without JSON wrapping or SIEM field headers, so we force RAG.
+# Deliberately excludes ambiguous English words (net/sc/reg) and tools that
+# commonly appear inside CTI prose (procdump) so narrative reports still route to
+# the deep-learning classifier; the context guards below keep firing precise.
+_CMD_BINARIES = (
+    "cmd", "powershell", "pwsh", "psexec", "paexec", "mimi", "mimikatz",
+    "wmic", "rundll32", "regsvr32", "certutil", "bitsadmin", "mshta",
+    "cscript", "wscript", "schtasks", "vssadmin", "nltest", "ntdsutil",
+    "wevtutil", "sekurlsa", "lazagne", "cobaltstrike", "beacon",
+)
+_BIN_ALT = "|".join(_CMD_BINARIES)
+# 1) a binary that starts the input or a line (optionally with a .exe suffix).
+_CMD_AT_START_RE = re.compile(rf"(?im)(?:^|[\n\r;|&`])\s*(?:{_BIN_ALT})(?:\.exe)?\b")
+# 2) a binary immediately followed by a CLI flag, path, UNC, or module syntax
+#    (a plain English word after it does NOT count, so prose stays prose).
+_CMD_WITH_ARGS_RE = re.compile(
+    rf"\b(?:{_BIN_ALT})(?:\.exe)?\s*(?=[/\-\"']|\\|\w+::)", re.IGNORECASE)
+# 3) mimikatz / DCOM-style "module::command" syntax (e.g. sekurlsa::logonpasswords).
+_CMD_MODULE_RE = re.compile(r"\b[A-Za-z][\w]+::[A-Za-z][\w]+")
+# 4) UNC path / admin share, e.g. \\192.168.10.25 or \\HOST\ADMIN$.
+_UNC_PATH_RE = re.compile(r"\\\\[\w.\-]+(?:\\[\w.$\-]+)*")
+
+
+def _detect_command_exec(text: str) -> Dict[str, Any]:
+    """Detect raw command-line execution; returns fired signal descriptions."""
+    fired: List[str] = []
+    if _CMD_MODULE_RE.search(text):
+        fired.append("module::command syntax")
+    if _UNC_PATH_RE.search(text):
+        fired.append("UNC/admin-share path")
+    if _CMD_AT_START_RE.search(text):
+        fired.append("command binary at line start")
+    if _CMD_WITH_ARGS_RE.search(text):
+        fired.append("command binary with CLI args")
+    return {"command_exec": bool(fired), "command_signals": fired}
+
 
 def _looks_like_json(text: str) -> bool:
     """True if the payload is (or begins as) a JSON object/array."""
@@ -94,6 +134,7 @@ def analyze_structure(text: str) -> Dict[str, Any]:
     known_cli = sorted({f for f in (c.lower() for c in cli_flags_all) if f in _KNOWN_CLI_FLAGS})
     sentences = len(_SENTENCE_RE.findall(sample))
     words = len(re.findall(r"[A-Za-z']+", sample))
+    cmd = _detect_command_exec(sample)
 
     return {
         "is_json": _looks_like_json(sample),
@@ -102,6 +143,8 @@ def analyze_structure(text: str) -> Dict[str, Any]:
         "kv_pairs": kv_pairs,
         "cli_flags": known_cli,
         "syslog_header": bool(_SYSLOG_PRI_RE.search(sample) or _SYSLOG_TS_RE.search(sample)),
+        "command_exec": cmd["command_exec"],
+        "command_signals": cmd["command_signals"],
         "sentences": sentences,
         "words": words,
         "chars": len(text),
@@ -111,6 +154,10 @@ def analyze_structure(text: str) -> Dict[str, Any]:
 def _structured_score(sig: Dict[str, Any]) -> float:
     """Weighted evidence that the input is machine/structured telemetry."""
     score = 0.0
+    # Raw command-line execution is decisive on its own (forced in route()); the
+    # score is bumped here too so the signal is visible in transparency output.
+    if sig.get("command_exec"):
+        score += 5.0
     if sig["is_json"]:
         score += 3.0
     if sig["syslog_header"]:
@@ -179,6 +226,17 @@ def route(text: str, pipeline_mode: str = "auto") -> Dict[str, Any]:
         }
 
     # --- auto ---------------------------------------------------------------
+    # Hard override: a raw command-line invocation is structured telemetry by
+    # definition (a shell/LOLBin with args, module syntax, or a UNC path), so it
+    # goes to the RAG + constraint engine regardless of any prose-like wrapping.
+    if signals.get("command_exec"):
+        fired = ", ".join(signals.get("command_signals") or []) or "raw command invocation"
+        return {
+            "mode": "auto", "engine": ENGINE_RAG, "auto": True,
+            "reason": (f"Raw command-line execution detected ({fired}); forced to "
+                       f"the RAG + constraint engine."),
+            "signals": signals,
+        }
     if struct >= STRUCTURED_THRESHOLD and struct >= prose:
         fired = _describe_structured(signals)
         engine = ENGINE_RAG
@@ -197,6 +255,8 @@ def route(text: str, pipeline_mode: str = "auto") -> Dict[str, Any]:
 
 def _describe_structured(sig: Dict[str, Any]) -> str:
     parts: List[str] = []
+    if sig.get("command_exec"):
+        parts.append("raw command (" + ", ".join(sig.get("command_signals") or []) + ")")
     if sig["is_json"]:
         parts.append("JSON payload")
     if sig["syslog_header"]:

@@ -80,11 +80,28 @@ _SIGNATURES: List[Tuple[Set[str], str]] = [
     ({"reg", "save"}, "os credential dumping registry hive dump"),
     ({"ntdsutil", "ifm"}, "os credential dumping ntds active directory database"),
     ({"procdump", "lsass"}, "os credential dumping lsass process memory"),
+    # Mimikatz family (T1003.001 — LSASS Memory).
+    ({"mimikatz"}, "os credential dumping lsass memory credential theft"),
+    ({"mimi"}, "os credential dumping lsass memory credential theft"),
+    ({"sekurlsa"}, "os credential dumping lsass memory credential theft logonpasswords"),
+
+    # --- Lateral Movement: Remote Services / Admin Shares (T1021.002 / T1570) --
+    ({"psexec"}, "remote services smb windows admin shares lateral tool transfer lateral movement"),
+    ({"paexec"}, "remote services smb windows admin shares lateral tool transfer lateral movement"),
 
     # --- Discovery (T1033 / T1087 / T1482) ------------------------------------
     ({"whoami"}, "system owner user discovery"),
     ({"nltest", "domain_trusts"}, "domain trust discovery"),
     ({"net", "group"}, "permission groups domain account discovery"),
+]
+
+
+# Literal substring triggers — for signatures that contain characters the word
+# tokenizer drops (e.g. the "$" in Windows admin shares like ADMIN$ / C$ / IPC$).
+_SUBSTRING_SIGNATURES: List[Tuple[str, str]] = [
+    ("admin$", "smb windows admin shares lateral movement remote services"),
+    ("ipc$", "smb windows admin shares remote services"),
+    ("c$", "smb windows admin shares lateral movement"),
 ]
 
 
@@ -96,7 +113,8 @@ def enrich(query: str) -> str:
     """
     if not query:
         return query
-    tokens = set(_TOKEN_RE.findall(query.lower()))
+    low = query.lower()
+    tokens = set(_TOKEN_RE.findall(low))
     if not tokens:
         return query
 
@@ -104,6 +122,10 @@ def enrich(query: str) -> str:
     extra: List[str] = []
     for required, intent in _SIGNATURES:
         if required <= tokens and intent not in seen:
+            seen.add(intent)
+            extra.append(intent)
+    for trigger, intent in _SUBSTRING_SIGNATURES:
+        if trigger in low and intent not in seen:
             seen.add(intent)
             extra.append(intent)
     if not extra:
