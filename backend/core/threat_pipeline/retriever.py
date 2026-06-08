@@ -20,6 +20,7 @@ import logging
 from typing import Dict, List, Optional
 
 from . import config
+from .command_intent import enrich as enrich_command_intent
 from .schema import Extraction, RetrievedTechnique
 
 log = logging.getLogger("threat_pipeline.retriever")
@@ -143,8 +144,14 @@ class TechniqueRetriever:
             # below instead. Left as None to keep recall; Layer 3 enforces it.
             where = None
 
+        # Append LOLBin/command intent vocabulary for embedding only — the stored
+        # source_query below stays the original so evidence remains faithful.
+        embed_query = (
+            enrich_command_intent(query_text)
+            if config.ENRICH_COMMAND_INTENT else query_text
+        )
         res = coll.query(
-            query_embeddings=self._embed([query_text]),
+            query_embeddings=self._embed([embed_query]),
             n_results=max(top_k * 2, top_k),  # over-fetch, trim after filtering
             where=where,
         )

@@ -71,6 +71,12 @@ TOP_K = int(os.getenv("AUTOMITRE_TOP_K", "5"))
 # reach the constraint engine.
 MIN_SIMILARITY = float(os.getenv("AUTOMITRE_MIN_SIMILARITY", "0.20"))
 
+# Command-intent enrichment. Terse CLI/LOLBin queries (e.g. "vssadmin delete
+# shadows") embed poorly against MITRE's prose, so when enabled the retriever
+# appends MITRE-vocabulary intent terms to the *embedding* query (never to the
+# stored evidence) before the bi-encoder runs. See command_intent.py.
+ENRICH_COMMAND_INTENT = os.getenv("AUTOMITRE_ENRICH_COMMANDS", "1") == "1"
+
 # ---------------------------------------------------------------------------
 # Layer 3 — Constraint engine
 # ---------------------------------------------------------------------------
