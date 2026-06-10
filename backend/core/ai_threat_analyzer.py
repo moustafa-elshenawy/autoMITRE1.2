@@ -902,6 +902,77 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
 
 
 
+def _clear_mps_cache() -> None:
+    """Free the Apple-Silicon Metal (MPS) allocator cache between ensemble tracks.
+
+    On an 8GB M1 the SecureBERT (discriminative) and RAG embedding/LLM
+    (generative) models cannot comfortably co-reside in unified memory. Running
+    the tracks sequentially and releasing the MPS cache after the first track
+    keeps peak memory bounded and prevents OOM aborts. A no-op on CPU/CUDA hosts
+    or if torch is unavailable, so it is always safe to call.
+    """
+    try:
+        import torch
+        if torch.backends.mps.is_available():
+            torch.mps.empty_cache()
+    except Exception as exc:  # noqa: BLE001 — cache hygiene must never break a request
+        import logging as _logging
+        _logging.getLogger("ai_threat_analyzer").debug(
+            "MPS cache clear skipped: %s", exc)
+
+
+def _merge_technique_tracks(dl_techs: List[Dict[str, Any]],
+                            rag_techs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Merge two ATTACKTechnique-shaped dict lists, deduplicating by MITRE ID.
+
+    When the same technique ID is flagged by both tracks, the entry with the
+    higher ``confidence`` is kept; its evidence is enriched with a note that both
+    the discriminative and generative tracks agreed, and ``verified`` is set True
+    if either track verified it. Results are returned highest-confidence first.
+    """
+    merged: Dict[str, Dict[str, Any]] = {}
+    for source, techs in (("deep_learning", dl_techs), ("rag", rag_techs)):
+        for t in techs:
+            tid = t.get("id")
+            if not tid:
+                continue
+            cand = dict(t)
+            cand.setdefault("_tracks", set())
+            cand["_tracks"].add(source)
+            existing = merged.get(tid)
+            if existing is None:
+                merged[tid] = cand
+                continue
+            # Same technique seen in both tracks: keep the higher-confidence
+            # entry but preserve the union of provenance.
+            tracks = existing["_tracks"] | cand["_tracks"]
+            winner = cand if cand.get("confidence", 0.0) > existing.get("confidence", 0.0) else existing
+            loser = existing if winner is cand else cand
+            winner["_tracks"] = tracks
+            # Union of evidence (winner first), de-duplicated, order-preserving.
+            seen_ev, combined_ev = set(), []
+            for ev in list(winner.get("evidence", [])) + list(loser.get("evidence", [])):
+                if ev not in seen_ev:
+                    seen_ev.add(ev)
+                    combined_ev.append(ev)
+            winner["evidence"] = combined_ev
+            winner["verified"] = bool(winner.get("verified") or loser.get("verified"))
+            merged[tid] = winner
+
+    out: List[Dict[str, Any]] = []
+    for t in merged.values():
+        tracks = t.pop("_tracks", set())
+        if len(tracks) > 1:
+            note = "Confirmed by both discriminative (SecureBERT) and generative (RAG) tracks"
+            evidence = list(t.get("evidence", []))
+            if note not in evidence:
+                evidence.append(note)
+            t["evidence"] = evidence
+        out.append(t)
+    out.sort(key=lambda t: t.get("confidence", 0.0), reverse=True)
+    return out
+
+
 def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False,
                    pipeline_mode: str = "auto") -> ThreatResult:
     """
@@ -993,7 +1064,9 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False,
     # degrades gracefully: DL failure -> RAG, RAG failure -> the legacy list, so
     # a request never hard-fails here. AUTOMITRE_USE_RAG=0 still disables RAG.
     import logging as _logging
-    from core.intake_router import route as _route_intake, ENGINE_DEEP_LEARNING, ENGINE_RAG
+    from core.intake_router import (
+        route as _route_intake, ENGINE_DEEP_LEARNING, ENGINE_RAG, ENGINE_HYBRID,
+    )
 
     routing_decision = _route_intake(text, pipeline_mode)
     engine = routing_decision["engine"]
@@ -1010,6 +1083,54 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False,
             )
             for t in techs
         ]
+
+    # --- Hybrid sequential ensemble ----------------------------------------
+    # Run both engines back-to-back (DL first, then RAG) on an 8GB M1, releasing
+    # the MPS allocator cache between them, and union the result sets by MITRE
+    # ID. This recovers recall the strict router misses (e.g. a Mimikatz
+    # technique buried in narrative prose that RAG catches but DL alone routes
+    # away from). Each track degrades independently: if one raises, the other's
+    # techniques still stand; if both fail, the baseline list is retained.
+    if engine == ENGINE_HYBRID:
+        dl_techs: List[Dict[str, Any]] = []
+        rag_techs: List[Dict[str, Any]] = []
+
+        # Track 1 — Discriminative (SecureBERT + bi-encoder).
+        try:
+            from core import dl_classifier
+            dl_techs = dl_classifier.predict_techniques(text)
+        except Exception as dl_err:  # noqa: BLE001 — RAG track can still carry the request
+            _logging.getLogger("ai_threat_analyzer").warning(
+                "Hybrid: DL track unavailable: %s", dl_err)
+            routing_decision["dl_error"] = f"deep_learning_unavailable: {dl_err}"
+
+        # Free unified memory before loading the generative stack.
+        _clear_mps_cache()
+
+        # Track 2 — Generative (RAG + command_intent enrichment + constraint engine).
+        if os.getenv("AUTOMITRE_USE_RAG", "1") == "1":
+            try:
+                from core.threat_pipeline import map_log_to_attack_techniques
+                rag_techs = map_log_to_attack_techniques(text)
+            except Exception as rag_err:  # noqa: BLE001 — DL track can still carry the request
+                _logging.getLogger("ai_threat_analyzer").warning(
+                    "Hybrid: RAG track unavailable: %s", rag_err)
+                routing_decision["rag_error"] = f"rag_unavailable: {rag_err}"
+        else:
+            routing_decision["rag_error"] = "rag_disabled (AUTOMITRE_USE_RAG=0)"
+
+        merged = _merge_technique_tracks(dl_techs, rag_techs)
+        if merged:
+            final_techniques_list = _to_attack_techniques(merged)
+        else:
+            routing_decision["note"] = (
+                "Both hybrid tracks returned no techniques; kept baseline list.")
+        routing_decision["engine_used"] = ENGINE_HYBRID
+        routing_decision["track_counts"] = {
+            "deep_learning": len(dl_techs),
+            "rag": len(rag_techs),
+            "merged": len(merged),
+        }
 
     if engine == ENGINE_DEEP_LEARNING:
         try:

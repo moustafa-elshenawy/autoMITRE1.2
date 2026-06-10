@@ -24,6 +24,7 @@ class PipelineMode(str, Enum):
     AUTO = "auto"               # intelligent intake router picks the engine
     RAG = "rag"                 # 3-layer RAG + constraint engine
     DEEP_LEARNING = "deep_learning"  # SecureBERT + bi-encoder classifier
+    HYBRID = "hybrid"           # sequential ensemble: DL + RAG, merged by MITRE ID
 
 
 class TextAnalysisRequest(BaseModel):

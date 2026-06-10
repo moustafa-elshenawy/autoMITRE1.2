@@ -30,6 +30,10 @@ from typing import Any, Dict, List
 # --- engine identifiers (kept as plain strings to avoid import cycles) -------
 ENGINE_RAG = "rag"
 ENGINE_DEEP_LEARNING = "deep_learning"
+# Sequential ensemble: run the DL track, free MPS, then run the RAG track and
+# merge both result sets by MITRE ID. Selected only via explicit pipeline_mode
+# ("hybrid"); the structural auto-router never picks it on its own.
+ENGINE_HYBRID = "hybrid"
 
 # --- structured-telemetry signal patterns -----------------------------------
 # Common SIEM / Windows-Event / Sysmon / EDR field names. Matched as whole
@@ -222,6 +226,14 @@ def route(text: str, pipeline_mode: str = "auto") -> Dict[str, Any]:
         return {
             "mode": mode, "engine": ENGINE_DEEP_LEARNING, "auto": False,
             "reason": "Explicit pipeline_mode=deep_learning override.",
+            "signals": signals,
+        }
+    if mode == ENGINE_HYBRID:
+        return {
+            "mode": mode, "engine": ENGINE_HYBRID, "auto": False,
+            "reason": ("Explicit pipeline_mode=hybrid override; running the "
+                       "SecureBERT and RAG tracks sequentially and merging by "
+                       "MITRE ID."),
             "signals": signals,
         }
 
