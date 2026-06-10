@@ -921,6 +921,34 @@ def _clear_mps_cache() -> None:
             "MPS cache clear skipped: %s", exc)
 
 
+# --- Hybrid output post-processing (noise / semantic-bleed control) ----------
+# Applied after the two tracks are merged and sorted. Both are env-overridable so
+# the floor and cap can be tuned per deployment without code changes.
+#   CONFIDENCE_THRESHOLD — drop techniques scoring strictly below this floor,
+#       unless they are `verified` (token-overlap gate / intent lexicon), which
+#       lets forensically grounded but statistically weak IDs (e.g. T1490)
+#       survive the cut.
+#   TOP_K_LIMIT — hard cap on techniques returned, to curb analyst alert fatigue.
+CONFIDENCE_THRESHOLD = float(os.getenv("AUTOMITRE_CONFIDENCE_THRESHOLD", "0.50"))
+TOP_K_LIMIT = int(os.getenv("AUTOMITRE_TOP_K_LIMIT", "5"))
+
+
+def _prune_merged_techniques(techs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Prune noise from the merged hybrid output.
+
+    Expects ``techs`` already sorted by confidence (descending). Drops anything
+    below ``CONFIDENCE_THRESHOLD`` — except entries with ``verified=True``, which
+    bypass the floor so grounded indicators aren't lost to a low statistical
+    score — then slices to at most ``TOP_K_LIMIT`` (the verified bypass does not
+    exempt an entry from the cap).
+    """
+    kept = [
+        t for t in techs
+        if t.get("verified") or t.get("confidence", 0.0) >= CONFIDENCE_THRESHOLD
+    ]
+    return kept[:TOP_K_LIMIT]
+
+
 def _merge_technique_tracks(dl_techs: List[Dict[str, Any]],
                             rag_techs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Merge two ATTACKTechnique-shaped dict lists, deduplicating by MITRE ID.
@@ -928,7 +956,8 @@ def _merge_technique_tracks(dl_techs: List[Dict[str, Any]],
     When the same technique ID is flagged by both tracks, the entry with the
     higher ``confidence`` is kept; its evidence is enriched with a note that both
     the discriminative and generative tracks agreed, and ``verified`` is set True
-    if either track verified it. Results are returned highest-confidence first.
+    if either track verified it. Results are sorted highest-confidence first, then
+    pruned by :func:`_prune_merged_techniques` (confidence floor + Top-K cap).
     """
     merged: Dict[str, Dict[str, Any]] = {}
     for source, techs in (("deep_learning", dl_techs), ("rag", rag_techs)):
@@ -970,7 +999,7 @@ def _merge_technique_tracks(dl_techs: List[Dict[str, Any]],
             t["evidence"] = evidence
         out.append(t)
     out.sort(key=lambda t: t.get("confidence", 0.0), reverse=True)
-    return out
+    return _prune_merged_techniques(out)
 
 
 def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False,
