@@ -657,7 +657,7 @@ export default function ThreatAnalysis() {
             </div>
 
             {/* AI Pipeline Animation — shown while loading */}
-            <AIPipelineAnimation visible={loading} />
+            <AIPipelineAnimation visible={loading && tab !== 'hash'} />
 
             <ThreatResultPanel result={result} />
             
