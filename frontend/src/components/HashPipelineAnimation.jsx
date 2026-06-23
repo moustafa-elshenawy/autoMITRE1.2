@@ -16,68 +16,44 @@ import { useEffect, useState } from 'react'
 
 const PIPELINE_STAGES = [
     {
-        id: 'input',
-        label: 'Input Normalization',
-        sublabel: 'Tokenizing & cleaning raw telemetry',
+        id: 'hash_input',
+        label: 'Hash Normalization',
+        sublabel: 'Validating MD5 / SHA-1 / SHA-256 format',
         icon: '01',
         color: '#00ff41',
-        duration: 700,
+        duration: 500,
     },
     {
-        id: 'context',
-        label: 'Context Extraction',
-        sublabel: 'Parsing OS · ports · protocols · credentials',
+        id: 'vt_query',
+        label: 'VirusTotal API Integration',
+        sublabel: 'Fetching detection ratio, tags, and consensus',
         icon: '02',
         color: '#38bdf8',
-        duration: 700,
+        duration: 800,
     },
     {
-        id: 'extract',
-        label: 'Semantic Extraction · Layer 1',
-        sublabel: 'SecureBERT deep-learning classifier',
+        id: 'deep_extract',
+        label: 'Deep File Extraction',
+        sublabel: 'Parsing Magika (DL type), TRID, and SSDEEP',
         icon: '03',
         color: '#a78bfa',
-        duration: 1600,
-    },
-    {
-        id: 'retrieve',
-        label: 'Vector Retrieval · Layer 2',
-        sublabel: 'Bi-encoder verification · all-mpnet-base-v2',
-        icon: '04',
-        color: '#34d399',
-        duration: 1100,
-    },
-    {
-        id: 'constrain',
-        label: 'Constraint Engine · Layer 3',
-        sublabel: 'Protocol · dependency · platform rules → confidence',
-        icon: '05',
-        color: '#fbbf24',
-        duration: 900,
-    },
-    {
-        id: 'severity',
-        label: 'Severity Scoring',
-        sublabel: 'ML risk regression — likelihood × impact',
-        icon: '06',
-        color: '#fb923c',
         duration: 700,
     },
     {
-        id: 'frameworks',
-        label: 'Framework Mapping',
-        sublabel: 'Cross-referencing D3FEND · NIST 800-53 · OWASP',
-        icon: '07',
-        color: '#f472b6',
-        duration: 900,
+        id: 'heuristic',
+        label: 'Heuristic Indicator Mapping',
+        sublabel: 'Translating VT behavior trees to MITRE ATT&CK',
+        icon: '04',
+        color: '#fbbf24',
+        duration: 600,
     },
     {
         id: 'assembly',
         label: 'Report Assembly',
-        sublabel: 'Generating mitigations & kill-chain predictions',
-        icon: '08',
+        sublabel: 'Building static analysis threat payload',
+        icon: '05',
         color: '#10b981',
-        duration: 700,
+        duration: 500,
     },
 ]
 
@@ -103,7 +79,7 @@ function PulsingDot({ color }) {
     )
 }
 
-export default function AIPipelineAnimation({ visible }) {
+export default function HashPipelineAnimation({ visible }) {
     const [activeStage, setActiveStage] = useState(0)
     const [completedStages, setCompletedStages] = useState(new Set())
     const [dataPackets, setDataPackets] = useState([])
@@ -214,7 +190,7 @@ export default function AIPipelineAnimation({ visible }) {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <PulsingDot color="#00ff41" />
                         <span style={{ fontSize: 13, fontWeight: 700, color: '#f0f4ff', letterSpacing: 0.5 }}>
-                            AI Pipeline — Live Processing
+                            Hash Pipeline — OSINT Processing
                         </span>
                         <span style={{
                             fontSize: 9, padding: '2px 8px', background: 'rgba(0,255,65,0.12)',
@@ -365,10 +341,10 @@ export default function AIPipelineAnimation({ visible }) {
                     display: 'flex', gap: 8, flexWrap: 'wrap',
                 }}>
                     {[
-                        { label: 'SecureBERT', desc: 'Cybersecurity NLP classifier', color: '#a78bfa' },
-                        { label: 'Bi-Encoder', desc: 'all-mpnet-base-v2 · cosine', color: '#34d399' },
-                        { label: 'XGBoost', desc: 'Severity Regression Model', color: '#38bdf8' },
-                        { label: 'Heuristics Engine', desc: 'Deterministic overrides', color: '#fbbf24' },
+                        { label: 'VirusTotal API', desc: 'Real-time threat intelligence', color: '#38bdf8' },
+                        { label: 'Magika DL', desc: 'Deep learning file typing', color: '#a78bfa' },
+                        { label: 'SSDEEP', desc: 'Fuzzy hashing similarity', color: '#34d399' },
+                        { label: 'Heuristics Engine', desc: 'Behavioral Sandbox Mapping', color: '#fbbf24' },
                     ].map(m => (
                         <div key={m.label} style={{
                             display: 'flex', alignItems: 'center', gap: 6,

@@ -4,6 +4,7 @@ import { Upload, Search, Hash, FileText, ChevronRight, AlertCircle, CheckCircle,
 import axios from 'axios'
 import { useDataView } from '../contexts/DataViewContext'
 import AIPipelineAnimation from '../components/AIPipelineAnimation'
+import HashPipelineAnimation from '../components/HashPipelineAnimation'
 
 const API = 'http://localhost:8001'
 
@@ -53,6 +54,11 @@ export function VirusTotalPanel({ vt }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <div style={{ width: 12, height: 12, borderRadius: '50%', background: badgeColor }}></div>
                     <span style={{ fontSize: 14, fontWeight: 600, color: '#f8fafc' }}>VirusTotal Analysis</span>
+                    {vt.threat_label && (
+                        <span style={{ padding: '2px 8px', background: 'rgba(239, 68, 68, 0.15)', color: '#fca5a5', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: 4, fontSize: 11, fontWeight: 700, letterSpacing: 0.5 }}>
+                            {vt.threat_label}
+                        </span>
+                    )}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <a href={`https://www.virustotal.com/gui/file/${vt.hashes?.sha256}`} target="_blank" rel="noreferrer" className="btn btn-secondary" style={{ padding: '4px 10px', fontSize: 11, height: 'auto', display: 'flex', alignItems: 'center' }}>
@@ -415,9 +421,6 @@ export default function ThreatAnalysis() {
         setLoading(false)
     }
 
-    // Total duration of all pipeline animation stages in ms
-    const PIPELINE_TOTAL_MS = 7300
-
     const analyze = async (content, endpoint) => {
         setLoading(true); setError(null); setResult(null)
         const startTime = Date.now()
@@ -434,8 +437,9 @@ export default function ThreatAnalysis() {
         }
 
         // Wait for the remainder of the animation if the API returned too fast
+        const animationTotalMs = tab === 'hash' ? 3100 : 7300
         const elapsed = Date.now() - startTime
-        const remaining = Math.max(0, PIPELINE_TOTAL_MS - elapsed)
+        const remaining = Math.max(0, animationTotalMs - elapsed)
         await new Promise(resolve => setTimeout(resolve, remaining))
 
         if (pendingResult) setResult(pendingResult)
@@ -656,8 +660,9 @@ export default function ThreatAnalysis() {
                 )}
             </div>
 
-            {/* AI Pipeline Animation — shown while loading */}
-            <AIPipelineAnimation visible={loading} />
+            {/* Pipeline Animations — shown while loading */}
+            <AIPipelineAnimation visible={loading && tab !== 'hash'} />
+            <HashPipelineAnimation visible={loading && tab === 'hash'} />
 
             <ThreatResultPanel result={result} />
             

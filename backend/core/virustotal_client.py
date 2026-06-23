@@ -94,6 +94,9 @@ def _parse_vt_response(data: Dict[str, Any]) -> Dict[str, Any]:
     first_seen_itw = attributes.get("first_seen_itw_date")
     type_extension = attributes.get("type_extension")
     
+    popular_threat = attributes.get("popular_threat_classification", {})
+    threat_label = popular_threat.get("suggested_threat_label")
+    
     return {
         "found": True,
         "malicious": malicious,
@@ -123,7 +126,8 @@ def _parse_vt_response(data: Dict[str, Any]) -> Dict[str, Any]:
         "magika": magika,
         "unique_sources": unique_sources,
         "first_seen_itw": first_seen_itw,
-        "type_extension": type_extension
+        "type_extension": type_extension,
+        "threat_label": threat_label
     }
 
 def _infer_techniques(attributes: Dict[str, Any]) -> list:
