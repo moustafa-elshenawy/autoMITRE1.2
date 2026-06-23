@@ -51,7 +51,7 @@ class SecBERTClassifier:
             self.is_loaded = False
             return False
 
-    def predict_techniques(self, text: str) -> Dict[str, float]:
+    def predict_techniques(self, text: str, top_k: int = 5) -> Dict[str, float]:
         """
         Takes raw threat text, tokenizes it, runs it through SecBERT, 
         and applies a sigmoid function to return a dictionary of {Technique ID: Confidence Score}.
@@ -78,8 +78,7 @@ class SecBERTClassifier:
             logits = outputs.logits
             probs = torch.sigmoid(logits).cpu().numpy()[0]
             
-            # Map probabilities back to ATT&CK Technique IDs (Top 5 dynamic extraction)
-            top_k = 5
+            # Map probabilities back to ATT&CK Technique IDs (Top K dynamic extraction)
             top_indices = probs.argsort()[-top_k:][::-1]
             
             detected_techniques = {}

@@ -11,11 +11,14 @@ from models.schemas import (
     ThreatResult, ChatRequest, ChatResponse
 )
 from core.input_processor import process_input, InputType
-from core.ai_threat_analyzer import analyze_threat
 from core.framework_mapper import map_all_frameworks
-from core.virustotal_client import lookup_hash
 from core.ai_chat_engine import generate_chat_response
-from core.pcap_parser import parse_pcap_bytes
+from core.pipelines import (
+    analyze_text_pipeline,
+    analyze_pcap_pipeline,
+    extract_pcap_attacks_pipeline,
+    analyze_hash_pipeline
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 import os
 import uuid
@@ -86,7 +89,7 @@ async def analyze_text(request: TextAnalysisRequest, background_tasks: Backgroun
     try:
         processed = process_input(request.text, InputType.TEXT)
         pipeline_mode = request.pipeline_mode.value if hasattr(request.pipeline_mode, "value") else str(request.pipeline_mode)
-        threat = analyze_threat(processed, deep_analysis=request.deep_analysis, pipeline_mode=pipeline_mode)
+        threat = analyze_text_pipeline(processed, deep_analysis=request.deep_analysis, pipeline_mode=pipeline_mode)
         technique_ids = threat.raw_indicators.get('technique_ids', [])
         threat = enrich_threat_result(threat, technique_ids)
 
@@ -106,34 +109,19 @@ async def analyze_text(request: TextAnalysisRequest, background_tasks: Backgroun
 async def analyze_hash(request: HashLookupRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
     """Look up a malware hash on VirusTotal and analyze it."""
     try:
-        vt_result = lookup_hash(request.hash)
-        if not vt_result.get("found"):
-            raise HTTPException(status_code=400, detail=vt_result.get("message", "Hash not found in VirusTotal."))
-
-        verdict = vt_result.get('verdict', 'unknown')
-        ratio = vt_result.get('detection_ratio', '0/0')
-        description = f"Malware hash analysis: {request.hash}. Detection ratio: {ratio}. Verdict: {verdict}."
-
-        if vt_result.get('names'):
-            description += f" Known names: {', '.join(vt_result['names'][:3])}."
-
-        processed = process_input(request.hash, InputType.HASH)
-        processed['normalized_text'] = description
-        if vt_result.get('suggested_techniques'):
-            processed['suggested_techniques'].extend(vt_result['suggested_techniques'])
-
-        threat = analyze_threat(processed)
+        threat = analyze_hash_pipeline(request.hash)
         technique_ids = threat.raw_indicators.get('technique_ids', [])
         threat = enrich_threat_result(threat, technique_ids)
-        threat.raw_indicators['virustotal'] = vt_result
 
         await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
         background_tasks.add_task(log_event,
             category="ANALYSIS", action="analyze_hash",
             user_id=current_user.id, username=current_user.username,
-            details={"hash": request.hash, "verdict": verdict, "detection_ratio": ratio}
+            details={"hash": request.hash, "verdict": threat.raw_indicators.get("virustotal", {}).get("verdict", "unknown"), "detection_ratio": threat.raw_indicators.get("virustotal", {}).get("detection_ratio", "0/0")}
         )
         return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -164,34 +152,11 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
             with open(temp_path, "wb") as f:
                 f.write(content)
             
-            from core.pcap_extractor import analyze_pcap
-            pcap_report = analyze_pcap(temp_path)
-            
-            if os.path.exists(temp_path):
-                os.remove(temp_path)
-                
-            if 'error' in pcap_report:
-                raise HTTPException(status_code=400, detail=pcap_report['error'])
-                
-            validated_attacks = []
-            for idx, att in enumerate(pcap_report.get('attacks', []), 1):
-                snippet = f"Attack Type: {att['type']}\nMetrics: {att['metrics']}\nDetails: {att['verdict']}"
-                if context:
-                    snippet = f"Context: {context}\n\n{snippet}"
-
-                validated_attacks.append(
-                    ExtractedAttack(
-                        id=f"pcap-{idx}",
-                        title=att['type'],
-                        description=att['verdict'],
-                        raw_snippet=snippet,
-                        severity_estimate=att['severity'],
-                        mitre_technique_id=att.get('mitre_technique_id'),
-                        mitre_tactic=att.get('mitre_tactic'),
-                        confidence=att.get('confidence'),
-                        payload_snippets=att.get('payload_snippets', [])
-                    )
-                )
+            try:
+                validated_attacks = extract_pcap_attacks_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
                 
             return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
 
@@ -255,23 +220,23 @@ async def import_tool_api(request: ToolImportRequest, db: AsyncSession = Depends
 
 @router.post("/file")
 async def analyze_file(file: UploadFile = File(...), context: Optional[str] = Form(None), db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
-    """Analyze an uploaded file (JSON, STIX, text log)."""
+    """Analyze an uploaded file (JSON, STIX, text log, or PCAP)."""
     try:
         filename = file.filename.lower() if file.filename else ""
         content = await file.read()
-        
-        input_type = InputType.TEXT
-        text_content = ""
         
         if filename.endswith(".pcap") or filename.endswith(".pcapng"):
             temp_path = f"/tmp/{uuid.uuid4()}_{filename}"
             with open(temp_path, "wb") as f:
                 f.write(content)
-            text_content = parse_pcap_bytes(temp_path)
-            if os.path.exists(temp_path):
-                os.remove(temp_path)
+            try:
+                threat = analyze_pcap_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
         else:
             text_content = content.decode('utf-8', errors='ignore')
+            input_type = InputType.TEXT
             try:
                 data = json.loads(text_content)
                 if isinstance(data, dict) and ('objects' in data or data.get('type') == 'bundle'):
@@ -280,12 +245,12 @@ async def analyze_file(file: UploadFile = File(...), context: Optional[str] = Fo
                     input_type = InputType.JSON
             except (json.JSONDecodeError, ValueError):
                 pass
-        
-        processed = process_input(text_content, input_type)
-        if context:
-            processed['normalized_text'] = context + "\n" + processed['normalized_text']
-        
-        threat = analyze_threat(processed)
+                
+            processed = process_input(text_content, input_type)
+            if context:
+                processed['normalized_text'] = context + "\n" + processed['normalized_text']
+            threat = analyze_text_pipeline(processed)
+            
         technique_ids = threat.raw_indicators.get('technique_ids', [])
         threat = enrich_threat_result(threat, technique_ids)
         

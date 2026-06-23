@@ -61,16 +61,45 @@ class SemanticVerifier:
         self._index = np.asarray(emb, dtype=np.float32)
         log.info("Bi-encoder index built: %s", self._index.shape)
 
-    def bi_support(self, text: str, top_k: int = 10) -> Dict[str, float]:
+    def bi_support(self, text: str, top_k: int = 10, chunk_text: bool = False) -> Dict[str, float]:
         """Cosine similarity of ``text`` to each technique definition (top_k)."""
         self.build_index()
-        q = self._get_biencoder().encode([text], normalize_embeddings=True)[0]
-        sims = self._index @ np.asarray(q, dtype=np.float32)  # cosine (normalised)
+        
+        if chunk_text:
+            words = text.split()
+            if len(words) <= 50:
+                q = self._get_biencoder().encode([text], normalize_embeddings=True)[0]
+                sims = self._index @ np.asarray(q, dtype=np.float32)
+            else:
+                chunks = [" ".join(words[i:i + 50]) for i in range(0, len(words), 50)]
+                q = self._get_biencoder().encode(chunks, normalize_embeddings=True)
+                sims_all = self._index @ np.asarray(q, dtype=np.float32).T
+                sims = np.max(sims_all, axis=1)
+        else:
+            q = self._get_biencoder().encode([text], normalize_embeddings=True)[0]
+            sims = self._index @ np.asarray(q, dtype=np.float32)  # cosine (normalised)
+            
         order = np.argsort(-sims)[:top_k]
         return {self._index_ids[i]: float(sims[i]) for i in order}
 
-    def verify(self, text: str, candidate_ids: List[str], top_k_support: int = 10
+    def verify(self, text: str, candidate_ids: List[str], chunk_text: bool = False
                ) -> Dict[str, float]:
         """Return bi-encoder cosine support for each candidate technique."""
-        support_all = self.bi_support(text, top_k=max(top_k_support, len(candidate_ids)))
-        return {tid: support_all.get(tid, 0.0) for tid in candidate_ids}
+        self.build_index()
+        
+        if chunk_text:
+            words = text.split()
+            if len(words) <= 50:
+                q = self._get_biencoder().encode([text], normalize_embeddings=True)[0]
+                sims = self._index @ np.asarray(q, dtype=np.float32)
+            else:
+                chunks = [" ".join(words[i:i + 50]) for i in range(0, len(words), 50)]
+                q = self._get_biencoder().encode(chunks, normalize_embeddings=True)
+                sims_all = self._index @ np.asarray(q, dtype=np.float32).T
+                sims = np.max(sims_all, axis=1)
+        else:
+            q = self._get_biencoder().encode([text], normalize_embeddings=True)[0]
+            sims = self._index @ np.asarray(q, dtype=np.float32)
+            
+        tid_to_sim = {self._index_ids[i]: float(sims[i]) for i in range(len(self._index_ids))}
+        return {tid: tid_to_sim.get(tid, 0.0) for tid in candidate_ids}

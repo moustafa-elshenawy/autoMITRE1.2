@@ -144,12 +144,13 @@ async def get_threat_feed(
     workspace: WorkspaceState = Depends(get_workspace),
 ):
     """Get live threat intelligence feed blending OSINT sources + analyzed threats."""
-    from core.osint_client import fetch_all_osint, RUNTIME_CONFIG
+    from core.pipelines import analyze_osint_pipeline
+    from core.osint_client import RUNTIME_CONFIG
     from database.models import OSINTFeedItem
     from sqlalchemy.future import select
 
     # Run OSINT fetch + DB query concurrently
-    osint_task = asyncio.create_task(fetch_all_osint())
+    osint_task = asyncio.create_task(analyze_osint_pipeline())
     db_threats = await get_recent_threats(db, limit=20, user_id=current_user.id, group_id=workspace.group_id, view_mode=workspace.view_mode)
     osint_result = await osint_task
 

@@ -79,9 +79,27 @@ class HierarchicalPredictor:
             "tac_prob": torch.sigmoid(tac_logits).float().cpu().numpy(),
         }
 
-    def predict(self, text: str, top_k: int = config.RERANK_TOP_K) -> Dict[str, Any]:
+    def predict(self, text: str, top_k: int = config.RERANK_TOP_K, chunk_text: bool = False) -> Dict[str, Any]:
         text = (text or "").strip()
-        scores = self._classify(text)
+        
+        if chunk_text:
+            words = text.split()
+            if len(words) <= 50:
+                scores = self._classify(text)
+            else:
+                chunks = [" ".join(words[i:i + 50]) for i in range(0, len(words), 50)]
+                scores = None
+                for chunk in chunks:
+                    chunk_scores = self._classify(chunk)
+                    if scores is None:
+                        scores = chunk_scores
+                    else:
+                        scores["tech_prob"] = np.maximum(scores["tech_prob"], chunk_scores["tech_prob"])
+                        scores["tech_softmax"] = np.maximum(scores["tech_softmax"], chunk_scores["tech_softmax"])
+                        scores["tac_prob"] = np.maximum(scores["tac_prob"], chunk_scores["tac_prob"])
+        else:
+            scores = self._classify(text)
+            
         tech_prob = scores["tech_prob"]
         tech_softmax = scores["tech_softmax"]
 
@@ -95,13 +113,15 @@ class HierarchicalPredictor:
 
         support = {}
         if self.verifier is not None and cand_ids:
-            support = self.verifier.verify(text, cand_ids)
+            support = self.verifier.verify(text, cand_ids, chunk_text=chunk_text)
 
+        print(f"DEBUG CANDIDATES: {cand_ids}")
         results: List[Dict[str, Any]] = []
         for i in cand_idx:
             tid = self.tax.techniques[i]
             prob = float(tech_prob[i])
             bi_support = float(support.get(tid, 0.0)) if self.verifier else None
+            print(f"DEBUG CANDIDATE {tid}: prob={prob}, bi_support={bi_support}")
             # Acceptance gate: high model probability AND bi-encoder agreement
             # that the text is in the technique's semantic neighbourhood. When
             # the verifier is disabled, fall back to probability alone.

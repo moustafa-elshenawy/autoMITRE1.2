@@ -104,7 +104,7 @@ def status() -> Dict[str, Any]:
     }
 
 
-def predict_techniques(text: str) -> List[Dict[str, Any]]:
+def predict_techniques(text: str, chunk_text: bool = False) -> List[Dict[str, Any]]:
     """Map raw text to accepted ATT&CK techniques via the deep-learning engine.
 
     Returns ATTACKTechnique-shaped dicts (id, name, tactic, confidence, verified,
@@ -117,7 +117,7 @@ def predict_techniques(text: str) -> List[Dict[str, Any]]:
         if not load():
             raise RuntimeError(f"deep-learning classifier unavailable: {_load_error}")
 
-    payload = _predictor.predict(text)  # type: ignore[union-attr]
+    payload = _predictor.predict(text, chunk_text=chunk_text)  # type: ignore[union-attr]
     out: List[Dict[str, Any]] = []
     for t in payload.get("mapped_techniques", []):
         prob = float(t.get("model_probability_score", 0.0))

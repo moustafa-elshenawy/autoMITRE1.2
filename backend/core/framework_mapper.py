@@ -44,7 +44,7 @@ def map_to_defend(technique_ids: List[str]) -> List[D3FENDCountermeasure]:
                     description=counter['description']
                 ))
     
-    return countermeasures[:8]
+    return countermeasures
 
 
 def map_to_nist(technique_ids: List[str]) -> List[NISTControl]:
@@ -64,7 +64,7 @@ def map_to_nist(technique_ids: List[str]) -> List[NISTControl]:
                     severity=control['severity']
                 ))
     
-    return controls[:8]
+    return controls
 
 
 def map_to_owasp(technique_ids: List[str]) -> List[OWASPItem]:
@@ -96,7 +96,7 @@ def map_to_owasp(technique_ids: List[str]) -> List[OWASPItem]:
                 ))
                 break
     
-    return items[:6]
+    return items
 
 
 def map_all_frameworks(technique_ids: List[str]) -> Dict[str, Any]:

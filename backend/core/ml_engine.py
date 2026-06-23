@@ -222,7 +222,7 @@ class EnsembleMLEngine:
         ]])
 
 
-    def evaluate_threat(self, processed_input: Dict[str, Any], heuristic_score: float, deep_analysis: bool = False) -> Tuple[bool, Optional[float], Dict[str, Any]]:
+    def evaluate_threat(self, processed_input: Dict[str, Any], heuristic_score: float, deep_analysis: bool = False, chunk_text: bool = False) -> Tuple[bool, Optional[float], Dict[str, Any]]:
         """
         Industrial-Grade Hybrid Evaluation.
         Returns:
@@ -265,15 +265,30 @@ class EnsembleMLEngine:
 
             # 3. Deep Intelligence Stage 1: SecBERT TTP Mapping
             from core.secbert_classifier import secbert_clf
-            detected_ttps = secbert_clf.predict_techniques(text) # Dict {ID: Conf}
+            
+            if chunk_text:
+                from core.ai_threat_analyzer import _chunk_text
+                chunks = _chunk_text(text)
+                detected_ttps = {}
+                for chunk in chunks:
+                    chunk_preds = secbert_clf.predict_techniques(chunk, top_k=15)
+                    for tech_id, conf in chunk_preds.items():
+                        if tech_id not in detected_ttps or conf > detected_ttps[tech_id]:
+                            detected_ttps[tech_id] = conf
+            else:
+                detected_ttps = secbert_clf.predict_techniques(text) # Dict {ID: Conf}
+            
+            print(f"ML ENGINE DETECTED TTPS: {detected_ttps}")
             
             # Convert to list of dicts for LLM/UI
             ttp_list = [{"id": tid, "name": "Classified Technique", "confidence": conf} for tid, conf in detected_ttps.items()]
             
-            # SecBERT Severity proxy (average confidence of top TTPs * 10)
+            # SecBERT Severity proxy: Anchored by MAX confidence, escalating with additional tactics
             secbert_score = 5.0
             if detected_ttps:
-                secbert_score = min(10.0, sum(detected_ttps.values()) / len(detected_ttps) * 10)
+                base_score = max(detected_ttps.values()) * 10
+                additional_tactics = max(0, sum(1 for conf in detected_ttps.values() if conf >= 0.70) - 1)
+                secbert_score = min(10.0, base_score + (additional_tactics * 0.5))
 
             # 4. Deep Intelligence Stage 2: Phi-3.5 Reasoning
             from core.nano_llm_engine import nano_llm
@@ -304,8 +319,8 @@ class EnsembleMLEngine:
             }
 
             # 5. Industrial Blended Severity
-            # Weights: 15% Heuristic, 15% XGBoost, 70% SecBERT (Proxied)
-            final_severity = (0.15 * heuristic_score) + (0.15 * num_score) + (0.70 * secbert_score)
+            # Use MAX aggregation: anchor to the highest signal to prevent semantic dilution
+            final_severity = max(heuristic_score, num_score, secbert_score)
             
             # Clip final result
             final_severity = float(np.clip(final_severity, 0.0, 10.0))

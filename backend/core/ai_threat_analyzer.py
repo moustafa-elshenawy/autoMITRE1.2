@@ -392,7 +392,7 @@ def calculate_confidence(text: str, signature_keywords: list) -> float:
     return confidence
 
 
-def classify_threats(processed_input: Dict[str, Any]) -> Dict[str, float]:
+def classify_threats(processed_input: Dict[str, Any], chunk_text: bool = False) -> Dict[str, float]:
     """Classify threat types from processed input and return their base confidence."""
     text = processed_input.get('normalized_text', '')
     detected = {}
@@ -401,40 +401,65 @@ def classify_threats(processed_input: Dict[str, Any]) -> Dict[str, float]:
     for tech_id in processed_input.get('suggested_techniques', []):
         detected[tech_id] = 0.90
 
-    # 2. Stage 1 Nano Pipeline: SecBERT Classification (Deep Learning TRAM)
-    from core.secbert_classifier import secbert_clf
-    
-    # Try SecBERT first
-    ml_predictions = secbert_clf.predict_techniques(text)
-    
-    if ml_predictions:
-        for tech_id, conf in ml_predictions.items():
-            # SOTA GATING: If it's a "Noise Trio" technique (T1105, T1027, T1082), it needs higher confidence (0.82+)
-            # to prevent it from overwhelming accurate detections in short logs.
-            if tech_id in _SOTA_GATING_LIST and conf < 0.82:
-                continue
-            detected[tech_id] = conf
+    if chunk_text:
+        # Push Sentence Chunking to the Base Layers
+        chunks = _chunk_text(text)
+        from core.secbert_classifier import secbert_clf
+        
+        for chunk in chunks:
+            chunk_detected = {}
+            # Increase top_k to 15 for multi-stage attacks when chunking
+            ml_predictions = secbert_clf.predict_techniques(chunk, top_k=15)
             
-    # 3. Apply Heuristic signature detection (HIGHER PRIORITY for precision on short strings)
-    heuristic_matched = False
-    for threat_type, sig in THREAT_SIGNATURES.items():
-        base_confidence = calculate_confidence(text, sig['keywords'])
-        if base_confidence > 0.58: # Balanced heuristic threshold
-            heuristic_matched = True
-            for i, t in enumerate(sig['techniques']):
-                # Heuristics can OVERWRITE ML if confidence is higher (precision boost)
-                # Apply positional decay: 1st technique gets full boost, subsequent drop by 3%
-                decayed_conf = max(0.60, base_confidence - (i * 0.03))
-                if t not in detected or decayed_conf > detected[t]:
-                    detected[t] = decayed_conf
+            if ml_predictions:
+                for tech_id, conf in ml_predictions.items():
+                    if tech_id in _SOTA_GATING_LIST and conf < 0.82:
+                        continue
+                    chunk_detected[tech_id] = conf
+                    
+            heuristic_matched = False
+            for threat_type, sig in THREAT_SIGNATURES.items():
+                base_confidence = calculate_confidence(chunk, sig['keywords'])
+                if base_confidence > 0.58:
+                    heuristic_matched = True
+                    for i, t in enumerate(sig['techniques']):
+                        decayed_conf = max(0.60, base_confidence - (i * 0.03))
+                        if t not in chunk_detected or decayed_conf > chunk_detected[t]:
+                            chunk_detected[t] = decayed_conf
 
-    # NEW: If we found a direct high-precision heuristic match for a very short string, 
-    # suppress unrelated ML "contextual noise" to keep mapping localized.
-    if heuristic_matched and len(text) < 50:
-        # For very short strings, we ONLY trust the direct heuristic matches 
-        # if they have significantly higher or equal confidence.
-        top_conf = max(detected.values()) if detected else 0
-        detected = {k: v for k, v in detected.items() if v >= top_conf - 0.005}
+            if heuristic_matched and len(chunk) < 50:
+                top_conf = max(chunk_detected.values()) if chunk_detected else 0
+                chunk_detected = {k: v for k, v in chunk_detected.items() if v >= top_conf - 0.005}
+
+            # Take the max base probability for each technique across all chunks
+            for tech_id, conf in chunk_detected.items():
+                if tech_id not in detected or conf > detected[tech_id]:
+                    detected[tech_id] = conf
+    else:
+        # Legacy/Monolithic path (PCAP, Hash, and OSINT bypass)
+        from core.secbert_classifier import secbert_clf
+        
+        ml_predictions = secbert_clf.predict_techniques(text)
+        
+        if ml_predictions:
+            for tech_id, conf in ml_predictions.items():
+                if tech_id in _SOTA_GATING_LIST and conf < 0.82:
+                    continue
+                detected[tech_id] = conf
+                
+        heuristic_matched = False
+        for threat_type, sig in THREAT_SIGNATURES.items():
+            base_confidence = calculate_confidence(text, sig['keywords'])
+            if base_confidence > 0.58:
+                heuristic_matched = True
+                for i, t in enumerate(sig['techniques']):
+                    decayed_conf = max(0.60, base_confidence - (i * 0.03))
+                    if t not in detected or decayed_conf > detected[t]:
+                        detected[t] = decayed_conf
+
+        if heuristic_matched and len(text) < 50:
+            top_conf = max(detected.values()) if detected else 0
+            detected = {k: v for k, v in detected.items() if v >= top_conf - 0.005}
 
     return detected
 
@@ -536,14 +561,42 @@ def determine_severity(text: str, technique_ids: List[str]) -> Tuple[SeverityLev
 
 
 
-def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List[ATTACKTechnique]:
+def _chunk_text(text: str) -> List[str]:
+    """Split text into sentences using simple regex-based boundary splitting."""
+    if not text:
+        return []
+    sentences = re.split(r'(?<=[.!?])\s+', text.strip())
+    chunks = [s.strip() for s in sentences if len(s.strip()) > 3]
+    if not chunks:
+        return [text]
+    return chunks
+
+
+def get_attack_techniques(
+    technique_scores: Dict[str, float],
+    text: str,
+    apply_semantic_penalty: bool = True,
+    chunk_text: bool = False,
+    bypass_semantic: bool = False,
+    pruning_threshold: float = 0.70
+) -> List[ATTACKTechnique]:
     """Get full technique objects with real semantic confidence scores."""
     technique_ids = list(technique_scores.keys())
     techniques = []
     seen = set()
 
     # Batch-compute real cosine similarity scores for all technique IDs at once
-    semantic_scores = technique_embedder.batch_score_techniques(text, technique_ids)
+    if bypass_semantic:
+        semantic_scores = {tid: technique_scores.get(tid, 0.5) for tid in technique_ids}
+    elif chunk_text:
+        chunks = _chunk_text(text)
+        semantic_scores = {tid: 0.1 for tid in technique_ids}
+        for chunk in chunks:
+            chunk_scores = technique_embedder.batch_score_techniques(chunk, technique_ids)
+            for tid, score in chunk_scores.items():
+                semantic_scores[tid] = max(semantic_scores[tid], score)
+    else:
+        semantic_scores = technique_embedder.batch_score_techniques(text, technique_ids)
 
 
     for technique in _ATTACK_DB:
@@ -556,19 +609,27 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
             semantic_conf = semantic_scores.get(technique['id'], 0.5)
 
             # Smart confidence blending
-            if base_conf >= 0.80:
-                # If we have a very high-precision match (ML or Heuristic), trust it.
-                # Don't let low semantic similarity for short strings pull down our decayed heuristic pipeline.
-                confidence = max(base_conf, semantic_conf)
-            elif semantic_conf >= 0.45:
-                # Strong semantic link: trust the base confidence or semantic link
-                confidence = max(base_conf, semantic_conf)
-                if confidence > 0.5:
-                    confidence = min(0.99, confidence)
+            if bypass_semantic:
+                confidence = base_conf
+            elif not apply_semantic_penalty:
+                # Semantic penalty disabled (No semantic dilution in CTI text)
+                if base_conf >= 0.70:
+                    confidence = max(base_conf, semantic_conf)
+                elif chunk_text:
+                    # Give the base heuristic 80% weight to protect it from generic semantic noise
+                    confidence = (base_conf * 0.8) + (semantic_conf * 0.2)
+                else:
+                    confidence = (base_conf * 0.6) + (semantic_conf * 0.4)
             else:
-                # Weak semantic link: likely just context or a co-occurrence ML prediction
-                # We pull it down to visually separate it
-                confidence = (base_conf * 0.7) + (semantic_conf * 0.3)
+                # Legacy/Standard confidence blending
+                if base_conf >= 0.80:
+                    confidence = max(base_conf, semantic_conf)
+                elif semantic_conf >= 0.45:
+                    confidence = max(base_conf, semantic_conf)
+                    if confidence > 0.5:
+                        confidence = min(0.99, confidence)
+                else:
+                    confidence = (base_conf * 0.7) + (semantic_conf * 0.3)
 
             confidence = round(confidence, 2)
 
@@ -583,23 +644,23 @@ def get_attack_techniques(technique_scores: Dict[str, float], text: str) -> List
 
     sorted_techniques = sorted(techniques, key=lambda t: t.confidence, reverse=True)
     
-    # SOTA: Adaptive-K based on confidence gap
-    # If the gap between top-1 and top-2 is > 0.15, we only output top-1.
-    # This aggressively suppresses "noise trio" secondary guesses when a primary signal is strong.
-    if len(sorted_techniques) > 1:
-        top_1 = sorted_techniques[0]
-        top_2 = sorted_techniques[1]
-        gap = top_1.confidence - top_2.confidence
-        
-        if gap >= 0.15 and top_1.confidence >= 0.85:
-            # High confidence leader found, truncate the rest to reduce noise
-            import logging
-            logging.getLogger(__name__).info(f"Adaptive-K: Pruning noise due to high confidence leader {top_1.id} (gap: {gap:.2f})")
-            sorted_techniques = [top_1]
+
+
+    # Inject Pre-Pruning Diagnostic Logging
+    if chunk_text:
+        import logging
+        debug_logger = logging.getLogger("ai_threat_analyzer")
+        for t in sorted_techniques:
+            b_conf = technique_scores.get(t.id, 0.5)
+            s_conf = semantic_scores.get(t.id, 0.5)
+            debug_logger.info(
+                f"Pre-pruning candidate: technique_id={t.id}, base_conf={b_conf:.4f}, "
+                f"semantic_conf={s_conf:.4f}, final_confidence={t.confidence:.4f}"
+            )
 
     # Filter out low confidence speculative results.
-    # anything below 0.70 is likely noise for simple inputs.
-    filtered_techniques = [t for t in sorted_techniques if t.confidence >= 0.70]
+    # anything below pruning_threshold is likely noise for simple inputs.
+    filtered_techniques = [t for t in sorted_techniques if t.confidence >= pruning_threshold]
     
     # Dynamically cap the results based on confidence tiers and input density
     final_techniques = []
@@ -828,7 +889,7 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
     # Extract comprehensive entities using NER and regex
     extracted_entities = _extract_entities(text)
     
-    detected_tools = [e['value'] for e in extracted_entities if e['type'] == 'tool']
+    detected_tools = [e['value'] for e in extracted_entities if e['type'] in ['tool', 'malware', 'software']]
     detected_cves = [e['value'] for e in extracted_entities if e['type'] == 'cve']
     
     # Pre-populate input entities with our extractions so they show up in the UI
