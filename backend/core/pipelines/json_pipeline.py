@@ -63,7 +63,12 @@ def extract_json_attacks_pipeline(file_path: str, context: Optional[str] = None)
     
     return [attack]
 
-def analyze_json_pipeline(text_content: str, context: Optional[str] = None) -> ThreatResult:
+def analyze_json_pipeline(
+    text_content: str, 
+    context: Optional[str] = None,
+    suggested_techniques: Optional[List[str]] = None,
+    suggested_severity: Optional[str] = None
+) -> ThreatResult:
     """
     Run full threat analysis on flattened JSON text snippet with strict NLP isolation.
     """
@@ -83,8 +88,11 @@ def analyze_json_pipeline(text_content: str, context: Optional[str] = None) -> T
     # It's treated as TEXT type structurally, but we bypass the NLP parser.
     processed = process_input(text_content, InputType.TEXT.value)
     
+    if suggested_techniques:
+        processed['suggested_techniques'] = processed.get('suggested_techniques', []) + suggested_techniques
+    
     # Use explicit isolation parameters for structured data
-    return analyze_text_pipeline(
+    res = analyze_text_pipeline(
         processed, 
         pipeline_mode="legacy",
         apply_semantic_penalty=True, 
@@ -92,3 +100,12 @@ def analyze_json_pipeline(text_content: str, context: Optional[str] = None) -> T
         bypass_semantic=True, 
         pruning_threshold=0.70
     )
+    
+    if suggested_severity and res.risk_score:
+        from models.schemas import SeverityLevel
+        try:
+            res.risk_score.severity = SeverityLevel(suggested_severity.capitalize())
+        except ValueError:
+            pass
+            
+    return res

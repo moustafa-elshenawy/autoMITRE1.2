@@ -484,8 +484,20 @@ export default function ThreatAnalysis() {
         setSavedAttacksList([...extractedAttacks])
         setExtractedAttacks([]) // Hide the UI list to show the analyzer
         setText(attack.raw_snippet)
-        const endpoint = attack.input_type === 'json' ? '/api/analyze/json' : '/api/analyze/text'
-        analyze({ text: attack.raw_snippet, deep_analysis: true }, endpoint)
+        const endpoint = attack.input_type === 'json'
+            ? '/api/analyze/json'
+            : (attack.input_type === 'csv'
+                ? '/api/analyze/csv'
+                : (attack.input_type === 'htm' || attack.input_type === 'html' ? '/api/analyze/tmt' : '/api/analyze/text'))
+                
+        // CRITICAL FIX: Pass the Phase 1 extracted technique and severity into Phase 2
+        // so the legacy text heuristics don't lose the context of abstract threats.
+        analyze({ 
+            text: attack.raw_snippet, 
+            deep_analysis: true,
+            suggested_techniques: attack.mitre_technique_id ? [attack.mitre_technique_id] : [],
+            suggested_severity: attack.severity_estimate
+        }, endpoint)
     }
     
     const handleBackToList = () => {
@@ -498,7 +510,7 @@ export default function ThreatAnalysis() {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
-            'text/*': ['.txt', '.log', '.csv'],
+            'text/*': ['.txt', '.log', '.csv', '.htm', '.html'],
             'application/json': ['.json'],
             'application/vnd.tcpdump.pcap': ['.pcap', '.pcapng']
         }
@@ -621,7 +633,7 @@ export default function ThreatAnalysis() {
                             <select className="form-input" style={{ marginBottom: 16 }} value={apiTool} onChange={(e) => setApiTool(e.target.value)}>
                                 <option value="iriusrisk">IriusRisk (SaaS REST API)</option>
                                 <option value="threat_dragon">OWASP Threat Dragon (Public JSON URL)</option>
-                                <option value="ms_tmt">Microsoft Threat Modeling Tool (.tm7)</option>
+                                <option value="ms_tmt">Microsoft Threat Modeling Tool (.htm report)</option>
                             </select>
 
                             {apiTool === 'iriusrisk' && (
@@ -642,13 +654,13 @@ export default function ThreatAnalysis() {
                                 <div>
                                     <div className="alert alert-info" style={{ marginBottom: 16 }}>
                                         <Info size={16} style={{ flexShrink: 0 }} />
-                                        <span style={{ fontSize: 13 }}>Microsoft Threat Modeling Tool (TMT) does not operate via REST APIs. Export your model as a <b>.tm7</b> XML file and drop it below.</span>
+                                        <span style={{ fontSize: 13 }}>Export your Microsoft Threat Modeling Tool (TMT) model as an <b>HTML Report</b> (<code>.htm</code>):<br />TMT → <i>Reports → HTML Report</i>. Drop the exported <code>.htm</code> file below to extract and map all threats to MITRE ATT&CK.</span>
                                     </div>
                                     <div {...getRootProps()} className={`upload-zone ${isDragActive ? 'drag-active' : ''}`}>
                                         <input {...getInputProps()} />
                                         <Upload className="upload-zone-icon" />
-                                        <div className="upload-zone-title">Drop TMT (.tm7) file here or click to browse</div>
-                                        <div className="upload-zone-sub">Our engine natively extracts threats using XML structure matching.</div>
+                                        <div className="upload-zone-title">Drop TMT HTML Report (.htm) here or click to browse</div>
+                                        <div className="upload-zone-sub">The engine natively parses the STRIDE threat table, extracts each threat entry, and maps it to MITRE ATT&CK.</div>
                                     </div>
                                 </div>
                             )}

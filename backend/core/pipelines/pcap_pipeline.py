@@ -374,27 +374,36 @@ def _build_snippet(flow: dict, context: Optional[str],
 
 def analyze_pcap_pipeline(
     file_path: str,
-    context: Optional[str] = None
+    context: Optional[str] = None,
+    suggested_techniques: Optional[List[str]] = None,
+    suggested_severity: Optional[str] = None
 ) -> ThreatResult:
     """
     Runs the full IDS extraction, merges all snippets into one enriched block,
     then hands off to the isolated text pipeline.
     """
-    attacks = extract_pcap_attacks_pipeline(file_path, context=context)
-
-    if attacks:
-        combined_text = "\n\n" + ("=" * 60) + "\n\n".join(a.raw_snippet for a in attacks)
-        combined_text = f"[PCAP ANALYSIS — {len(attacks)} threat(s) detected]\n" + combined_text
+    import os
+    if os.path.isfile(file_path):
+        attacks = extract_pcap_attacks_pipeline(file_path, context=context)
+        if attacks:
+            combined_text = "\n\n" + ("=" * 60) + "\n\n".join(a.raw_snippet for a in attacks)
+            combined_text = f"[PCAP ANALYSIS — {len(attacks)} threat(s) detected]\n" + combined_text
+        else:
+            combined_text = "[PCAP ANALYSIS] No signature matches or suspicious ports detected. Traffic appears benign."
     else:
-        combined_text = "[PCAP ANALYSIS] No signature matches or suspicious ports detected. Traffic appears benign."
+        # It's a raw snippet from the UI
+        combined_text = file_path
 
-    if context and not attacks:
+    if context and not combined_text.startswith("Analyst Context:"):
         combined_text = f"Analyst Context: {context}\n\n{combined_text}"
 
     processed = process_input(combined_text, InputType.TEXT.value)
+    
+    if suggested_techniques:
+        processed['suggested_techniques'] = processed.get('suggested_techniques', []) + suggested_techniques
 
     # Enforce strict isolation parameters — identical to JSON pipeline handoff
-    return analyze_text_pipeline(
+    res = analyze_text_pipeline(
         processed,
         pipeline_mode="legacy",
         apply_semantic_penalty=True,
@@ -402,3 +411,12 @@ def analyze_pcap_pipeline(
         bypass_semantic=True,
         pruning_threshold=0.70,
     )
+    
+    if suggested_severity and res.risk_score:
+        from models.schemas import SeverityLevel
+        try:
+            res.risk_score.severity = SeverityLevel(suggested_severity.capitalize())
+        except ValueError:
+            pass
+            
+    return res

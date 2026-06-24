@@ -35,6 +35,9 @@ class TextAnalysisRequest(BaseModel):
     # telemetry to the RAG/constraint engine and prose CTI reports to the
     # SecureBERT deep-learning classifier. See core.intake_router.
     pipeline_mode: PipelineMode = PipelineMode.AUTO
+    
+    suggested_techniques: Optional[List[str]] = []
+    suggested_severity: Optional[str] = None
 
 
 class ExtractedAttack(BaseModel):

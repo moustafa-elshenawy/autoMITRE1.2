@@ -17,7 +17,11 @@ from core.pipelines import (
     analyze_text_pipeline,
     analyze_pcap_pipeline,
     extract_pcap_attacks_pipeline,
-    analyze_hash_pipeline
+    analyze_hash_pipeline,
+    analyze_csv_pipeline,
+    extract_csv_attacks_pipeline,
+    analyze_htm_pipeline,
+    extract_htm_attacks_pipeline
 )
 from core.pipelines.json_pipeline import analyze_json_pipeline, extract_json_attacks_pipeline
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -131,7 +135,8 @@ async def analyze_hash(request: HashLookupRequest, background_tasks: BackgroundT
 async def analyze_json(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
     """Analyze a JSON snippet deeply using the isolated pipeline."""
     try:
-        threat = analyze_json_pipeline(request.text, request.context)
+        from core.pipelines.json_pipeline import analyze_json_pipeline
+        threat = analyze_json_pipeline(request.text, request.context, request.suggested_techniques, request.suggested_severity)
         technique_ids = threat.raw_indicators.get('technique_ids', [])
         
         await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
@@ -145,6 +150,69 @@ async def analyze_json(request: TextAnalysisRequest, background_tasks: Backgroun
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/pcap")
+async def analyze_pcap(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
+    """Analyze a PCAP snippet deeply using the isolated pipeline."""
+    try:
+        from core.pipelines.pcap_pipeline import analyze_pcap_pipeline
+        threat = analyze_pcap_pipeline(request.text, request.context, request.suggested_techniques, request.suggested_severity)
+        technique_ids = threat.raw_indicators.get('technique_ids', [])
+        
+        await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
+        background_tasks.add_task(log_event,
+            category="ANALYSIS", action="analyze_pcap",
+            user_id=current_user.id, username=current_user.username,
+            details={"description": "Analyzed PCAP packet stream"}
+        )
+        return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/csv")
+async def analyze_csv(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
+    """Analyze a CSV snippet deeply using the isolated pipeline."""
+    try:
+        from core.pipelines.csv_pipeline import analyze_csv_pipeline
+        threat = analyze_csv_pipeline(request.text, request.context, request.suggested_techniques, request.suggested_severity)
+        technique_ids = threat.raw_indicators.get('technique_ids', [])
+        threat = enrich_threat_result(threat, technique_ids)
+        
+        await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
+        background_tasks.add_task(log_event,
+            category="ANALYSIS", action="analyze_csv",
+            user_id=current_user.id, username=current_user.username,
+            details={"description": "Analyzed structured CSV"}
+        )
+        return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/tmt")
+async def analyze_tmt(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
+    """Analyze a Microsoft TMT threat snippet using the isolated TMT pipeline."""
+    try:
+        from core.pipelines.tmt_pipeline import analyze_tmt_pipeline
+        threat = analyze_tmt_pipeline(request.text, request.context, request.suggested_techniques, request.suggested_severity)
+        technique_ids = threat.raw_indicators.get('technique_ids', [])
+        threat = enrich_threat_result(threat, technique_ids)
+
+        await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
+        background_tasks.add_task(log_event,
+            category="ANALYSIS", action="analyze_tmt",
+            user_id=current_user.id, username=current_user.username,
+            details={"description": "Analyzed Microsoft TMT threat block"}
+        )
+        return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
 
 
 @router.post("/extract-attacks", response_model=None) # Returning ExtractedAttacksResponse
@@ -175,6 +243,37 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
             
             try:
                 validated_attacks = extract_pcap_attacks_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+                
+            return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+
+        # TMT Routing (Microsoft TMT reports)
+        is_tmt = filename.endswith(".htm") or filename.endswith(".html")
+        if is_tmt:
+            print("!!! ROUTER HIT - TMT ROUTE (EXTRACT): ", filename, " !!!")
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload.htm'}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            try:
+                from core.pipelines.tmt_pipeline import extract_tmt_attacks_pipeline
+                validated_attacks = extract_tmt_attacks_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+
+        # CSV Routing
+        is_csv = filename.endswith(".csv") or getattr(file, 'content_type', '') == "text/csv"
+        if is_csv:
+            print("!!! ROUTER HIT - CSV ROUTE (EXTRACT): ", filename, " !!!")
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload.csv'}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            
+            try:
+                validated_attacks = extract_csv_attacks_pipeline(temp_path, context)
             finally:
                 if os.path.exists(temp_path):
                     os.remove(temp_path)
@@ -269,6 +368,25 @@ async def analyze_file(file: UploadFile = File(...), context: Optional[str] = Fo
                 f.write(content)
             try:
                 threat = analyze_pcap_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+        elif filename.endswith(".csv") or getattr(file, 'content_type', '') == "text/csv":
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            try:
+                threat = analyze_csv_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+        elif filename.endswith(".htm") or filename.endswith(".html"):
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            try:
+                from core.pipelines.tmt_pipeline import analyze_tmt_pipeline
+                threat = analyze_tmt_pipeline(temp_path, context)
             finally:
                 if os.path.exists(temp_path):
                     os.remove(temp_path)
