@@ -151,9 +151,9 @@ export default function Dashboard() {
                                 <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 0 10px rgba(255,255,255,0.2)', marginBottom: 6 }}>
                                     {(stats.total_threats || 0).toLocaleString()}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.trend_percentage || 0) > 0 ? '#ef4444' : (stats.trend_percentage || 0) < 0 ? '#10b981' : '#6b7280', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    {(stats.trend_percentage || 0) > 0 ? <TrendingUp size={11} /> : (stats.trend_percentage || 0) < 0 ? <TrendingDown size={11} /> : <Minus size={11} />}
-                                    {stats.trend_percentage !== undefined ? `${stats.trend_percentage > 0 ? '+' : ''}${stats.trend_percentage}%` : '0%'} this week
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: threatsThisWeekCount > 0 ? '#ef4444' : '#6b7280', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                                    {threatsThisWeekCount > 0 ? <TrendingUp size={11} /> : <Minus size={11} />}
+                                    {threatsThisWeekCount > 0 ? `+${threatsThisWeekCount}` : '0'} this week
                                 </div>
                             </td>
 
