@@ -152,6 +152,9 @@ async def get_dashboard_stats(db: AsyncSession, user_id: str = None, group_id: s
             "frameworks_mapped": 4,
             "active_framework_names": ["ATT&CK", "D3FEND", "NIST", "OWASP"],
             "risk_score_avg": 0.0,
+            "trend_percentage": 0,
+            "this_week_count": 0,
+            "prev_week_count": 0
         }
         
     # Severity counts
@@ -186,6 +189,42 @@ async def get_dashboard_stats(db: AsyncSession, user_id: str = None, group_id: s
     ]
     active_names = [name for key, name in frameworks if str(RUNTIME_CONFIG.get(key, "True")).lower() == "true"]
 
+    # Calculate trend percentage (last 7 days vs previous 7 days)
+    # Use datetime.datetime.now() since timestamps in DB are stored as naive local time
+    import datetime
+    now = datetime.datetime.now()
+    seven_days_ago = now - datetime.timedelta(days=7)
+    fourteen_days_ago = now - datetime.timedelta(days=14)
+    
+    # Query timestamps for all matching threats
+    ts_query = select(models.ThreatRecord.timestamp)
+    if base_where: ts_query = ts_query.where(*base_where)
+    ts_res = await db.execute(ts_query)
+    timestamps = ts_res.scalars().all()
+    
+    this_week_count = 0
+    last_week_count = 0
+    
+    for ts_str in timestamps:
+        if ts_str:
+            try:
+                # Handle 'Z' suffix and make timezone naive for comparison
+                ts_clean = ts_str.replace('Z', '+00:00') if ts_str.endswith('Z') else ts_str
+                t_date = datetime.datetime.fromisoformat(ts_clean).replace(tzinfo=None)
+                if t_date >= seven_days_ago:
+                    this_week_count += 1
+                elif t_date >= fourteen_days_ago:
+                    last_week_count += 1
+            except Exception:
+                pass
+
+    if last_week_count > 0:
+        trend = ((this_week_count - last_week_count) / last_week_count) * 100
+    elif this_week_count > 0:
+        trend = 100
+    else:
+        trend = 0
+
     return {
         "total_threats": total_threats,
         "critical_threats": critical,
@@ -195,7 +234,10 @@ async def get_dashboard_stats(db: AsyncSession, user_id: str = None, group_id: s
         "techniques_covered": unique_techs,
         "frameworks_mapped": len(active_names),
         "active_framework_names": active_names,
-        "risk_score_avg": round(avg_score, 1)
+        "risk_score_avg": round(avg_score, 1),
+        "trend_percentage": round(trend),
+        "this_week_count": this_week_count,
+        "prev_week_count": last_week_count
     }
 
 
@@ -219,7 +261,7 @@ async def get_threat_activity(db: AsyncSession, user_id: str = None, group_id: s
     """
     from datetime import datetime, timedelta
     
-    now = datetime.utcnow()
+    now = datetime.now()
     labels = []
     for i in range(6, -1, -1):
         day = now - timedelta(days=i)
@@ -245,7 +287,8 @@ async def get_threat_activity(db: AsyncSession, user_id: str = None, group_id: s
     result = await db.execute(query)
     for ts_str, severity in result.all():
         try:
-            ts = datetime.fromisoformat(ts_str)
+            ts_clean = ts_str.replace('Z', '+00:00') if ts_str.endswith('Z') else ts_str
+            ts = datetime.fromisoformat(ts_clean).replace(tzinfo=None)
             days_diff = (ts.date() - start_date.date()).days
             if 0 <= days_diff < 7:
                 sev_str = str(severity)
