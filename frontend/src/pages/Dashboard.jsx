@@ -48,7 +48,7 @@ export default function Dashboard() {
     const [stats, setStats] = useState({
         total_threats: 0, critical_threats: 0, high_threats: 0,
         medium_threats: 0, low_threats: 0, techniques_covered: 0,
-        frameworks_mapped: 0, risk_score_avg: 0.0,
+        frameworks_mapped: 0, risk_score_avg: 0.0, trend_percentage: 0,
         active_framework_names: []
     })
     const [activity, setActivity] = useState([])
@@ -151,8 +151,8 @@ export default function Dashboard() {
                                 <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 0 10px rgba(255,255,255,0.2)', marginBottom: 6 }}>
                                     {(stats.total_threats || 0).toLocaleString()}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.trend_percentage || 0) >= 0 ? '#ef4444' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    <TrendingUp size={11} /> {stats.trend_percentage !== undefined ? `${stats.trend_percentage > 0 ? '+' : ''}${stats.trend_percentage}%` : '+0%'} this week
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.trend_percentage || 0) > 0 ? '#ef4444' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                                    <TrendingUp size={11} /> {stats.trend_percentage !== undefined ? `${stats.trend_percentage > 0 ? '+' : ''}${stats.trend_percentage}%` : '0%'} this week
                                 </div>
                             </td>
 
@@ -161,7 +161,7 @@ export default function Dashboard() {
                                 <div style={{ fontSize: 24, fontWeight: 700, color: (stats.risk_score_avg || 0) >= 7 ? '#ef4444' : (stats.risk_score_avg || 0) >= 4 ? '#f97316' : '#10b981', textShadow: '0 0 10px currentColor', marginBottom: 6 }}>
                                     {(stats.risk_score_avg || 0).toFixed(1)}/10
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.risk_score_avg || 0) >= 7 ? '#ef4444' : '#f97316', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.risk_score_avg || 0) >= 7 ? '#ef4444' : (stats.risk_score_avg || 0) >= 4 ? '#f97316' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
                                     <TrendingUp size={11} /> {(stats.risk_score_avg || 0) >= 7 ? 'CRITICAL' : (stats.risk_score_avg || 0) >= 4 ? 'HIGH' : 'LOW'} severity
                                 </div>
                             </td>
