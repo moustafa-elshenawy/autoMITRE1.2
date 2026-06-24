@@ -93,6 +93,8 @@ async def get_dashboard_stats(
         trend = 100
     else:
         trend = 0
+        
+    print(f"DEBUG STATS -> Total: {total_threats}, this_week: {this_week_count}, last_week: {last_week_count}, trend: {trend}", flush=True)
 
     return {
         "total_threats": total_threats,

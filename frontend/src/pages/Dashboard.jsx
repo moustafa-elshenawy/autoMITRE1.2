@@ -170,11 +170,12 @@ export default function Dashboard() {
 
                             {/* 3. Attack Techniques */}
                             <td style={{ padding: '18px 16px', textAlign: 'left', verticalAlign: 'top' }}>
-                                <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 0 10px rgba(255,255,255,0.2)', marginBottom: 6 }}>
-                                    {stats.techniques_covered || 0}
+                                <div style={{ fontSize: 24, fontWeight: 700, color: '#f8fafc', textShadow: '0 0 10px rgba(248,250,252,0.3)', marginBottom: 6 }}>
+                                    {stats.techniques_covered || 0} <span style={{ fontSize: 14, color: '#94a3b8', fontWeight: 500 }}>Mapped</span>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    <Shield size={11} /> Unique Techniques Mapped
+                                    <Activity size={11} />
+                                    Active mapping
                                 </div>
                             </td>
 
