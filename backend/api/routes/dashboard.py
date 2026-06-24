@@ -106,7 +106,9 @@ async def get_dashboard_stats(
         "techniques_covered": techniques_covered,
         "active_framework_names": active_frameworks,
         "risk_score_avg": round(avg_risk, 1),
-        "trend_percentage": round(trend)
+        "trend_percentage": round(trend),
+        "this_week_count": this_week_count,
+        "prev_week_count": last_week_count
     }
 
 @router.get("/debug_stats")

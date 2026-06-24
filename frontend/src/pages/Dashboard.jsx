@@ -127,6 +127,10 @@ export default function Dashboard() {
     ].filter(s => s.value > 0)
 
     const threatsThisWeekCount = activity.reduce((acc, day) => acc + (day.critical || 0) + (day.high || 0) + (day.medium || 0) + (day.low || 0), 0);
+    const prevWeekCount = stats.prev_week_count || 0
+    const trendPct = prevWeekCount > 0
+        ? Math.round(((threatsThisWeekCount - prevWeekCount) / prevWeekCount) * 100)
+        : threatsThisWeekCount > 0 ? 100 : 0
 
     return (
         <div style={{ maxWidth: 1400, margin: '0 auto' }}>
@@ -151,9 +155,9 @@ export default function Dashboard() {
                                 <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 0 10px rgba(255,255,255,0.2)', marginBottom: 6 }}>
                                     {(stats.total_threats || 0).toLocaleString()}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: threatsThisWeekCount > 0 ? '#ef4444' : '#6b7280', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    {threatsThisWeekCount > 0 ? <TrendingUp size={11} /> : <Minus size={11} />}
-                                    {threatsThisWeekCount > 0 ? `+${threatsThisWeekCount}` : '0'} this week
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: trendPct > 0 ? '#ef4444' : trendPct < 0 ? '#10b981' : '#6b7280', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                                    {trendPct > 0 ? <TrendingUp size={11} /> : trendPct < 0 ? <TrendingDown size={11} /> : <Minus size={11} />}
+                                    {trendPct > 0 ? '+' : ''}{trendPct}% this week
                                 </div>
                             </td>
 
