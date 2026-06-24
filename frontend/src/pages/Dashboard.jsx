@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
-import { AlertTriangle, Shield, Activity, TrendingUp, Zap, Globe, Lock, Clock, Target, Crosshair, Compass, Layers, List, Play, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
+import { AlertTriangle, Shield, Activity, TrendingUp, TrendingDown, Minus, Zap, Globe, Lock, Clock, Target, Crosshair, Compass, Layers, List, Play, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import axios from 'axios'
 import { useDataView } from '../contexts/DataViewContext'
 import { useAuth } from '../contexts/AuthContext'
@@ -151,8 +151,9 @@ export default function Dashboard() {
                                 <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 0 10px rgba(255,255,255,0.2)', marginBottom: 6 }}>
                                     {(stats.total_threats || 0).toLocaleString()}
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.trend_percentage || 0) > 0 ? '#ef4444' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    <TrendingUp size={11} /> {stats.trend_percentage !== undefined ? `${stats.trend_percentage > 0 ? '+' : ''}${stats.trend_percentage}%` : '0%'} this week
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.trend_percentage || 0) > 0 ? '#ef4444' : (stats.trend_percentage || 0) < 0 ? '#10b981' : '#6b7280', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                                    {(stats.trend_percentage || 0) > 0 ? <TrendingUp size={11} /> : (stats.trend_percentage || 0) < 0 ? <TrendingDown size={11} /> : <Minus size={11} />}
+                                    {stats.trend_percentage !== undefined ? `${stats.trend_percentage > 0 ? '+' : ''}${stats.trend_percentage}%` : '0%'} this week
                                 </div>
                             </td>
 
@@ -162,7 +163,8 @@ export default function Dashboard() {
                                     {(stats.risk_score_avg || 0).toFixed(1)}/10
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.risk_score_avg || 0) >= 7 ? '#ef4444' : (stats.risk_score_avg || 0) >= 4 ? '#f97316' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    <TrendingUp size={11} /> {(stats.risk_score_avg || 0) >= 7 ? 'CRITICAL' : (stats.risk_score_avg || 0) >= 4 ? 'HIGH' : 'LOW'} severity
+                                    {(stats.risk_score_avg || 0) >= 4 ? <AlertTriangle size={11} /> : <Shield size={11} />}
+                                    {(stats.risk_score_avg || 0) >= 7 ? 'CRITICAL' : (stats.risk_score_avg || 0) >= 4 ? 'HIGH' : 'LOW'} severity
                                 </div>
                             </td>
 
@@ -172,7 +174,7 @@ export default function Dashboard() {
                                     {stats.techniques_covered || 0}
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    <Shield size={11} /> Mapped
+                                    <Shield size={11} /> Unique Techniques Mapped
                                 </div>
                             </td>
 
