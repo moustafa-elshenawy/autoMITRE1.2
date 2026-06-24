@@ -201,7 +201,7 @@ def _parse_html_current_risk_summary(soup: "BeautifulSoup", context: Optional[st
                         cm_status_els = item.find_all(class_=lambda c: c and "status" in c)
 
                     cm_statuses = [
-                        el.get_text(" ", strip=True).lower()
+                        _strip_label(el.get_text(" ", strip=True).lower(), ("status:",))
                         for el in cm_status_els
                     ]
 
@@ -232,8 +232,13 @@ def _parse_html_current_risk_summary(soup: "BeautifulSoup", context: Optional[st
 def _extract_component_name(block) -> str:
     """
     Heuristically extract the component/component-group name from a block element.
-    Tries several well-known IriusRisk CSS classes before falling back to text.
+
+    In the IriusRisk Current Risk Summary Report the component heading is an
+    <h4> whose text reads "Component: Active Directory" — we strip the label prefix.
     """
+    LABEL_PREFIXES = ("component:", "component name:", "trust zone:", "group:")
+
+    # Prefer the well-known IriusRisk CSS class first
     for cls in [
         "current-risk-threats-list__component-name",
         "component-name",
@@ -243,41 +248,86 @@ def _extract_component_name(block) -> str:
     ]:
         el = block.find(class_=cls)
         if el:
-            return el.get_text(" ", strip=True) or "Unknown Component"
+            text = el.get_text(" ", strip=True)
+            if text:
+                return _strip_label(text, LABEL_PREFIXES)
 
-    # Try heading tags inside the block
-    for heading in block.find_all(["h1", "h2", "h3", "h4", "h5", "strong"], limit=1):
-        text = heading.get_text(" ", strip=True)
-        if text:
-            return text
+    # IriusRisk Summary uses an h4 directly inside the component-item
+    for tag in ["h4", "h3", "h2", "h5", "h1", "strong"]:
+        el = block.find(tag)
+        if el:
+            text = el.get_text(" ", strip=True)
+            if text:
+                return _strip_label(text, LABEL_PREFIXES)
 
     return "Unknown Component"
 
 
 def _extract_threat_title(item) -> str:
     """
-    Heuristically extract the threat title from a threat-item element.
-    Priority: .threat-name .text-name  →  .threat-name  →  [data-name]  →  first heading.
-    """
-    # Primary: nested class path .threat-name > .text-name
-    threat_name_el = item.find(class_="threat-name")
-    if threat_name_el:
-        text_name_el = threat_name_el.find(class_="text-name")
-        if text_name_el:
-            return text_name_el.get_text(" ", strip=True)
-        return threat_name_el.get_text(" ", strip=True)
+    Extract the threat title from a threat-item block.
 
-    # Fallback: data attribute
+    IriusRisk Current Risk Summary DOM:
+        <section class="threat-name">
+          <p class="typography ...">
+            <b class="text-name">CRT1. Threat name:</b>
+            Active Directory database theft          ← the actual name (plain text node)
+          </p>
+        </section>
+
+    Strategy:
+      1. Find the <p> inside .threat-name
+      2. Clone the <p>, remove the <b class="text-name"> label
+      3. Return the remaining text
+    If that fails, fall back through progressively looser selectors.
+    """
+    threat_name_section = item.find(class_="threat-name")
+    if threat_name_section:
+        p = threat_name_section.find("p")
+        if p:
+            # Remove the <b class="text-name"> label node; remaining text is the title
+            b_label = p.find("b", class_="text-name") or p.find("b")
+            label_text = b_label.get_text(" ", strip=True) if b_label else ""
+
+            # Collect all text in the <p> then subtract the label
+            full_text = p.get_text(" ", strip=True)
+            if label_text and full_text.startswith(label_text):
+                title = full_text[len(label_text):].strip()
+            else:
+                # Label might be embedded elsewhere — strip known prefixes
+                title = _strip_label(
+                    full_text,
+                    ("threat name:", "threat:", "name:")
+                )
+
+            if title:
+                return title
+
+        # Fallback: take all text from the section minus the label
+        full_section = threat_name_section.get_text(" ", strip=True)
+        return _strip_label(full_section, ("threat name:", "threat:", "name:")) or full_section
+
+    # No .threat-name section — try data attribute or heading
     if item.get("data-name"):
         return item["data-name"].strip()
 
-    # Fallback: first heading inside the item
-    for heading in item.find_all(["h3", "h4", "h5", "strong", "b"], limit=1):
-        text = heading.get_text(" ", strip=True)
-        if text:
-            return text
+    for tag in ["h3", "h4", "h5", "strong", "b"]:
+        el = item.find(tag)
+        if el:
+            text = el.get_text(" ", strip=True)
+            if text:
+                return text
 
     return ""
+
+
+def _strip_label(text: str, prefixes: tuple) -> str:
+    """Remove a leading label prefix (case-insensitive) from text."""
+    lower = text.lower()
+    for prefix in prefixes:
+        if lower.startswith(prefix):
+            return text[len(prefix):].strip()
+    return text
 
 def _parse_xml_data_model(file_path: str, context: Optional[str]) -> List[ExtractedAttack]:
     attacks = []
