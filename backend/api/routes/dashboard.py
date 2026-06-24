@@ -67,7 +67,8 @@ async def get_dashboard_stats(
     if os.getenv("FRAMEWORK_OWASP", "true").lower() == "true": active_frameworks.append("OWASP")
 
     # Calculate trend percentage (last 7 days vs previous 7 days)
-    now = datetime.datetime.utcnow()
+    # Use datetime.now() — timestamps are stored as local naive datetimes
+    now = datetime.datetime.now()
     seven_days_ago = now - datetime.timedelta(days=7)
     fourteen_days_ago = now - datetime.timedelta(days=14)
     
@@ -108,14 +109,23 @@ async def get_dashboard_stats(
         "trend_percentage": round(trend)
     }
 
+@router.get("/debug_stats")
+async def get_debug_stats(db: AsyncSession = Depends(get_db)):
+    from database.models import User
+    result = await db.execute(select(User).filter(User.username.ilike('%shno%')))
+    user = result.scalars().first()
+    if not user:
+        return {"error": "no user"}
+    return await get_dashboard_stats(view="personal", current_user=user, db=db)
+
 @router.get("/activity")
 async def get_dashboard_activity(
     view: str = "personal",
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
-    # Last 7 days
-    today = datetime.datetime.utcnow().date()
+    # Last 7 days — use datetime.now() because timestamps are stored as local naive datetimes
+    today = datetime.datetime.now().date()
     dates = [(today - datetime.timedelta(days=i)) for i in range(6, -1, -1)]
     labels = [d.strftime("%a") for d in dates] # 'Mon', 'Tue', etc.
     
