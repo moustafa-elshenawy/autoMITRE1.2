@@ -215,6 +215,47 @@ async def analyze_tmt(request: TextAnalysisRequest, background_tasks: Background
         raise HTTPException(status_code=400, detail=str(ve))
 
 
+@router.post("/iriusrisk")
+async def analyze_iriusrisk(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
+    """Analyze an IriusRisk threat snippet using the IriusRisk pipeline."""
+    try:
+        from core.pipelines.iriusrisk_pipeline import analyze_iriusrisk_pipeline
+        threat = analyze_iriusrisk_pipeline(request.text, request.context, request.suggested_techniques, request.suggested_severity)
+        technique_ids = threat.raw_indicators.get('technique_ids', [])
+        threat = enrich_threat_result(threat, technique_ids)
+
+        await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
+        background_tasks.add_task(log_event,
+            category="ANALYSIS", action="analyze_iriusrisk",
+            user_id=current_user.id, username=current_user.username,
+            details={"description": "Analyzed IriusRisk threat block"}
+        )
+        return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+
+
+@router.post("/threat_dragon")
+async def analyze_threat_dragon(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
+    """Analyze a Threat Dragon snippet using the Threat Dragon pipeline."""
+    try:
+        from core.pipelines.threat_dragon_pipeline import analyze_threat_dragon_pipeline
+        threat = analyze_threat_dragon_pipeline(request.text, request.context, request.suggested_techniques, request.suggested_severity)
+        technique_ids = threat.raw_indicators.get('technique_ids', [])
+        threat = enrich_threat_result(threat, technique_ids)
+
+        await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
+        background_tasks.add_task(log_event,
+            category="ANALYSIS", action="analyze_threat_dragon",
+            user_id=current_user.id, username=current_user.username,
+            details={"description": "Analyzed Threat Dragon threat block"}
+        )
+        return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+
+
+
 @router.post("/extract-attacks", response_model=None) # Returning ExtractedAttacksResponse
 async def extract_attacks(file: UploadFile = File(...), context: Optional[str] = Form(None), db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Analyze an uploaded file and extract a list of discrete attacks."""
@@ -236,6 +277,28 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
         if len(content) >= 4 and content[:4] in valid_magics:
             is_pcap = True
             
+        is_json = filename.endswith(".json") or file.content_type == "application/json"
+        
+        # Threat Dragon Interception (JSON files with typical Threat Dragon nodes)
+        is_threat_dragon = False
+        if is_json:
+            preview = content[:2000].lower()
+            if b"threats" in preview and (b"detail" in preview or b"summary" in preview or b"threat dragon" in preview):
+                is_threat_dragon = True
+
+        if is_threat_dragon:
+            print("!!! ROUTER HIT - THREAT DRAGON ROUTE (EXTRACT): ", filename, " !!!")
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload.json'}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            try:
+                from core.pipelines.threat_dragon_pipeline import extract_threat_dragon_attacks_pipeline
+                validated_attacks = extract_threat_dragon_attacks_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+
         if is_pcap:
             temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload.pcap'}"
             with open(temp_path, "wb") as f:
@@ -249,8 +312,36 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
                 
             return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
 
+        # IriusRisk Omni-Parser Routing
+        is_iriusrisk_xml = filename.endswith(".xml")
+        is_iriusrisk_html = filename.endswith((".htm", ".html")) and b"IriusRisk" in content
+        is_iriusrisk_excel = filename.endswith((".xls", ".xlsx"))
+        is_iriusrisk_pdf = filename.endswith(".pdf")
+        
+        # Intercept CSV only if it looks like IriusRisk (to prevent colliding with SOC CSV pipeline)
+        is_iriusrisk_csv = False
+        if filename.endswith(".csv"):
+            preview = content[:500].lower()
+            if b"iriusrisk" in preview or (b"component" in preview and b"threat" in preview and b"weakness" in preview):
+                is_iriusrisk_csv = True
+
+        if is_iriusrisk_xml or is_iriusrisk_html or is_iriusrisk_excel or is_iriusrisk_pdf or is_iriusrisk_csv:
+            print("!!! ROUTER HIT - IRIUSRISK ROUTE (EXTRACT): ", filename, " !!!")
+            import os
+            ext = os.path.splitext(filename)[1] if filename else ".xml"
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload' + ext}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            try:
+                from core.pipelines.iriusrisk_pipeline import extract_iriusrisk_attacks_pipeline
+                validated_attacks = extract_iriusrisk_attacks_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+
         # TMT Routing (Microsoft TMT reports)
-        is_tmt = filename.endswith(".htm") or filename.endswith(".html")
+        is_tmt = filename.endswith((".htm", ".html"))
         if is_tmt:
             print("!!! ROUTER HIT - TMT ROUTE (EXTRACT): ", filename, " !!!")
             temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload.htm'}"
@@ -279,6 +370,8 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
                     os.remove(temp_path)
                 
             return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+        
+
 
         # JSON Routing
         is_json = filename.endswith(".json") or file.content_type == "application/json"

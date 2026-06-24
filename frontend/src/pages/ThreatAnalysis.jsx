@@ -485,10 +485,14 @@ export default function ThreatAnalysis() {
         setExtractedAttacks([]) // Hide the UI list to show the analyzer
         setText(attack.raw_snippet)
         const endpoint = attack.input_type === 'json'
-            ? '/api/analyze/json'
+            ? '/api/analyze/json-stix'
             : (attack.input_type === 'csv'
                 ? '/api/analyze/csv'
-                : (attack.input_type === 'htm' || attack.input_type === 'html' ? '/api/analyze/tmt' : '/api/analyze/text'))
+                : (attack.input_type === 'htm' || attack.input_type === 'html' 
+                    ? '/api/analyze/tmt' 
+                    : (attack.input_type === 'xml' 
+                        ? '/api/analyze/iriusrisk' 
+                        : (attack.input_type === 'threat_dragon' ? '/api/analyze/threat_dragon' : '/api/analyze/text'))))
                 
         // CRITICAL FIX: Pass the Phase 1 extracted technique and severity into Phase 2
         // so the legacy text heuristics don't lose the context of abstract threats.
@@ -511,6 +515,11 @@ export default function ThreatAnalysis() {
         onDrop,
         accept: {
             'text/*': ['.txt', '.log', '.csv', '.htm', '.html'],
+            'application/xml': ['.xml'],
+            'text/xml': ['.xml'],
+            'application/pdf': ['.pdf'],
+            'application/vnd.ms-excel': ['.xls'],
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx'],
             'application/json': ['.json'],
             'application/vnd.tcpdump.pcap': ['.pcap', '.pcapng']
         }
@@ -637,16 +646,38 @@ export default function ThreatAnalysis() {
                             </select>
 
                             {apiTool === 'iriusrisk' && (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                                    <input className="form-input" placeholder="Instance URL (e.g., https://mycorp.iriusrisk.com)" value={apiUrl} onChange={e => setApiUrl(e.target.value)} />
-                                    <input className="form-input" type="password" placeholder="API Token (v1 Token)" value={apiToken} onChange={e => setApiToken(e.target.value)} />
-                                    <input className="form-input" placeholder="Project ID / Reference ID" value={apiProjectId} onChange={e => setApiProjectId(e.target.value)} />
+                                <div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+                                        <input className="form-input" placeholder="Instance URL (e.g., https://mycorp.iriusrisk.com)" value={apiUrl} onChange={e => setApiUrl(e.target.value)} />
+                                        <input className="form-input" type="password" placeholder="API Token (v1 Token)" value={apiToken} onChange={e => setApiToken(e.target.value)} />
+                                        <input className="form-input" placeholder="Project ID / Reference ID" value={apiProjectId} onChange={e => setApiProjectId(e.target.value)} />
+                                    </div>
+                                    <div className="alert alert-info" style={{ marginBottom: 16 }}>
+                                        <Info size={16} style={{ flexShrink: 0 }} />
+                                        <span style={{ fontSize: 13 }}>Using the <b>Community Edition</b>? API integration is disabled. You can export your model to an <b>XML, PDF, Excel, or CSV</b> file and drop it below instead.</span>
+                                    </div>
+                                    <div {...getRootProps()} className={`upload-zone ${isDragActive ? 'drag-active' : ''}`}>
+                                        <input {...getInputProps()} />
+                                        <Upload className="upload-zone-icon" />
+                                        <div className="upload-zone-title">Drop IriusRisk Export (.xml, .pdf, .xlsx, .csv) here or click to browse</div>
+                                    </div>
                                 </div>
                             )}
 
                             {apiTool === 'threat_dragon' && (
                                 <div>
-                                    <input className="form-input" placeholder="Threat Dragon JSON File URL" value={apiUrl} onChange={e => setApiUrl(e.target.value)} />
+                                    <div style={{ marginBottom: 16 }}>
+                                        <input className="form-input" placeholder="Threat Dragon JSON File URL" value={apiUrl} onChange={e => setApiUrl(e.target.value)} />
+                                    </div>
+                                    <div className="alert alert-info" style={{ marginBottom: 16 }}>
+                                        <Info size={16} style={{ flexShrink: 0 }} />
+                                        <span style={{ fontSize: 13 }}>Alternatively, you can drop your exported <b>Threat Dragon Model (.json)</b> file below to parse it locally.</span>
+                                    </div>
+                                    <div {...getRootProps()} className={`upload-zone ${isDragActive ? 'drag-active' : ''}`}>
+                                        <input {...getInputProps()} />
+                                        <Upload className="upload-zone-icon" />
+                                        <div className="upload-zone-title">Drop Threat Dragon Export (.json) here or click to browse</div>
+                                    </div>
                                 </div>
                             )}
 
