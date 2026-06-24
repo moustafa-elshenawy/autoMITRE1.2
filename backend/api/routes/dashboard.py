@@ -77,12 +77,14 @@ async def get_dashboard_stats(
     for t in threats:
         if t.timestamp:
             try:
-                t_date = datetime.datetime.fromisoformat(t.timestamp)
+                # Handle 'Z' suffix and make timezone naive for comparison with utcnow
+                ts_clean = t.timestamp.replace('Z', '+00:00') if t.timestamp.endswith('Z') else t.timestamp
+                t_date = datetime.datetime.fromisoformat(ts_clean).replace(tzinfo=None)
                 if t_date >= seven_days_ago:
                     this_week_count += 1
                 elif t_date >= fourteen_days_ago:
                     last_week_count += 1
-            except ValueError:
+            except Exception:
                 pass
 
     if last_week_count > 0:
@@ -131,13 +133,15 @@ async def get_dashboard_activity(
     for threat in threats:
         if threat.timestamp:
             try:
-                t_date = datetime.datetime.fromisoformat(threat.timestamp).date()
+                # Handle 'Z' suffix and make timezone naive for comparison
+                ts_clean = threat.timestamp.replace('Z', '+00:00') if threat.timestamp.endswith('Z') else threat.timestamp
+                t_date = datetime.datetime.fromisoformat(ts_clean).replace(tzinfo=None).date()
                 if t_date in dates:
                     idx = dates.index(t_date)
                     sev = threat.severity
                     if sev in datasets:
                         datasets[sev][idx] += 1
-            except ValueError:
+            except Exception:
                 pass
 
     return {

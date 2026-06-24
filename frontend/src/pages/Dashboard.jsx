@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
-import { AlertTriangle, Shield, Activity, TrendingUp, TrendingDown, Minus, Zap, Globe, Lock, Clock, Target, Crosshair, Compass, Layers, List, Play, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
+import { AlertTriangle, AlertCircle, Shield, Activity, TrendingUp, TrendingDown, Minus, Zap, Globe, Lock, Clock, Target, Crosshair, Compass, Layers, List, Play, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import axios from 'axios'
 import { useDataView } from '../contexts/DataViewContext'
 import { useAuth } from '../contexts/AuthContext'
@@ -159,12 +159,12 @@ export default function Dashboard() {
 
                             {/* 2. Avg Risk Score */}
                             <td style={{ padding: '18px 16px', textAlign: 'left', verticalAlign: 'top' }}>
-                                <div style={{ fontSize: 24, fontWeight: 700, color: (stats.risk_score_avg || 0) >= 7 ? '#ef4444' : (stats.risk_score_avg || 0) >= 4 ? '#f97316' : '#10b981', textShadow: '0 0 10px currentColor', marginBottom: 6 }}>
+                                <div style={{ fontSize: 24, fontWeight: 700, color: (stats.risk_score_avg || 0) >= 9 ? '#ef4444' : (stats.risk_score_avg || 0) >= 7 ? '#f97316' : (stats.risk_score_avg || 0) >= 4 ? '#eab308' : '#10b981', textShadow: '0 0 10px currentColor', marginBottom: 6 }}>
                                     {(stats.risk_score_avg || 0).toFixed(1)}/10
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.risk_score_avg || 0) >= 7 ? '#ef4444' : (stats.risk_score_avg || 0) >= 4 ? '#f97316' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
-                                    {(stats.risk_score_avg || 0) >= 4 ? <AlertTriangle size={11} /> : <Shield size={11} />}
-                                    {(stats.risk_score_avg || 0) >= 7 ? 'CRITICAL' : (stats.risk_score_avg || 0) >= 4 ? 'HIGH' : 'LOW'} severity
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: (stats.risk_score_avg || 0) >= 9 ? '#ef4444' : (stats.risk_score_avg || 0) >= 7 ? '#f97316' : (stats.risk_score_avg || 0) >= 4 ? '#eab308' : '#10b981', fontSize: 11, fontWeight: 600, fontFamily: "'Inter', sans-serif" }}>
+                                    {(stats.risk_score_avg || 0) >= 7 ? <AlertTriangle size={11} /> : (stats.risk_score_avg || 0) >= 4 ? <AlertCircle size={11} /> : <Shield size={11} />}
+                                    {(stats.risk_score_avg || 0) >= 9 ? 'CRITICAL' : (stats.risk_score_avg || 0) >= 7 ? 'HIGH' : (stats.risk_score_avg || 0) >= 4 ? 'MEDIUM' : 'LOW'} severity
                                 </div>
                             </td>
 
