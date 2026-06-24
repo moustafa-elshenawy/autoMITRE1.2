@@ -149,9 +149,9 @@ chmod +x run.sh
 ```
 
 This starts:
-- **Backend** on http://localhost:8000
-- **Frontend** on http://localhost:5173
-- **API Docs** on http://localhost:8000/docs
+- **Backend** on http://localhost:8001
+- **Frontend** on http://localhost:5174
+- **API Docs** on http://localhost:8001/docs
 
 **Default login credentials:**
 ```
@@ -165,7 +165,7 @@ Password: Admin@1234!
 
 After the app starts, please check these things for me:
 
-1. Open http://localhost:5173 — you should see the autoMITRE login page
+1. Open http://localhost:5174 — you should see the autoMITRE login page
 2. Log in with `admin` / `Admin@1234!`
 3. Go to **Threat Analysis**
 4. Click **Load Example** then **Analyze Threat**
@@ -183,8 +183,8 @@ If something goes wrong, here are the most common issues:
 | `No module named 'torch'` | Make sure you activated the venv with `source venv/bin/activate` before running pip |
 | Backend starts but frontend shows "Network Error" | The backend may still be loading (wait 10 seconds and refresh) |
 | Only 3–5 ATT&CK techniques detected | Your `GROQ_API_KEY` in `backend/.env` is missing or incorrect |
-| `Database error: no such column` | Delete `backend/automitre.db` and restart — it rebuilds automatically |
-| Port 8000 already in use | Run `kill $(lsof -ti:8000)` then start again |
+| Database error: no such column | Delete `backend/automitre.db` and restart — it rebuilds automatically |
+| Port 8001 already in use | Run `kill $(lsof -ti:8001)` then start again |
 | `model.safetensors` is only 134 bytes | Git LFS didn't download properly — run `git lfs pull` |
 
 ---
