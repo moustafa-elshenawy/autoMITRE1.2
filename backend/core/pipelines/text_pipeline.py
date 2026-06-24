@@ -25,7 +25,7 @@ logger = logging.getLogger("text_pipeline")
 def analyze_text_pipeline(processed_input: Dict[str, Any], deep_analysis: bool = False,
                           pipeline_mode: str = "auto", apply_semantic_penalty: bool = False,
                           chunk_text: bool = True, bypass_semantic: bool = False,
-                          pruning_threshold: float = 0.55) -> ThreatResult:
+                          pruning_threshold: float = 0.55, **kwargs) -> ThreatResult:
     """
     Orchestrates the threat analysis pipeline specifically for unstructured text CTI reports,
     advisories, and log fields.
@@ -228,7 +228,7 @@ def analyze_text_pipeline(processed_input: Dict[str, Any], deep_analysis: bool =
         owasp_items=map_to_owasp(final_tids),
         mitigations=get_mitigations(final_tids),
         predicted_steps=final_predicted_steps,
-        entities=[(e if isinstance(e, ThreatEntity) else ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', ''))) for e in entities],
+        entities=[(e if hasattr(e, 'type') and not isinstance(e, dict) else ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', ''))) for e in entities],
         raw_indicators={
             "technique_ids": final_tids,
             "is_anomaly": bool(is_anomalous),

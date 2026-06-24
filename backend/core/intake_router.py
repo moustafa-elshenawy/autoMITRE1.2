@@ -216,6 +216,12 @@ def route(text: str, pipeline_mode: str = "auto") -> Dict[str, Any]:
     signals["structured_score"] = struct
     signals["prose_score"] = prose
 
+    if mode == "legacy":
+        return {
+            "mode": mode, "engine": "legacy", "auto": False,
+            "reason": "Explicit pipeline_mode=legacy override.",
+            "signals": signals,
+        }
     if mode == ENGINE_RAG:
         return {
             "mode": mode, "engine": ENGINE_RAG, "auto": False,

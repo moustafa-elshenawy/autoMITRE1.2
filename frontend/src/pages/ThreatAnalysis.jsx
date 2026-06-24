@@ -458,8 +458,17 @@ export default function ThreatAnalysis() {
         setLoading(true); setError(null); setResult(null); setExtractedAttacks([]); setSavedAttacksList([])
         try {
             const token = localStorage.getItem('token')
-            const headers = token ? { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } : { 'Content-Type': 'multipart/form-data' }
-            const r = await axios.post(`${API}/api/analyze/extract-attacks${viewParam}`, fd, { headers })
+            const headers = {
+                'Content-Type': 'multipart/form-data',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+            if (token) headers['Authorization'] = `Bearer ${token}`
+            
+            // Add a cache-busting timestamp to the URL
+            const cacheBuster = viewParam ? `&t=${Date.now()}` : `?t=${Date.now()}`
+            const r = await axios.post(`${API}/api/analyze/extract-attacks${viewParam}${cacheBuster}`, fd, { headers })
             if (r.data.success && r.data.attacks && r.data.attacks.length > 0) {
                 setExtractedAttacks(sortAttacks(r.data.attacks))
             } else {
@@ -475,7 +484,8 @@ export default function ThreatAnalysis() {
         setSavedAttacksList([...extractedAttacks])
         setExtractedAttacks([]) // Hide the UI list to show the analyzer
         setText(attack.raw_snippet)
-        analyze({ text: attack.raw_snippet, deep_analysis: true }, '/api/analyze/text')
+        const endpoint = attack.input_type === 'json' ? '/api/analyze/json' : '/api/analyze/text'
+        analyze({ text: attack.raw_snippet, deep_analysis: true }, endpoint)
     }
     
     const handleBackToList = () => {

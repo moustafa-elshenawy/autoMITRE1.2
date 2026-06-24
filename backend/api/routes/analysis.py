@@ -19,6 +19,7 @@ from core.pipelines import (
     extract_pcap_attacks_pipeline,
     analyze_hash_pipeline
 )
+from core.pipelines.json_pipeline import analyze_json_pipeline, extract_json_attacks_pipeline
 from sqlalchemy.ext.asyncio import AsyncSession
 import os
 import uuid
@@ -126,6 +127,26 @@ async def analyze_hash(request: HashLookupRequest, background_tasks: BackgroundT
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/json")
+async def analyze_json(request: TextAnalysisRequest, background_tasks: BackgroundTasks, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user), workspace: WorkspaceState = Depends(get_workspace)):
+    """Analyze a JSON snippet deeply using the isolated pipeline."""
+    try:
+        threat = analyze_json_pipeline(request.text, request.context)
+        technique_ids = threat.raw_indicators.get('technique_ids', [])
+        
+        await create_threat_record(db, threat, current_user.id, group_id=workspace.group_id)
+        background_tasks.add_task(log_event,
+            category="ANALYSIS", action="analyze_json",
+            user_id=current_user.id, username=current_user.username,
+            details={"description": "Analyzed structured JSON"}
+        )
+        return AnalysisResponse(success=True, threat_result=threat)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/extract-attacks", response_model=None) # Returning ExtractedAttacksResponse
 async def extract_attacks(file: UploadFile = File(...), context: Optional[str] = Form(None), db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """Analyze an uploaded file and extract a list of discrete attacks."""
@@ -160,7 +181,24 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
                 
             return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
 
-        # Handle Standard Text/JSON Logs
+        # JSON Routing
+        is_json = filename.endswith(".json") or file.content_type == "application/json"
+        if is_json:
+            print("!!! ROUTER HIT - JSON FALLTHROUGH: ", filename, " !!!")
+            temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload.json'}"
+            with open(temp_path, "wb") as f:
+                f.write(content)
+            
+            try:
+                validated_attacks = extract_json_attacks_pipeline(temp_path, context)
+            finally:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+                
+            return ExtractedAttacksResponse(success=True, attacks=validated_attacks)
+
+        # Handle Standard Text Logs
+        print("!!! ROUTER HIT - GENERIC TEXT FALLBACK: ", filename, " !!!")
         trimmed_content = content[:2000000] # 2MB absolute cap
         text_content = trimmed_content.decode('utf-8', errors='ignore')
         

@@ -43,6 +43,7 @@ class ExtractedAttack(BaseModel):
     description: str
     raw_snippet: str
     severity_estimate: str
+    input_type: Optional[str] = "text"
     mitre_technique_id: Optional[str] = None
     mitre_tactic: Optional[str] = None
     confidence: Optional[float] = None

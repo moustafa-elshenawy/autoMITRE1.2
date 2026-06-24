@@ -152,6 +152,28 @@ _embed_thread.start()
 
 
 # Threat classification keyword sets with weights
+TOOL_TO_BEHAVIOR_MAP = {
+    "mimikatz": "T1003",
+    "mimikatz.exe": "T1003",
+    "cobalt strike": "T1059",
+    "bloodhound": "T1087",
+    "psexec": "T1570",
+    "sqlmap": "T1190",
+    "nmap": "T1046"
+}
+
+def apply_behavioral_overrides(entities: List[Any], technique_scores: Dict[str, float]):
+    """Global execution path to boost techniques based on strictly detected entities."""
+    for entity in entities:
+        # Support both Pydantic models (from JSON pipeline) and dicts
+        ent_type = getattr(entity, 'type', None) if not isinstance(entity, dict) else entity.get('type')
+        if ent_type in ['tool', 'malware', 'software']:
+            ent_value = getattr(entity, 'value', '') if not isinstance(entity, dict) else entity.get('value', '')
+            val_lower = str(ent_value).lower()
+            if val_lower in TOOL_TO_BEHAVIOR_MAP:
+                t_id = TOOL_TO_BEHAVIOR_MAP[val_lower]
+                technique_scores[t_id] = max(technique_scores.get(t_id, 0.0), 0.95)
+
 THREAT_SIGNATURES = {
     'web_attack': {
         'keywords': ['sql injection', 'xss', 'cross-site', 'csrf', 'ssrf', 'xxe', 
@@ -457,9 +479,13 @@ def classify_threats(processed_input: Dict[str, Any], chunk_text: bool = False) 
                     if t not in detected or decayed_conf > detected[t]:
                         detected[t] = decayed_conf
 
-        if heuristic_matched and len(text) < 50:
-            top_conf = max(detected.values()) if detected else 0
-            detected = {k: v for k, v in detected.items() if v >= top_conf - 0.005}
+    if heuristic_matched and len(text) < 50:
+        top_conf = max(detected.values()) if detected else 0
+        detected = {k: v for k, v in detected.items() if v >= top_conf - 0.005}
+
+    # Apply global behavioral overrides based on explicitly detected entities
+    entities = processed_input.get('entities', [])
+    apply_behavioral_overrides(entities, detected)
 
     return detected
 
@@ -631,16 +657,22 @@ def get_attack_techniques(
                 else:
                     confidence = (base_conf * 0.7) + (semantic_conf * 0.3)
 
+            if "mimikatz" in text.lower() or "mimikatz.exe" in text.lower():
+                if technique['id'] in ['T1003', 'T1003.001']:
+                    confidence = 0.95
+
             confidence = round(confidence, 2)
 
-            techniques.append(ATTACKTechnique(
-                id=technique['id'],
-                name=technique['name'],
-                tactic=technique['tactic'],
-                tactic_id=technique['tactic_id'],
-                description=technique['description'],
-                confidence=confidence
-            ))
+            if confidence >= pruning_threshold:
+                techniques.append(ATTACKTechnique(
+                    id=technique['id'],
+                    name=technique['name'],
+                    tactic=technique['tactic'],
+                    tactic_id=technique['tactic_id'],
+                    description=technique['description'],
+                    confidence=confidence
+                ))
+
 
     sorted_techniques = sorted(techniques, key=lambda t: t.confidence, reverse=True)
     
@@ -660,7 +692,7 @@ def get_attack_techniques(
 
     # Filter out low confidence speculative results.
     # anything below pruning_threshold is likely noise for simple inputs.
-    filtered_techniques = [t for t in sorted_techniques if t.confidence >= pruning_threshold]
+    filtered_techniques = sorted_techniques
     
     # Dynamically cap the results based on confidence tiers and input density
     final_techniques = []
@@ -695,7 +727,8 @@ def get_attack_techniques(
                 final_techniques.append(t)
                 tier_3_count += 1
                 
-    return final_techniques
+    # The final physical gate to guarantee the pruning_threshold is respected globally
+    return [t for t in final_techniques if t.confidence >= pruning_threshold]
 
 
 def get_mitigations(technique_ids: List[str]) -> List[MitigationStep]:
@@ -894,7 +927,7 @@ def generate_predictive_actions(technique_ids: List[str], text: str = '', entiti
     
     # Pre-populate input entities with our extractions so they show up in the UI
     for ext_e in extracted_entities:
-        if not any((e.value if isinstance(e, ThreatEntity) else e.get('value', '')).lower() == ext_e['value'].lower() for e in entities):
+        if not any((getattr(e, 'value', '') if not isinstance(e, dict) else e.get('value', '')).lower() == ext_e['value'].lower() for e in entities):
             try:
                 # Add as ThreatEntity schema-compatible instance
                 entities.append(ThreatEntity(
@@ -1301,7 +1334,7 @@ def analyze_threat(processed_input: Dict[str, Any], deep_analysis: bool = False,
         owasp_items=map_to_owasp(final_tids),
         mitigations=get_mitigations(final_tids),
         predicted_steps=final_predicted_steps,
-        entities=[(e if isinstance(e, ThreatEntity) else ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', ''))) for e in entities],
+        entities=[(e if hasattr(e, 'type') and not isinstance(e, dict) else ThreatEntity(type=e.get('type', 'indicator'), value=e.get('value', ''))) for e in entities],
         raw_indicators={
             "technique_ids": final_tids,
             "is_anomaly": bool(is_anomalous),
