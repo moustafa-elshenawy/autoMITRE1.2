@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  background-color: #020617;
+  color: #f8fafc;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Custom glowing utility for cyber aesthetic */
+.neon-glow-cyan {
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.5), 0 0 20px rgba(34, 211, 238, 0.3);
+}
+.neon-glow-emerald {
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.5), 0 0 20px rgba(52, 211, 153, 0.3);
+}
+
+.glass-card {
+  @apply bg-slate-900/60 backdrop-blur-md border border-slate-700/50 rounded-xl;
+}
+
+/* Legendary Cyber Animations */
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.animate-scanline {
+  animation: scanline 8s linear infinite;
+}
+
+@keyframes glitch-anim {
+  0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
+  10% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -2px); }
+  20% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 0); }
+  30% { clip-path: inset(40% 0 40% 0); transform: translate(2px, 2px); }
+  40% { clip-path: inset(60% 0 20% 0); transform: translate(-2px, -2px); }
+  50% { clip-path: inset(15% 0 80% 0); transform: translate(2px, 0); }
+  60% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
+  70% { clip-path: inset(40% 0 40% 0); transform: translate(2px, -2px); }
+  80% { clip-path: inset(60% 0 20% 0); transform: translate(-2px, 0); }
+  90% { clip-path: inset(15% 0 80% 0); transform: translate(2px, 2px); }
+  100% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, -2px); }
+}
+
+.glitch-text-container {
+  position: relative;
+}
+
+.glitch-text-container::before,
+.glitch-text-container::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.glitch-text-container::before {
+  left: 2px;
+  text-shadow: -2px 0 #22d3ee;
+  animation: glitch-anim 3s infinite linear alternate-reverse;
+}
+
+.glitch-text-container::after {
+  left: -2px;
+  text-shadow: -2px 0 #f43f5e;
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+.cyber-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(34, 211, 238, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
+}

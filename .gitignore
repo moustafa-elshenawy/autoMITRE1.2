@@ -12,3 +12,11 @@ test_pdf.py
 
 # Generated ML artifacts (regenerable; too large or noisy for git)
 backend/data/chroma_mitre/
+
+# Node modules
+node_modules/
+*node_modules/*
+
+# Build output
+dist/
+
