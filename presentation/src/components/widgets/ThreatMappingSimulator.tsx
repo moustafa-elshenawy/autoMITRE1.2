@@ -46,7 +46,7 @@ export default function ThreatMappingSimulator() {
             <Target className="w-8 h-8 text-rose-400" />
             <div className="text-left">
               <p className="text-sm text-slate-400 font-mono">Raw Threat Data</p>
-              <p className="text-lg font-bold text-slate-200">"mimikatz memory dump"</p>
+              <p className="text-sm font-bold text-slate-200 max-w-xs leading-snug">"adversary uses Mimikatz to dump credential material from LSASS."</p>
             </div>
           </div>
           {stage === 0 && <span className="absolute -top-3 -right-3 flex h-6 w-6 z-20"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span><span className="relative inline-flex rounded-full h-6 w-6 bg-cyan-500 text-xs items-center justify-center text-white shadow-[0_0_10px_#22d3ee]">Click</span></span>}
