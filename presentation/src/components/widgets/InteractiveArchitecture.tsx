@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Server, Database, BrainCircuit, Cpu, ArrowRight } from 'lucide-react';
+import { Server, Database, BrainCircuit, Cpu } from 'lucide-react';
 
 const components = [
   { id: 'intake', icon: Server, label: 'Intake Router', color: 'text-blue-400', desc: 'Parses raw text, PCAP, HTML, and OSINT into standardized schemas.' },

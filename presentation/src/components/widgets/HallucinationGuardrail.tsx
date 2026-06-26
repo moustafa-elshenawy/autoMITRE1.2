@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, Database, AlertOctagon, CheckCircle2, ShieldX, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Bot, Database, ShieldX, ShieldCheck } from 'lucide-react';
 
 export default function HallucinationGuardrail() {
   const [step, setStep] = useState(0);

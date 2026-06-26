@@ -1,4 +1,15 @@
-export type SlideWidget = 'latency' | 'accuracy' | 'architecture' | 'simulator' | 'none';
+export type SlideWidget = 
+  | 'latency' 
+  | 'accuracy' 
+  | 'architecture' 
+  | 'simulator' 
+  | 'guardrail' 
+  | 'hardware' 
+  | 'dbscan' 
+  | 'intake' 
+  | 'siem_funnel' 
+  | 'stix_tree' 
+  | 'none';
 
 export type SlideData = {
   id: number;
@@ -10,454 +21,470 @@ export type SlideData = {
 };
 
 export const slides: SlideData[] = [
-  // 1. TITLE & ACKNOWLEDGEMENTS (Slides 1-3)
+  // SECTION 1: INTRODUCTION & BACKGROUND (Slides 1-8)
   {
     id: 1,
-    section: "Title",
-    title: "AutoMITRE: AI-Powered Threat Modeling and SOC Automation",
+    section: "Introduction & Background",
+    title: "autoMITRE: AI-Powered Threat Intelligence and Mitigation System",
     content: [
-      "Revolutionizing Cybersecurity Defenses via Generative AI",
-      "Automated TTP Extraction & Interactive Visualization"
+      "A Unified Platform for Automated Threat Modeling and SOC Orchestration",
+      "Bridging the Gap Between Static Risk Design and Active Cyber Defense",
+      "Graduation Project Defense — Arab Academy for Science, Technology, and Maritime Transport"
     ],
     layout: "title"
   },
   {
     id: 2,
-    section: "Acknowledgements",
-    title: "Project Authors",
+    section: "Introduction & Background",
+    title: "Project Authors & Affiliation",
     content: [
-      "Moustafa Ahmed Elsayed Elshenawy",
-      "Abd El-Rahman Mohammed Abd-Eltawab",
-      "Hashem Abdo Hashem",
-      "Mira Amin",
-      "Jana Wael",
-      "Jomana Mohsen"
+      "Moustafa Ahmed Elsayed Elshenawy (Team Lead & Full-Stack Architect)",
+      "Abd El-Rahman Mohammed Abd-Eltawab (Security Analyst & Integrations)",
+      "Hashem Abdo Hashem (Backend & Systems Developer)",
+      "Mira Amin (AI Engineer & QA Lead)",
+      "Jana Wael (Data Engineer)",
+      "Jomana Mohsen (Frontend Developer)",
+      "College of Computing and Information Technology, AASTMT (Smart Village)"
     ],
     layout: "content"
   },
   {
     id: 3,
-    section: "Acknowledgements",
+    section: "Introduction & Background",
     title: "Academic Supervision",
     content: [
-      "Supervisor: Dr. Ahmed Maher",
-      "Arab Academy for Science, Technology, and Maritime Transport (AASTMT)",
-      "College of Computing and Information Technology"
+      "Supervisor: Dr. Ahmed Maher Moustafa",
+      "Academic Year: 2025-2026",
+      "Subject: Graduation Thesis Submitted in Partial Fulfillment of B.Sc. in Cybersecurity"
     ],
     layout: "content"
   },
-
-  // 2. INTRODUCTION (Slides 4-8)
   {
     id: 4,
-    section: "Introduction",
-    title: "The Static Modeling Gap",
+    section: "Introduction & Background",
+    title: "Core Motivation",
     content: [
-      "Traditional threat modeling relies on static, point-in-time assessments.",
-      "Security Operations Centers (SOCs) face highly dynamic, rapidly evolving environments.",
-      "The gap between static models and active defense leads to missed vulnerabilities."
+      "Evolving Threat Landscape: Rapid increase in sophisticated, multi-stage cyber attacks.",
+      "Operational Inefficiencies: Security teams spend hours manually compiling threat models and maps.",
+      "Tool Fragmentation: Lack of unified integration between design-time models and real-time logs."
     ],
     layout: "content"
   },
   {
     id: 5,
-    section: "Introduction",
-    title: "The Manual Parsing Burden",
+    section: "Introduction & Background",
+    title: "MITRE ATT&CK Framework Primer",
     content: [
-      "Cyber Threat Intelligence (CTI) is predominantly shared in unstructured text formats.",
-      "Analysts spend excessive hours manually parsing narratives, reports, and raw logs.",
-      "This process is highly error-prone and unscalable against massive data influxes."
+      "Standardized Taxonomy: A globally recognized knowledge base of adversary tactics and techniques.",
+      "Defensive Utility: Helps SOCs understand attacker behavior, trace threat paths, and verify coverage.",
+      "Mapping Challenge: Over 499 unique techniques and sub-techniques require manual, complex correlation."
     ],
     layout: "content"
   },
   {
     id: 6,
-    section: "Introduction",
-    title: "Project Objectives",
+    section: "Introduction & Background",
+    title: "The Bottleneck of Manual Mapping",
     content: [
-      "Automate the ingestion and parsing of heterogeneous threat data.",
-      "Eliminate manual mapping by directly linking intelligence to the MITRE ATT&CK framework.",
-      "Provide a highly visual, interactive dashboard for instantaneous threat comprehension."
+      "Unstructured Intelligence: Most CTI data and logs are shared in raw text or disjointed formats.",
+      "High Human Overhead: SOC analysts must manually translate threat descriptions to ATT&CK codes.",
+      "Delayed Response (MTTR): Manual mapping slows down detection and response workflows during active incidents."
     ],
     layout: "content"
   },
   {
     id: 7,
-    section: "Introduction",
-    title: "Scope of AutoMITRE",
+    section: "Introduction & Background",
+    title: "Specific Objectives of autoMITRE",
     content: [
-      "Targeted at automating SOC Level 1/2 analytical tasks.",
-      "Focuses exclusively on the MITRE ATT&CK Enterprise Matrix.",
-      "Handles multiple data modalities: Raw Text, PCAP, IriusRisk HTML, OSINT."
+      "Ingest Diverse Inputs: Support PCAP, raw text, XML, JSON, and file hashes automatically.",
+      "AI Semantic Parsing: Extract threat behaviors and intent directly from unstructured logs.",
+      "Automated Mapping & Mitigations: Link findings to ATT&CK, D3FEND, NIST 800-53, and OWASP ASVS.",
+      "SIEM Orchestration: Export standardized STIX 2.1 intelligence to Splunk and QRadar."
     ],
     layout: "content"
   },
   {
     id: 8,
-    section: "Introduction",
-    title: "The Vision",
+    section: "Introduction & Background",
+    title: "Scope and System Boundaries",
     content: [
-      "\"From raw unstructured data to actionable, mapped intelligence in seconds, not hours.\"",
-      "A proactive defense posture powered by local, privacy-preserving AI engines."
+      "SOC Optimization: Focuses on automating Level 1/Level 2 analyst correlation tasks.",
+      "Framework Boundaries: Targets the MITRE ATT&CK Enterprise Matrix and corresponding controls.",
+      "Resource Constraint: Designed to operate efficiently on local analyst workstations."
     ],
     layout: "content"
   },
 
-  // 3. PROBLEM STATEMENT (Slides 9-13)
+  // SECTION 2: LITERATURE REVIEW & GAP ANALYSIS (Slides 9-12)
   {
     id: 9,
-    section: "Problem Statement",
-    title: "SIEM Ingestion Limitations",
+    section: "Literature Review & Gap Analysis",
+    title: "Limitations of Current SOC Workflows",
     content: [
-      "Modern SIEMs (Splunk, Sentinel) excel at log aggregation but struggle with unstructured narrative ingestion.",
-      "Lack of semantic understanding leads to poorly categorized security alerts.",
-      "High volume of false positives due to rigid deterministic matching rules."
+      "Alert Fatigue: Analysts are overwhelmed by high volumes of disconnected alerts.",
+      "Isolated Data Silos: Threat models sit in static reports while SIEM systems run logs separately.",
+      "Reactive Defenses: Systems report previous events but fail to predict next-stage threat actions."
     ],
     layout: "split",
     widget: "siem_funnel"
   },
   {
     id: 10,
-    section: "Problem Statement",
-    title: "MITRE ATT&CK Complexity",
+    section: "Literature Review & Gap Analysis",
+    title: "Existing Automated Solutions & Gaps",
     content: [
-      "The framework contains hundreds of specific Techniques and Sub-Techniques.",
-      "Manual mapping requires deep domain expertise and constant framework memorization.",
-      "Contextual nuance is easily lost when mapping complex attack chains manually."
+      "Microsoft TMT & OWASP Threat Dragon: Generate static STRIDE reports but lack runtime analysis.",
+      "IriusRisk: Commercial tool with rule-based templates but lacks adaptive learning or NLP models.",
+      "VirusTotal: Detects signatures but does not map behavioral threat paths to security frameworks."
     ],
     layout: "content"
   },
   {
     id: 11,
-    section: "Problem Statement",
-    title: "API Rate Limits & Privacy",
+    section: "Literature Review & Gap Analysis",
+    title: "Gaps: Hallucinations and Privacy",
     content: [
-      "Relying purely on external APIs (e.g., OpenAI) introduces severe privacy risks.",
-      "Uploading sensitive network data (PCAP) or internal architectures is a compliance violation.",
-      "Strict API rate limits throttle continuous, real-time threat analysis pipelines."
-    ],
-    layout: "content"
-  },
-  {
-    id: 12,
-    section: "Problem Statement",
-    title: "Hardware Constraints",
-    content: [
-      "Running 70B parameter models locally requires multiple high-end GPUs.",
-      "Most SOC analyst workstations lack the memory (VRAM) to load massive models.",
-      "AutoMITRE employs quantization to fit local fallback models (like Phi-3.5) into standard hardware."
-    ],
-    layout: "split",
-    widget: "hardware"
-  },
-  {
-    id: 13,
-    section: "Problem Statement",
-    title: "The Threat Landscape Reality",
-    content: [
-      "Threat actors automate their attacks; defenders must automate their analysis.",
-      "Speed is the critical metric in SOC environments to reduce the Mean Time To Respond (MTTR)."
-    ],
-    layout: "content"
-  },
-
-  // 4. RELATED WORK (Slides 14-18)
-  {
-    id: 14,
-    section: "Related Work",
-    title: "Deterministic vs Generative",
-    content: [
-      "Existing tools utilize Regex and simple keyword matching (Deterministic).",
-      "Deterministic models fail spectacularly on obfuscated or newly phrased threats.",
-      "Generative AI provides the required semantic reasoning to map novel attacks."
-    ],
-    layout: "content"
-  },
-  {
-    id: 15,
-    section: "Related Work",
-    title: "The Pitfalls of AI Hallucinations",
-    content: [
-      "Generative LLMs are prone to hallucinating non-existent ATT&CK techniques.",
-      "A raw LLM might predict \"T9999: Memory Exfiltration\" which does not exist.",
-      "AutoMITRE's RAG architecture forces the LLM to ground its output in actual ChromaDB retrieved documents, drastically reducing false positives."
+      "Cloud LLM Hallucinations: Generic AI models often hallucinate non-existent ATT&CK IDs.",
+      "Data Privacy Violations: Uploading internal logs or PCAP files to public APIs exposes sensitive metadata.",
+      "autoMITRE Solution: Integrates local vector databases (RAG) and private offline LLM fallbacks."
     ],
     layout: "split",
     widget: "guardrail"
   },
   {
-    id: 16,
-    section: "Related Work",
-    title: "Need for Local NLP Models",
+    id: 12,
+    section: "Literature Review & Gap Analysis",
+    title: "How autoMITRE Addresses the Gaps",
     content: [
-      "Previous attempts utilized massive cloud infrastructure, incurring high costs.",
-      "AutoMITRE introduces highly quantized (Q4_K_M) local models via llama.cpp.",
-      "Provides military-grade privacy by keeping all inference local."
-    ],
-    layout: "content"
-  },
-  {
-    id: 17,
-    section: "Related Work",
-    title: "Current Threat Modeler Constraints",
-    content: [
-      "Tools like IriusRisk generate excellent PDF/HTML reports, but they are static.",
-      "No direct pipeline exists to map IriusRisk outputs dynamically to SIEM watchlists.",
-      "AutoMITRE acts as the bridge via its dual-schema HTML parser."
-    ],
-    layout: "content"
-  },
-  {
-    id: 18,
-    section: "Related Work",
-    title: "Advancements in Embeddings",
-    content: [
-      "SecureBERT: A domain-specific language model pre-trained on massive cybersecurity text.",
-      "Outperforms general-purpose embeddings (like text-embedding-ada-002) in isolating cyber semantics.",
-      "Serves as AutoMITRE's primary classification backbone."
+      "Unified Pipeline: Bridges static threat modeling with runtime SIEM log analysis.",
+      "Grounded Reasoning: Semantic RAG ensures all AI outputs are mapped to verified standards.",
+      "Privacy-First Architecture: Supports full offline execution on constrained hardware."
     ],
     layout: "content"
   },
 
-  // 5. PROPOSED SYSTEM ARCHITECTURE (Slides 19-26)
+  // SECTION 3: SYSTEM ARCHITECTURE & AI METHODOLOGY (Slides 13-22)
   {
-    id: 19,
-    section: "Architecture",
-    title: "High-Level System Design",
+    id: 13,
+    section: "System Architecture & AI Methodology",
+    title: "High-Level System Architecture",
     content: [
-      "A fully decoupled, modern architecture built for scalability and local execution."
+      "Decoupled Architecture: FastAPI backend paired with a responsive React.js frontend.",
+      "Modular Pipelines: Dedicated routers isolate data ingestion, AI reasoning, and SIEM exports.",
+      "Asynchronous Processing: Ensures high-throughput file analysis without blocking the UI."
     ],
-    widget: "architecture",
-    layout: "split"
+    layout: "split",
+    widget: "architecture"
   },
   {
-    id: 20,
-    section: "Architecture",
-    title: "FastAPI Backend",
+    id: 14,
+    section: "System Architecture & AI Methodology",
+    title: "Ingestion Layer & Intake Router",
     content: [
-      "High-performance Python backend serving concurrent analytical pipelines.",
-      "Handles heavy computational loads, model loading, and asynchronous processing.",
-      "Strict Pydantic schemas enforce type-safe data boundaries."
-    ],
-    layout: "content"
-  },
-  {
-    id: 21,
-    section: "Architecture",
-    title: "React Frontend",
-    content: [
-      "Vite-powered Single Page Application (SPA) offering a real-time dashboard.",
-      "Highly responsive interface built with Tailwind CSS and Framer Motion.",
-      "Visualizes data immediately as it streams from the analytical pipelines."
-    ],
-    layout: "content"
-  },
-  {
-    id: 22,
-    section: "Architecture",
-    title: "The Intake Router",
-    content: [
-      "Dynamic data ingestion layer capable of parsing multiple modalities:",
-      "- Raw Text & Narratives",
-      "- Complex IriusRisk HTML Layouts",
-      "- Network Traffic (PCAP)",
-      "- Open Source Intelligence (OSINT)"
+      "Multi-Format Ingestion: Accepts raw text, IriusRisk HTML, PCAP files, and MD5/SHA256 hashes.",
+      "Validation & Parsing: Normalizes heterogeneous streams into a unified internal JSON threat schema.",
+      "Sanitization Layer: Sanitizes inputs to prevent injection attacks (95% coverage)."
     ],
     layout: "split",
     widget: "intake"
   },
   {
-    id: 23,
-    section: "Architecture",
-    title: "Hybrid AI Engine",
+    id: 15,
+    section: "System Architecture & AI Methodology",
+    title: "Threat Preprocessing & Parsing",
     content: [
-      "AutoMITRE uses a tiered intelligence approach to maximize speed and privacy.",
-      "Primary: Groq Cloud API (Llama-3.1-8B / Llama-3.3-70B) for ultra-fast, zero-memory inference.",
-      "Fallback: Local hardware-accelerated LLM for offline privacy."
+      "Text Tokenization: Standardizes unstructured text input for model compatibility.",
+      "DOM Parsing: Extracts unmitigated threats and system components from IriusRisk HTML files using BeautifulSoup.",
+      "Network Flow Construction: Assembles individual packets into distinct communication streams."
+    ],
+    layout: "content"
+  },
+  {
+    id: 16,
+    section: "System Architecture & AI Methodology",
+    title: "Isolated Pipeline: Network Logs",
+    content: [
+      "PCAP Parsing: Leverages Scapy for packet header inspection and flow reconstruction.",
+      "Feature Extraction: Extracts source/destination IPs, communication protocols, and packet flags.",
+      "Behavioral Normalization: Identifies anomalies like beaconing or scanning for AI classification."
+    ],
+    layout: "content"
+  },
+  {
+    id: 17,
+    section: "System Architecture & AI Methodology",
+    title: "Isolated Pipeline: Endpoint & System Logs",
+    content: [
+      "Log Normalization: Parses structured CSV/JSON log formats from endpoint sources.",
+      "Entity Extraction: Identifies system processes, user sessions, file paths, and registry keys.",
+      "Correlation Layer: Prepares endpoint metadata for semantic alignment with known attack behaviors."
+    ],
+    layout: "content"
+  },
+  {
+    id: 18,
+    section: "System Architecture & AI Methodology",
+    title: "The AI Engine: SecureBERT Integration",
+    content: [
+      "Domain-Specific Classifier: Deploys Hugging Face SecureBERT pre-trained on cybersecurity corpora.",
+      "Semantic Vector Generation: Utilizes `all-mpnet-base-v2` to extract threat semantic contexts.",
+      "Superior Performance: Outperforms generic language models in classifying specific security incidents."
+    ],
+    layout: "content"
+  },
+  {
+    id: 19,
+    section: "System Architecture & AI Methodology",
+    title: "The AI Engine: RAG Mechanism",
+    content: [
+      "Local Vector Database: Integrates ChromaDB to store verified cybersecurity framework definitions.",
+      "Contextual Grounding: Queries ChromaDB to retrieve verified techniques and mitigation standards.",
+      "Hallucination Prevention: Anchors LLM output text directly to retrieved framework standards."
+    ],
+    layout: "content"
+  },
+  {
+    id: 20,
+    section: "System Architecture & AI Methodology",
+    title: "The AI Engine: Threat Reasoning",
+    content: [
+      "Multi-Tiered Inference: Primary reasoning executed via Groq API (`gpt-oss-20b`) for rapid analysis.",
+      "Offline Failover: Gracefully redirects to local CPU/GPU engines if network connections are lost.",
+      "Local Hardware Accel: Uses Apple Metal (MPS) to execute Phi-3.5-mini locally without memory crashes."
+    ],
+    layout: "content"
+  },
+  {
+    id: 21,
+    section: "System Architecture & AI Methodology",
+    title: "Semantic Framework Mapping Logic",
+    content: [
+      "Cosine Similarity Matching: Computes semantic distance between threat vectors and framework definitions.",
+      "Multi-Framework Correlation: Maps single events to ATT&CK, D3FEND, NIST 800-53, and OWASP ASVS.",
+      "Dynamic Knowledge Mapping: Resolves complex relationships across multiple defense databases."
+    ],
+    layout: "split",
+    widget: "simulator"
+  },
+  {
+    id: 22,
+    section: "System Architecture & AI Methodology",
+    title: "Threat Prediction & Forecasting",
+    content: [
+      "Adaptive Trend Analysis: Mines historical threat records stored in the SQLite database.",
+      "Attack Path Forecasting: Predicts next-stage attacker actions based on recognized patterns.",
+      "Proactive Defenses: Identifies vulnerable system components before exploitation occurs."
+    ],
+    layout: "content"
+  },
+
+  // SECTION 4: IMPLEMENTATION & ENGINEERING (Slides 23-27)
+  {
+    id: 23,
+    section: "Implementation & Engineering",
+    title: "Technology Stack",
+    content: [
+      "Backend Architecture: Python 3.13, FastAPI, Uvicorn, SQLAlchemy ORM.",
+      "AI/ML Components: Hugging Face Transformers, ChromaDB, llama_cpp, MLX.",
+      "Frontend Interface: React.js 18, Vite, Tailwind CSS, Lucide Icons, Recharts."
     ],
     layout: "content"
   },
   {
     id: 24,
-    section: "Architecture",
-    title: "Offline Fallback & Hardware Accel.",
+    section: "Implementation & Engineering",
+    title: "Relational Database Schema",
     content: [
-      "Utilizes Apple Metal (MPS) acceleration via llama_cpp.",
-      "Runs quantized Phi-3.5-mini entirely on local 8GB RAM.",
-      "Seamlessly takes over if the Groq API throttles or internet connectivity drops."
+      "SQLite Persistence: High performance and low overhead on analyst workstations (`automitre.db`).",
+      "Primary Relational Entities: `users`, `threat_records`, `threat_entities`, `threat_techniques`.",
+      "Mitigation & Prediction Logs: Relates `threat_mitigations` and `threat_predicted_steps` to parent threats."
     ],
     layout: "content"
   },
   {
     id: 25,
-    section: "Architecture",
-    title: "ChromaDB & RAG",
+    section: "Implementation & Engineering",
+    title: "Optimization on Apple Silicon (M1)",
     content: [
-      "Local vector database (ChromaDB) stores the entire MITRE ATT&CK framework.",
-      "Retrieval-Augmented Generation ensures LLM outputs are explicitly grounded in verified MITRE IDs.",
-      "Completely eliminates LLM hallucinations."
+      "Hardware Resource Constraints: Developed and optimized for an Apple M1 with 8GB Unified Memory.",
+      "Unified Memory Efficiency: Shared CPU/GPU memory space allows highly efficient local tensor loading.",
+      "Hardware-Accelerated Fallback: Metal Performance Shaders (MPS) speed up local model inference."
+    ],
+    layout: "split",
+    widget: "hardware"
+  },
+  {
+    id: 26,
+    section: "Implementation & Engineering",
+    title: "Local Quantization & Inference Tuning",
+    content: [
+      "Model Quantization: Employs 4-bit quantization (Q4_K_M) on Phi-3.5-mini-instruct.",
+      "Memory Footprint Reduction: Reduces model RAM requirements to fit within the local 8GB boundary.",
+      "Inference Acceleration: Employs `llama_cpp` compiler flags targeting Apple Metal APIs."
     ],
     layout: "content"
   },
   {
-    id: 26,
-    section: "Architecture",
-    title: "Threat Mapping Simulator",
+    id: 27,
+    section: "Implementation & Engineering",
+    title: "Major Engineering Challenges Resolved",
     content: [
-      "Interactive demonstration of the semantic mapping algorithm."
+      "HTML Pipeline Dual-Schema: Parsed both Flexbox Summary and traditional Technical threat modeling reports.",
+      "PCAP Memory Allocation: Implemented chunking and protocol-level stream parsing for files up to 100MB.",
+      "API Rate-Limit Handling: Programmed seamless, real-time fallbacks to local engines."
     ],
-    widget: "simulator",
-    layout: "split"
+    layout: "content"
   },
 
-  // 6. IMPLEMENTATION & RESULTS (Slides 27-34)
-  {
-    id: 27,
-    section: "Results",
-    title: "Inference Latency Comparison",
-    content: [
-      "Benchmarking the Hybrid Architecture: Cloud vs Local execution times."
-    ],
-    widget: "latency",
-    layout: "split"
-  },
+  // SECTION 5: RESULTS, TESTING & EVALUATION (Slides 28-35)
   {
     id: 28,
-    section: "Results",
-    title: "Latency Analysis",
+    section: "Results, Testing & Evaluation",
+    title: "Testing Framework & IEEE 829 Standards",
     content: [
-      "Groq Cloud API achieves near-instantaneous 0.8s inference via LPUs.",
-      "Local Metal Fallback maintains functional usability at 4.0s - 6.5s.",
-      "Demonstrates successful operation on highly constrained analyst hardware."
+      "Test Plan Structure: Built according to the IEEE 829 Standard for Software Test Documentation.",
+      "Coverage: Unit, integration, and quantitative AI evaluation scripts (`test_accuracy.py`).",
+      "Test Case Execution: Executed 37 formal test cases (TC-01 through TC-37) achieving 100% PASS rate."
     ],
     layout: "content"
   },
   {
     id: 29,
-    section: "Results",
-    title: "Accuracy Metrics",
+    section: "Results, Testing & Evaluation",
+    title: "AI Model Quantitative Accuracy",
     content: [
-      "Evaluating the deterministic success of the SecureBERT models."
+      "Rigorous Evaluation: Tested on a dataset of 20,736 cyber threat narratives across 499 ATT&CK techniques.",
+      "SecureBERT Accuracy: Achieved 96.81% overall Accuracy and a 96.65% F1-Score.",
+      "Severity Classification: F1-Score of 95.22% in predicting CVSS-like impact levels."
     ],
-    widget: "accuracy",
-    layout: "split"
+    layout: "split",
+    widget: "accuracy"
   },
   {
     id: 30,
-    section: "Results",
-    title: "Metric Breakdown",
+    section: "Results, Testing & Evaluation",
+    title: "System Performance & Latency Benchmarks",
     content: [
-      "SecureBERT F1-Score: 96.65% across distinct cyber datasets.",
-      "Threat Severity Scoring: 95.22% accuracy in predicting CVSS-like impact.",
-      "Framework Mapping: 98.41% success rate in exact MITRE ID correlation."
+      "Groq Cloud Engine: Latency of ~0.8 seconds utilizing LPU-powered cloud inference.",
+      "Local Fallback Engine: Latency of 4.0s - 6.5s running Phi-3.5-mini locally via Metal MPS.",
+      "Usability Baseline: Both modes execute well within the NFR1 performance targets."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "latency"
   },
   {
     id: 31,
-    section: "Results",
-    title: "Handling Massive PCAP Data",
+    section: "Results, Testing & Evaluation",
+    title: "System Resiliency & Failover Validation",
     content: [
-      "Tested against massive 150MB+ network packet capture files.",
-      "The system successfully chunks, streams, and prevents Out-of-Memory (OOM) kernel panics.",
-      "Efficient boundary parsing extracts only relevant HTTP/TCP streams."
+      "Failover Logic (TC-33): Artificially blocked cloud Groq API requests during runtime.",
+      "Automatic Transition: Exception handler successfully redirected queries to local Phi-3.5-mini.",
+      "Zero Downtime: Processed and mapped threat queues continuously with zero host memory crashes."
     ],
     layout: "content"
   },
   {
     id: 32,
-    section: "Results",
-    title: "API Timeout Triggers",
+    section: "Results, Testing & Evaluation",
+    title: "Case Study: Threat Mapping Process",
     content: [
-      "Robust exception handling proven during extensive end-to-end (E2E) testing.",
-      "When external APIs trigger a 429 Too Many Requests, the system pivots to the local model instantly.",
-      "Zero downtime during aggressive threat ingestion."
+      "Raw Ingested Text: \"adversary uses Mimikatz to dump credential material from LSASS.\"",
+      "SecureBERT Extraction: Identifies threat intent as credential dumping and LSASS access.",
+      "Framework Mapping: maps to MITRE ATT&CK technique T1003 (OS Credential Dumping).",
+      "Mitigation Output: Recommends D3FEND Credential Access protection and NIST AC-6 access controls."
     ],
     layout: "content"
   },
   {
     id: 33,
-    section: "Results",
-    title: "Interoperability (STIX 2.1)",
+    section: "Results, Testing & Evaluation",
+    title: "Interoperability: SIEM Integration",
     content: [
-      "All generated threat models are actively exported to the STIX 2.1 schema.",
-      "Successfully ingested into external Splunk instances during integration testing.",
-      "Ensures AutoMITRE is a viable middleware for enterprise SOCs."
+      "STIX 2.1 Export: Formats detected threat intelligence into structured JSON STIX objects.",
+      "SIEM Compatibility: Validated importing generated reports into Splunk and Wazuh.",
+      "Actionable Middleware: Seamlessly integrates design-time mapping with active SOC watchlists."
     ],
     layout: "split",
     widget: "stix_tree"
   },
   {
     id: 34,
-    section: "Results",
-    title: "Maintainability & Scale",
+    section: "Results, Testing & Evaluation",
+    title: "Local Load & Scalability Benchmarks",
     content: [
-      "Decoupled pipeline architecture allows \"hot-swapping\" models without breaking the core engine.",
-      "New data modalities can be added simply by subclassing the BasePipeline interface."
+      "Locust Load Testing: Evaluated backend REST API under simulated concurrent user traffic.",
+      "Target Load: Successfully handled 20 concurrent analysts making concurrent upload requests.",
+      "Degradation Rate: Latency increased linearly without causing server timeouts or connection drops."
+    ],
+    layout: "content"
+  },
+  {
+    id: 35,
+    section: "Results, Testing & Evaluation",
+    title: "Database & Vector Storage Footprint",
+    content: [
+      "SQLite Optimization: Indexes on threat records and mappings maintain query speeds under 10ms.",
+      "ChromaDB Footprint: Vector embeddings databases compress framework definitions to <50MB.",
+      "API Cache: OSINT feeds and VirusTotal lookups are cached to avoid API rate limiting."
     ],
     layout: "content"
   },
 
-  // 7. CONCLUSION & FUTURE WORK (Slides 35-40)
+  // SECTION 6: CONCLUSION & FUTURE WORK (Slides 36-40)
   {
-    id: 35,
-    section: "Conclusion",
-    title: "Total Threat Processing",
+    id: 36,
+    section: "Conclusion & Future Work",
+    title: "Academic & Practical Contributions",
     content: [
-      "AutoMITRE successfully processed over 20,736 distinct threat narratives during validation.",
-      "Proved the viability of hybrid cloud/local AI architectures in privacy-critical domains.",
-      "Bridged the gap between unstructured data and automated SOC ingestion."
+      "Unified Threat Pipeline: Bridges design threat modeling with real-time SOC incident detection.",
+      "Optimized Edge AI: Demonstrates that domain-specific NLP models can run locally on constrained hardware.",
+      "Hallucination Prevention: Validated the effectiveness of semantic RAG in grounding cybersecurity AI."
     ],
     layout: "content"
   },
   {
-    id: 36,
-    section: "Future Work",
-    title: "Advanced Clustering (DBSCAN)",
-    content: [
-      "Implementing DBSCAN algorithms to detect entirely novel, unseen attack campaigns based on embedding distances.",
-      "Moving beyond classification to active threat discovery."
-    ],
-    layout: "split",
-    widget: "dbscan"
-  },
-  {
     id: 37,
-    section: "Future Work",
-    title: "Expanding Frameworks",
+    section: "Conclusion & Future Work",
+    title: "Real-World Applications for Threat Hunters",
     content: [
-      "Integrating the Cloud Security Alliance (CSA) matrices.",
-      "Adding D3FEND framework mapping to provide automated mitigation strategies alongside threat detection."
+      "Incident Triage: Accelerates classification of incoming security events.",
+      "Vulnerability Mitigation: Instantly generates framework-aligned mitigation steps for dev teams.",
+      "Reduced Analyst Burnout: Automates manual translation, reducing alert fatigue in modern SOCs."
     ],
     layout: "content"
   },
   {
     id: 38,
-    section: "Future Work",
-    title: "Distributed Data Processing",
+    section: "Conclusion & Future Work",
+    title: "Unsupervised Anomaly Discovery",
     content: [
-      "Upgrading the PCAP parsing engine to leverage Apache Spark.",
-      "Enabling the processing of multi-gigabyte enterprise traffic captures in real-time."
+      "DBSCAN Clustering: Future feature leverages density-based spatial clustering of applications with noise.",
+      "Novel Threat Detection: Clusters new anomalous logs that do not match existing MITRE signatures.",
+      "Zero-Day Identification: Discovers emerging attack vectors before official security disclosures."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "dbscan"
   },
   {
     id: 39,
-    section: "Conclusion",
-    title: "Final Summary",
+    section: "Conclusion & Future Work",
+    title: "Future Enhancements & Extensions",
     content: [
-      "AutoMITRE represents a paradigm shift in threat intelligence.",
-      "By combining modern web stacks, optimized LLMs, and deterministic vector searches, we eliminate the manual mapping bottleneck."
+      "Framework Expansion: Add Cloud Security Alliance (CSA) and regional standards (GDPR, ISO 27001).",
+      "Local Model Tuning: Fine-tune local models to match cloud performance without memory overhead.",
+      "Distributed Stream Processing: Upgrade the PCAP engine with Apache Spark for real-time traffic analysis."
     ],
     layout: "content"
   },
   {
     id: 40,
-    section: "Q&A",
-    title: "Questions & Answers",
+    section: "Conclusion & Future Work",
+    title: "Conclusion & Q&A",
     content: [
-      "Thank you for your time and attention.",
-      "We are now open for any questions regarding the AutoMITRE architecture, results, or implementation details."
+      "autoMITRE: Successful B.Sc. Graduation Thesis in Cybersecurity.",
+      "Eliminating manual bottlenecks to secure modern digital ecosystems.",
+      "Thank you for your time. The floor is open for Questions & Answers."
     ],
     layout: "title"
   }
