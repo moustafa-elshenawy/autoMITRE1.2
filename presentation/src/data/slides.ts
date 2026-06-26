@@ -305,14 +305,14 @@ export const slides: SlideData[] = [
   {
     id: 25,
     section: "Implementation & Engineering",
-    title: "Optimization on Apple Silicon (M1)",
+    title: "FastAPI Asynchronous REST API Design",
     content: [
-      "Hardware Resource Constraints: Developed and optimized for an Apple M1 with 8GB Unified Memory.",
-      "Unified Memory Efficiency: Shared CPU/GPU memory space allows highly efficient local tensor loading.",
-      "Hardware-Accelerated Fallback: Metal Performance Shaders (MPS) speed up local model inference."
+      "Asynchronous Orchestration: Built with FastAPI and Uvicorn to support high-concurrency log parsing and AI reasoning.",
+      "Asynchronous Database Calls: Integrates SQLAlchemy and aiosqlite for non-blocking CRUD operations on automitre.db.",
+      "Pydantic Data Validation: Enforces strict, type-safe data schemas for threat ingestion endpoints and dashboard payloads.",
+      "Analyst-Facing Endpoints: Exposes specialized routes for file uploads, live telemetry status, and SIEM-compatible file generation."
     ],
-    layout: "split",
-    widget: "hardware"
+    layout: "content"
   },
   {
     id: 26,
@@ -323,7 +323,8 @@ export const slides: SlideData[] = [
       "Memory Footprint Reduction: Reduces model RAM requirements to fit within the local 8GB boundary.",
       "Inference Acceleration: Employs `llama_cpp` compiler flags targeting Apple Metal APIs."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "hardware"
   },
   {
     id: 27,
