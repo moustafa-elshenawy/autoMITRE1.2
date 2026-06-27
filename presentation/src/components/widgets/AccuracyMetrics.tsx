@@ -1,9 +1,10 @@
 import { RadialBarChart, RadialBar, Legend, Tooltip, ResponsiveContainer, PolarAngleAxis } from 'recharts';
 
 const data = [
-  { name: 'Severity Scoring', value: 95.22, fill: '#3b82f6' },
-  { name: 'F1-Score', value: 96.65, fill: '#22d3ee' },
-  { name: 'Framework Mapping', value: 98.41, fill: '#10b981' }
+  { name: 'Precision', value: 25.0, fill: '#a855f7' },
+  { name: 'F1-Score', value: 32.4, fill: '#22d3ee' },
+  { name: 'Recall', value: 46.0, fill: '#f59e0b' },
+  { name: 'Severity Scoring', value: 60.0, fill: '#3b82f6' }
 ];
 
 const CustomTooltip = ({ active, payload }: any) => {

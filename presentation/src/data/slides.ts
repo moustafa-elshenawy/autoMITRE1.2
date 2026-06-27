@@ -305,14 +305,15 @@ export const slides: SlideData[] = [
   {
     id: 25,
     section: "Implementation & Engineering",
-    title: "FastAPI Asynchronous REST API Design",
+    title: "Frontend & Interface Architecture",
     content: [
-      "Asynchronous Orchestration: Built with FastAPI and Uvicorn to support high-concurrency log parsing and AI reasoning.",
-      "Asynchronous Database Calls: Integrates SQLAlchemy and aiosqlite for non-blocking CRUD operations on automitre.db.",
-      "Pydantic Data Validation: Enforces strict, type-safe data schemas for threat ingestion endpoints and dashboard payloads.",
-      "Analyst-Facing Endpoints: Exposes specialized routes for file uploads, live telemetry status, and SIEM-compatible file generation."
+      "React Ecosystem: Built on React.js 18 and Vite for rapid, modular component development.",
+      "Bold Design System: Implements a custom aesthetic prioritizing high-contrast and dynamic glassmorphism.",
+      "Interactive Visualization: Uses Recharts and Framer Motion for metrics, animations, and complex cyber-art.",
+      "Responsive Layouts: Optimized for analyst workstations to provide real-time dashboard feedback without latency."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "none"
   },
   {
     id: 26,
@@ -356,8 +357,8 @@ export const slides: SlideData[] = [
     title: "AI Model Quantitative Accuracy",
     content: [
       "Rigorous Evaluation: Tested on a dataset of 20,736 cyber threat narratives across 499 ATT&CK techniques.",
-      "SecureBERT Accuracy: Achieved 96.81% overall Accuracy and a 96.65% F1-Score.",
-      "Severity Classification: F1-Score of 95.22% in predicting CVSS-like impact levels."
+      "Threat Mapping: Achieved 25.0% Precision, 46.0% Recall, and 32.4% F1-Score (Lenient Evaluation).",
+      "Severity Classification: Reached 60.0% Accuracy in predicting CVSS-like impact levels."
     ],
     layout: "split",
     widget: "accuracy"

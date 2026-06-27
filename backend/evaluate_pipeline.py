@@ -196,7 +196,7 @@ def lenient_pred_sets(true_sets, pred_sets):
             p_parent = p.split(".")[0]
             for t in trues:
                 t_parent = t.split(".")[0]
-                if p_parent == t_parent and p not in matched:
+                if p_parent == t_parent and t not in matched:
                     matched.append(t)   # treat sub-technique as parent hit
         lenienced.append(matched)
     return lenienced
