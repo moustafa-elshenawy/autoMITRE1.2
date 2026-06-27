@@ -11,13 +11,15 @@ import DataIntakeHub from './widgets/DataIntakeHub';
 import DynamicCyberArt from './widgets/DynamicCyberArt';
 import SIEMFunnel from './widgets/SIEMFunnel';
 import STIXTree from './widgets/STIXTree';
+import BespokeWidgetFactory from './widgets/BespokeWidgets';
 import { Shield } from 'lucide-react';
 
 export default function SlideWrapper({ slide }: { slide: SlideData }) {
   const isTitle = slide.layout === 'title';
-  const isSplit = !isTitle; // Force split layout on all content slides
+  const isSplit = slide.layout === 'split';
 
   const renderWidget = () => {
+    if (!slide.widget) return <DynamicCyberArt seed={slide.id} />;
     switch(slide.widget) {
       case 'latency': return <LatencyChart />;
       case 'accuracy': return <AccuracyMetrics />;
@@ -29,7 +31,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'intake': return <DataIntakeHub />;
       case 'siem_funnel': return <SIEMFunnel />;
       case 'stix_tree': return <STIXTree />;
-      default: return <DynamicCyberArt seed={slide.id} />;
+      default: return <BespokeWidgetFactory id={slide.widget} />;
     }
   };
 

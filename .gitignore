@@ -20,3 +20,4 @@ node_modules/
 # Build output
 dist/
 
+backend/models/secbert_tram/model.safetensors

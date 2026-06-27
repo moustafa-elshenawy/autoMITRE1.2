@@ -67,6 +67,20 @@ def _generate_stix_course_of_action(mitigation: Dict[str, Any]) -> Dict[str, Any
     }
 
 
+def _generate_stix_relationship(source_ref: str, target_ref: str, relationship_type: str) -> Dict[str, Any]:
+    """Generate a STIX 2.1 Relationship object."""
+    return {
+        "type": "relationship",
+        "spec_version": "2.1",
+        "id": f"relationship--{str(uuid.uuid4())}",
+        "created": datetime.now(timezone.utc).isoformat(),
+        "modified": datetime.now(timezone.utc).isoformat(),
+        "relationship_type": relationship_type,
+        "source_ref": source_ref,
+        "target_ref": target_ref
+    }
+
+
 def export_to_stix(threats: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Export threats to STIX 2.1 bundle."""
     objects = [
@@ -87,16 +101,27 @@ def export_to_stix(threats: List[Dict[str, Any]]) -> Dict[str, Any]:
         objects.append(indicator)
         
         # Add attack patterns for each technique
+        ap_ids = []
         for technique in threat.get('attack_techniques', []):
             if isinstance(technique, dict):
                 ap = _generate_stix_attack_pattern(technique)
                 objects.append(ap)
+                ap_ids.append(ap["id"])
+                
+                # Link indicator to attack pattern
+                rel_indicates = _generate_stix_relationship(indicator["id"], ap["id"], "indicates")
+                objects.append(rel_indicates)
         
         # Add courses of action for mitigations
         for mitigation in threat.get('mitigations', [])[:3]:
             if isinstance(mitigation, dict):
                 coa = _generate_stix_course_of_action(mitigation)
                 objects.append(coa)
+                
+                # Link course of action to attack patterns
+                for ap_id in ap_ids:
+                    rel_mitigates = _generate_stix_relationship(coa["id"], ap_id, "mitigates")
+                    objects.append(rel_mitigates)
     
     return {
         "type": "bundle",

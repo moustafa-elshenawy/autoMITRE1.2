@@ -67,18 +67,23 @@ export default function DataIntakeHub() {
               {/* Laser Beam connecting to center */}
               <AnimatePresence>
                 {isActive && (
-                  <motion.div
-                    initial={{ opacity: 0, scaleX: 0 }}
-                    animate={{ opacity: 1, scaleX: 1 }}
-                    exit={{ opacity: 0, scaleX: 0 }}
-                    transition={{ duration: 0.2 }}
+                  <div
+                    className="absolute top-1/2 left-1/2 h-1 -mt-0.5 z-10"
                     style={{
                       transformOrigin: '0 50%',
                       transform: `rotate(${Math.atan2(-y, -x)}rad)`,
                       width: `${radius - 50}px`
                     }}
-                    className={`absolute top-1/2 left-1/2 h-1 -mt-0.5 rounded-full z-10 ${source.beam} shadow-[0_0_10px_currentColor]`}
-                  />
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      exit={{ opacity: 0, scaleX: 0 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ transformOrigin: '0 50%' }}
+                      className={`w-full h-full rounded-full ${source.beam} shadow-[0_0_10px_currentColor]`}
+                    />
+                  </div>
                 )}
               </AnimatePresence>
             </div>

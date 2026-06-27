@@ -9,6 +9,30 @@ export type SlideWidget =
   | 'intake' 
   | 'siem_funnel' 
   | 'stix_tree' 
+  | 'agenda'
+  | 'threat_landscape'
+  | 'alert_fatigue'
+  | 'tool_fragmentation'
+  | 'research_problem'
+  | 'objectives'
+  | 'mapping_integration'
+  | 'state_of_art'
+  | 'comparison_matrix'
+  | 'generic_ai'
+  | 'contribution'
+  | 'cyber_frameworks'
+  | 'compliance'
+  | 'ai_ml_stack'
+  | 'tech_stack'
+  | 'auto_mitigation'
+  | 'predictive_forecast'
+  | 'dashboard_features'
+  | 'live_export'
+  | 'validation_results'
+  | 'key_findings'
+  | 'limitations'
+  | 'real_world_value'
+  | 'conclusion'
   | 'none';
 
 export type SlideData = {
@@ -46,7 +70,8 @@ export const slides: SlideData[] = [
       "Jomana Mohsen (Frontend Developer)",
       "College of Computing and Information Technology, AASTMT (Smart Village)"
     ],
-    layout: "content"
+    layout: "split",
+    widget: "agenda"
   },
   {
     id: 3,
@@ -57,7 +82,7 @@ export const slides: SlideData[] = [
       "Academic Year: 2025-2026",
       "Subject: Graduation Thesis Submitted in Partial Fulfillment of B.Sc. in Cybersecurity"
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 4,
@@ -68,7 +93,8 @@ export const slides: SlideData[] = [
       "Operational Inefficiencies: Security teams spend hours manually compiling threat models and maps.",
       "Tool Fragmentation: Lack of unified integration between design-time models and real-time logs."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "threat_landscape"
   },
   {
     id: 5,
@@ -79,7 +105,7 @@ export const slides: SlideData[] = [
       "Defensive Utility: Helps SOCs understand attacker behavior, trace threat paths, and verify coverage.",
       "Mapping Challenge: Over 499 unique techniques and sub-techniques require manual, complex correlation."
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 6,
@@ -90,7 +116,8 @@ export const slides: SlideData[] = [
       "High Human Overhead: SOC analysts must manually translate threat descriptions to ATT&CK codes.",
       "Delayed Response (MTTR): Manual mapping slows down detection and response workflows during active incidents."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "alert_fatigue"
   },
   {
     id: 7,
@@ -102,7 +129,8 @@ export const slides: SlideData[] = [
       "Automated Mapping & Mitigations: Link findings to ATT&CK, D3FEND, NIST 800-53, and OWASP ASVS.",
       "SIEM Orchestration: Export standardized STIX 2.1 intelligence to Splunk and QRadar."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "research_problem"
   },
   {
     id: 8,
@@ -113,7 +141,8 @@ export const slides: SlideData[] = [
       "Framework Boundaries: Targets the MITRE ATT&CK Enterprise Matrix and corresponding controls.",
       "Resource Constraint: Designed to operate efficiently on local analyst workstations."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "objectives"
   },
 
   // SECTION 2: LITERATURE REVIEW & GAP ANALYSIS (Slides 9-12)
@@ -127,7 +156,7 @@ export const slides: SlideData[] = [
       "Reactive Defenses: Systems report previous events but fail to predict next-stage threat actions."
     ],
     layout: "split",
-    widget: "siem_funnel"
+    widget: "tool_fragmentation"
   },
   {
     id: 10,
@@ -138,7 +167,8 @@ export const slides: SlideData[] = [
       "IriusRisk: Commercial tool with rule-based templates but lacks adaptive learning or NLP models.",
       "VirusTotal: Detects signatures but does not map behavioral threat paths to security frameworks."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "mapping_integration"
   },
   {
     id: 11,
@@ -150,7 +180,7 @@ export const slides: SlideData[] = [
       "autoMITRE Solution: Integrates local vector databases (RAG) and private offline LLM fallbacks."
     ],
     layout: "split",
-    widget: "guardrail"
+    widget: "state_of_art"
   },
   {
     id: 12,
@@ -161,7 +191,8 @@ export const slides: SlideData[] = [
       "Grounded Reasoning: Semantic RAG ensures all AI outputs are mapped to verified standards.",
       "Privacy-First Architecture: Supports full offline execution on constrained hardware."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "comparison_matrix"
   },
 
   // SECTION 3: SYSTEM ARCHITECTURE & AI METHODOLOGY (Slides 13-22)
@@ -175,7 +206,7 @@ export const slides: SlideData[] = [
       "Asynchronous Processing: Ensures high-throughput file analysis without blocking the UI."
     ],
     layout: "split",
-    widget: "architecture"
+    widget: "generic_ai"
   },
   {
     id: 14,
@@ -187,7 +218,7 @@ export const slides: SlideData[] = [
       "Sanitization Layer: Sanitizes inputs to prevent injection attacks (95% coverage)."
     ],
     layout: "split",
-    widget: "intake"
+    widget: "contribution"
   },
   {
     id: 15,
@@ -198,7 +229,8 @@ export const slides: SlideData[] = [
       "DOM Parsing: Extracts unmitigated threats and system components from IriusRisk HTML files using BeautifulSoup.",
       "Network Flow Construction: Assembles individual packets into distinct communication streams."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "cyber_frameworks"
   },
   {
     id: 16,
@@ -209,7 +241,8 @@ export const slides: SlideData[] = [
       "Feature Extraction: Extracts source/destination IPs, communication protocols, and packet flags.",
       "Behavioral Normalization: Identifies anomalies like beaconing or scanning for AI classification."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "compliance"
   },
   {
     id: 17,
@@ -220,7 +253,8 @@ export const slides: SlideData[] = [
       "Entity Extraction: Identifies system processes, user sessions, file paths, and registry keys.",
       "Correlation Layer: Prepares endpoint metadata for semantic alignment with known attack behaviors."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "ai_ml_stack"
   },
   {
     id: 18,
@@ -231,7 +265,8 @@ export const slides: SlideData[] = [
       "Semantic Vector Generation: Utilizes `all-mpnet-base-v2` to extract threat semantic contexts.",
       "Superior Performance: Outperforms generic language models in classifying specific security incidents."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "auto_mitigation"
   },
   {
     id: 19,
@@ -242,7 +277,8 @@ export const slides: SlideData[] = [
       "Contextual Grounding: Queries ChromaDB to retrieve verified techniques and mitigation standards.",
       "Hallucination Prevention: Anchors LLM output text directly to retrieved framework standards."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "predictive_forecast"
   },
   {
     id: 20,
@@ -253,7 +289,8 @@ export const slides: SlideData[] = [
       "Offline Failover: Gracefully redirects to local CPU/GPU engines if network connections are lost.",
       "Local Hardware Accel: Uses Apple Metal (MPS) to execute Phi-3.5-mini locally without memory crashes."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "dashboard_features"
   },
   {
     id: 21,
@@ -265,7 +302,7 @@ export const slides: SlideData[] = [
       "Dynamic Knowledge Mapping: Resolves complex relationships across multiple defense databases."
     ],
     layout: "split",
-    widget: "simulator"
+    widget: "live_export"
   },
   {
     id: 22,
@@ -276,7 +313,8 @@ export const slides: SlideData[] = [
       "Attack Path Forecasting: Predicts next-stage attacker actions based on recognized patterns.",
       "Proactive Defenses: Identifies vulnerable system components before exploitation occurs."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "validation_results"
   },
 
   // SECTION 4: IMPLEMENTATION & ENGINEERING (Slides 23-27)
@@ -289,7 +327,8 @@ export const slides: SlideData[] = [
       "AI/ML Components: Hugging Face Transformers, ChromaDB, llama_cpp, MLX.",
       "Frontend Interface: React.js 18, Vite, Tailwind CSS, Lucide Icons, Recharts."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "tech_stack"
   },
   {
     id: 24,
@@ -300,7 +339,8 @@ export const slides: SlideData[] = [
       "Primary Relational Entities: `users`, `threat_records`, `threat_entities`, `threat_techniques`.",
       "Mitigation & Prediction Logs: Relates `threat_mitigations` and `threat_predicted_steps` to parent threats."
     ],
-    layout: "content"
+    layout: "split",
+    widget: "key_findings"
   },
   {
     id: 25,
@@ -313,7 +353,7 @@ export const slides: SlideData[] = [
       "Responsive Layouts: Optimized for analyst workstations to provide real-time dashboard feedback without latency."
     ],
     layout: "split",
-    widget: "none"
+    widget: "limitations"
   },
   {
     id: 26,
@@ -325,7 +365,7 @@ export const slides: SlideData[] = [
       "Inference Acceleration: Employs `llama_cpp` compiler flags targeting Apple Metal APIs."
     ],
     layout: "split",
-    widget: "hardware"
+    widget: "real_world_value"
   },
   {
     id: 27,
@@ -336,7 +376,7 @@ export const slides: SlideData[] = [
       "PCAP Memory Allocation: Implemented chunking and protocol-level stream parsing for files up to 100MB.",
       "API Rate-Limit Handling: Programmed seamless, real-time fallbacks to local engines."
     ],
-    layout: "content"
+    layout: "split"
   },
 
   // SECTION 5: RESULTS, TESTING & EVALUATION (Slides 28-35)
@@ -349,7 +389,7 @@ export const slides: SlideData[] = [
       "Coverage: Unit, integration, and quantitative AI evaluation scripts (`test_accuracy.py`).",
       "Test Case Execution: Executed 37 formal test cases (TC-01 through TC-37) achieving 100% PASS rate."
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 29,
@@ -384,7 +424,7 @@ export const slides: SlideData[] = [
       "Automatic Transition: Exception handler successfully redirected queries to local Phi-3.5-mini.",
       "Zero Downtime: Processed and mapped threat queues continuously with zero host memory crashes."
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 32,
@@ -396,7 +436,7 @@ export const slides: SlideData[] = [
       "Framework Mapping: maps to MITRE ATT&CK technique T1003 (OS Credential Dumping).",
       "Mitigation Output: Recommends D3FEND Credential Access protection and NIST AC-6 access controls."
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 33,
@@ -419,7 +459,7 @@ export const slides: SlideData[] = [
       "Target Load: Successfully handled 20 concurrent analysts making concurrent upload requests.",
       "Degradation Rate: Latency increased linearly without causing server timeouts or connection drops."
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 35,
@@ -430,32 +470,10 @@ export const slides: SlideData[] = [
       "ChromaDB Footprint: Vector embeddings databases compress framework definitions to <50MB.",
       "API Cache: OSINT feeds and VirusTotal lookups are cached to avoid API rate limiting."
     ],
-    layout: "content"
+    layout: "split"
   },
 
   // SECTION 6: CONCLUSION & FUTURE WORK (Slides 36-40)
-  {
-    id: 36,
-    section: "Conclusion & Future Work",
-    title: "Academic & Practical Contributions",
-    content: [
-      "Unified Threat Pipeline: Bridges design threat modeling with real-time SOC incident detection.",
-      "Optimized Edge AI: Demonstrates that domain-specific NLP models can run locally on constrained hardware.",
-      "Hallucination Prevention: Validated the effectiveness of semantic RAG in grounding cybersecurity AI."
-    ],
-    layout: "content"
-  },
-  {
-    id: 37,
-    section: "Conclusion & Future Work",
-    title: "Real-World Applications for Threat Hunters",
-    content: [
-      "Incident Triage: Accelerates classification of incoming security events.",
-      "Vulnerability Mitigation: Instantly generates framework-aligned mitigation steps for dev teams.",
-      "Reduced Analyst Burnout: Automates manual translation, reducing alert fatigue in modern SOCs."
-    ],
-    layout: "content"
-  },
   {
     id: 38,
     section: "Conclusion & Future Work",
@@ -477,7 +495,7 @@ export const slides: SlideData[] = [
       "Local Model Tuning: Fine-tune local models to match cloud performance without memory overhead.",
       "Distributed Stream Processing: Upgrade the PCAP engine with Apache Spark for real-time traffic analysis."
     ],
-    layout: "content"
+    layout: "split"
   },
   {
     id: 40,
@@ -488,6 +506,7 @@ export const slides: SlideData[] = [
       "Eliminating manual bottlenecks to secure modern digital ecosystems.",
       "Thank you for your time. The floor is open for Questions & Answers."
     ],
-    layout: "title"
+    layout: "title",
+    widget: "conclusion"
   }
 ];
