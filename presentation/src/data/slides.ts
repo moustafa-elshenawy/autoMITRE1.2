@@ -538,7 +538,7 @@ export const slides: SlideData[] = [
     content: [
       'Phase 1 (Q3 2026): Fine-tune local models to match cloud accuracy — eliminate offline performance gap.',
       'Phase 2 (Q4 2026): Add Cloud Security Alliance (CSA), ISO 27001, GDPR framework mappings.',
-      'Phase 3–4 (2027): Apache Spark real-time PCAP streaming + full enterprise SaaS deployment.',
+      'Phase 3–4 (2027): Enterprise SecLM/SecPaLM Integration to achieve 95%+ mapping accuracy.',
     ],
     layout: 'split',
     widget: 'future_roadmap',

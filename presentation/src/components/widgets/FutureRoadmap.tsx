@@ -98,7 +98,7 @@ export default function FutureRoadmap() {
         transition={{ delay: 1.8 }}
         className="text-[11px] text-slate-500 font-mono text-center mt-4"
       >
-        DBSCAN zero-day clustering • Federated SIEM integrations • Production hardening
+        DBSCAN zero-day clustering • Enterprise SecLM Integration (SecPaLM) • Production hardening
       </motion.p>
     </div>
   );
