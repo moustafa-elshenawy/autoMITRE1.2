@@ -11,47 +11,49 @@ const events = [
 
 export default function FailoverTest() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-2">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Resiliency Test TC-33 — Failover Validation</p>
-      <div className="w-full relative">
+    <div className="w-full h-full flex flex-col items-center justify-center p-4 gap-4">
+      <p className="text-xs font-mono text-slate-400 uppercase tracking-widest">Resiliency Test TC-33 — Failover Validation</p>
+
+      <div className="w-full relative max-w-4xl mt-2">
         {/* Timeline bar */}
-        <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-800" />
-        <div className="flex flex-col gap-2 pl-10">
+        <div className="absolute left-6 top-1 bottom-1 w-0.5 bg-slate-800" />
+        <div className="flex flex-col gap-3 pl-12">
           {events.map((event, i) => (
             <motion.div
               key={event.t}
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.3, duration: 0.4 }}
-              className="relative flex items-start gap-2"
+              className="relative flex items-center gap-3"
             >
               {/* Dot */}
               <motion.div
-                animate={event.type === 'failure' ? { scale: [1, 1.5, 1] } : {}}
+                animate={event.type === 'failure' ? { scale: [1, 1.6, 1] } : {}}
                 transition={{ duration: 0.5, repeat: event.type === 'failure' ? 3 : 0, delay: i * 0.3 }}
-                className="absolute -left-[29px] top-1 w-3 h-3 rounded-full border-2"
+                className="absolute -left-[32px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-[2.5px]"
                 style={{
                   backgroundColor: `${event.color}30`,
                   borderColor: event.color,
-                  boxShadow: `0 0 6px ${event.color}60`,
+                  boxShadow: `0 0 10px ${event.color}60`,
                 }}
               />
               <div className="flex-1 pb-1">
-                <p className="text-[9px] font-bold font-mono" style={{ color: event.color }}>{event.label}</p>
-                <p className="text-[7px] text-slate-400 font-mono">{event.desc}</p>
+                <p className="text-sm font-bold font-mono" style={{ color: event.color }}>{event.label}</p>
+                <p className="text-xs text-slate-400 font-mono mt-0.5">{event.desc}</p>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2 }}
-        className="flex items-center gap-2 bg-emerald-950/30 border border-emerald-700/40 rounded-xl px-3 py-1.5 w-full justify-center"
+        className="flex items-center gap-3 bg-emerald-950/30 border border-emerald-700/40 rounded-xl px-5 py-3 w-full max-w-4xl justify-center mt-3"
       >
-        <span className="text-emerald-400 text-sm">✓</span>
-        <p className="text-[9px] font-bold font-mono text-emerald-300">
+        <span className="text-emerald-400 text-2xl font-bold">✓</span>
+        <p className="text-sm font-bold font-mono text-emerald-300">
           Result: PASS — Zero downtime • Zero memory crashes
         </p>
       </motion.div>

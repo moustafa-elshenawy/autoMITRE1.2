@@ -9,25 +9,26 @@ const gauges = [
 
 export default function LimitationsGauge() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-3">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Honest Limitations Assessment</p>
-      <div className="w-full flex flex-col gap-3">
+    <div className="w-full h-full flex flex-col items-center justify-center p-4 gap-5">
+      <p className="text-xs font-mono text-slate-400 uppercase tracking-widest">Honest Limitations Assessment</p>
+
+      <div className="w-full flex flex-col gap-5 max-w-4xl mt-3">
         {gauges.map((g, i) => (
           <motion.div
             key={g.label}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: i * 0.2 }}
-            className="flex flex-col gap-1"
+            className="flex flex-col gap-2"
           >
-            <div className="flex justify-between items-center">
-              <span className="text-[9px] font-mono font-bold text-slate-300">{g.label}</span>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[9px] font-bold font-mono" style={{ color: g.color }}>{g.value}%</span>
-                <span className="text-[7px] text-slate-500 font-mono">({g.note})</span>
+            <div className="flex justify-between items-end px-1">
+              <span className="text-sm font-mono font-bold text-slate-200">{g.label}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold font-mono" style={{ color: g.color }}>{g.value}%</span>
+                <span className="text-[11px] text-slate-400 font-mono">({g.note})</span>
               </div>
             </div>
-            <div className="h-3 rounded-full bg-slate-800 overflow-hidden">
+            <div className="h-4 rounded-full bg-slate-800 overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${g.value}%` }}
@@ -45,13 +46,15 @@ export default function LimitationsGauge() {
           </motion.div>
         ))}
       </div>
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="text-[8px] text-slate-500 font-mono text-center"
+        className="text-[11px] text-slate-500 font-mono text-center mt-6 leading-relaxed"
       >
-        Limitations are documented honestly per academic project scope — future work addresses each
+        Limitations are documented honestly per academic project scope<br />
+        Future work addresses each constraint
       </motion.div>
     </div>
   );
