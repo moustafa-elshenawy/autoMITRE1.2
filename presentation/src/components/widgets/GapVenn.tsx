@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 
 export default function GapVenn() {
   const circles = [
-    { label: 'AI / NLP\nEngines', color: '#0ea5e9', cx: 38, cy: 42 },
-    { label: 'Multi-Framework\nMapping', color: '#8b5cf6', cx: 62, cy: 42 },
-    { label: 'Multi-Format\nIngestion', color: '#10b981', cx: 50, cy: 62 },
+    { label: 'AI / NLP\nEngines', color: '#0ea5e9', cx: 38, cy: 42, lx: 26, ly: 28, anchor: 'end' },
+    { label: 'Multi-Framework\nMapping', color: '#8b5cf6', cx: 62, cy: 42, lx: 74, ly: 28, anchor: 'start' },
+    { label: 'Multi-Format\nIngestion', color: '#10b981', cx: 50, cy: 62, lx: 50, ly: 84, anchor: 'middle' },
   ];
 
   return (
@@ -58,13 +58,11 @@ export default function GapVenn() {
 
           {/* Labels */}
           {circles.map((c, i) => {
-            const lx = c.cx + (c.cx < 50 ? -12 : c.cx > 50 ? 12 : 0);
-            const ly = c.cy + (c.cy > 55 ? 12 : -12);
             return (
               <motion.text
                 key={c.label + 'label'}
-                x={lx} y={ly}
-                textAnchor="middle"
+                x={c.lx} y={c.ly}
+                textAnchor={c.anchor}
                 fontSize="3.5"
                 fill={c.color}
                 fontFamily="monospace"
@@ -73,7 +71,7 @@ export default function GapVenn() {
                 transition={{ delay: i * 0.4 + 0.5 }}
               >
                 {c.label.split('\n').map((line, li) => (
-                  <tspan key={li} x={lx} dy={li === 0 ? 0 : 4.5}>{line}</tspan>
+                  <tspan key={li} x={c.lx} dy={li === 0 ? 0 : 4.5}>{line}</tspan>
                 ))}
               </motion.text>
             );
