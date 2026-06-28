@@ -42,6 +42,7 @@ import APIRoutes from './widgets/APIRoutes';
 import TechStackWheel from './widgets/TechStackWheel';
 import TestMatrix from './widgets/TestMatrix';
 import MappingAccuracy from './widgets/MappingAccuracy';
+import AccuracyContext from './widgets/AccuracyContext';
 import CaseStudyWalkthrough from './widgets/CaseStudyWalkthrough';
 import FailoverTest from './widgets/FailoverTest';
 import LoadTest from './widgets/LoadTest';
@@ -95,6 +96,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'tech_stack_wheel':       return <TechStackWheel />;
       case 'test_matrix':            return <TestMatrix />;
       case 'mapping_accuracy':       return <MappingAccuracy />;
+      case 'accuracy_context':       return <AccuracyContext />;
       case 'case_study_walkthrough': return <CaseStudyWalkthrough />;
       case 'failover_test':          return <FailoverTest />;
       case 'load_test':              return <LoadTest />;

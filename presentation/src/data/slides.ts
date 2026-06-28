@@ -37,6 +37,7 @@ export type SlideWidget =
   | 'test_matrix'
   | 'mapping_accuracy'
   | 'case_study_walkthrough'
+  | 'accuracy_context'
   | 'failover_test'
   | 'load_test'
   | 'fr_validation'
@@ -432,7 +433,19 @@ export const slides: SlideData[] = [
     widget: 'mapping_accuracy',
   },
   {
+      {
     id: 30,
+    section: 'Results & Testing',
+    title: 'Contextualizing 84% Accuracy',
+    content: [
+      'Sub-technique Ambiguity: 499 techniques have massive semantic overlap (e.g., T1003.001 vs T1003.004).',
+      'Probabilistic Nature: Zero-shot semantic search retrieves based on generic embeddings, lacking domain nuance.',
+      'Isolated Context: Logs are analyzed in a vacuum. Analysts use surrounding timeline context to map correctly.',
+    ],
+    layout: 'split',
+    widget: 'accuracy_context',
+  },
+id: 31,
     section: 'Results & Testing',
     title: 'Case Study — Mimikatz Credential Dumping',
     content: [
@@ -444,7 +457,7 @@ export const slides: SlideData[] = [
     widget: 'case_study_walkthrough',
   },
   {
-    id: 31,
+    id: 32,
     section: 'Results & Testing',
     title: 'SIEM Integration — STIX 2.1 Export Validation',
     content: [
@@ -456,7 +469,7 @@ export const slides: SlideData[] = [
     widget: 'stix_tree',
   },
   {
-    id: 32,
+    id: 33,
     section: 'Results & Testing',
     title: 'Hallucination Prevention — RAG Validation',
     content: [
@@ -468,7 +481,7 @@ export const slides: SlideData[] = [
     widget: 'guardrail',
   },
   {
-    id: 33,
+    id: 34,
     section: 'Results & Testing',
     title: 'System Resiliency — Failover Test (TC-33)',
     content: [
@@ -480,7 +493,7 @@ export const slides: SlideData[] = [
     widget: 'failover_test',
   },
   {
-    id: 34,
+    id: 35,
     section: 'Results & Testing',
     title: 'Load Testing — 20 Concurrent Analysts (Locust)',
     content: [
@@ -492,7 +505,7 @@ export const slides: SlideData[] = [
     widget: 'load_test',
   },
   {
-    id: 35,
+    id: 36,
     section: 'Results & Testing',
     title: 'Functional Requirements Validation — Complete Coverage',
     content: [
@@ -508,7 +521,7 @@ export const slides: SlideData[] = [
   // SECTION 6 — CONCLUSION & FUTURE WORK (Slides 36–39)
   // ────────────────────────────────────────────────────────────
   {
-    id: 36,
+    id: 37,
     section: 'Conclusion & Future Work',
     title: 'Honest Limitations',
     content: [
@@ -520,7 +533,7 @@ export const slides: SlideData[] = [
     widget: 'limitations_gauge',
   },
   {
-    id: 37,
+    id: 38,
     section: 'Conclusion & Future Work',
     title: 'Future Work — DBSCAN Zero-Day Anomaly Detection',
     content: [
@@ -532,7 +545,7 @@ export const slides: SlideData[] = [
     widget: 'dbscan',
   },
   {
-    id: 38,
+    id: 39,
     section: 'Conclusion & Future Work',
     title: 'Future Enhancement Roadmap',
     content: [
@@ -544,7 +557,7 @@ export const slides: SlideData[] = [
     widget: 'future_roadmap',
   },
   {
-    id: 39,
+    id: 40,
     section: 'Conclusion & Future Work',
     title: 'Conclusion & Thank You',
     content: [
