@@ -121,7 +121,7 @@ export const slides: SlideData[] = [
     section: 'The Problem & Gap',
     title: 'Fragmented SOC Tooling — The Root Cause',
     content: [
-      'Microsoft TMT, OWASP Dragon, IriusRisk, VirusTotal, and Splunk all operate in isolation.',
+      'Microsoft TMT, OWASP Dragon, Network Logs, VirusTotal, and Splunk all operate in isolation.',
       'No tool bridges design-time threat models with runtime log analysis.',
       'Analysts manually correlate findings across 5+ disconnected platforms every incident.',
     ],

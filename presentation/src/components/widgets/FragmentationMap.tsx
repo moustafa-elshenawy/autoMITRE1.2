@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { Shield, Layers, GitBranch, Eye, AlertTriangle, FileText } from 'lucide-react';
+import { Activity, Layers, GitBranch, Eye, AlertTriangle, FileText } from 'lucide-react';
 
 const tools = [
   { name: 'Microsoft TMT', color: '#0ea5e9', icon: FileText, x: 15, y: 20, desc: 'Threat Modeling' },
   { name: 'VirusTotal', color: '#f59e0b', icon: Eye, x: 72, y: 10, desc: 'Hash Scanning' },
-  { name: 'IriusRisk', color: '#8b5cf6', icon: Shield, x: 80, y: 65, desc: 'Risk Modeling' },
+  { name: 'Network Logs', color: '#8b5cf6', icon: Activity, x: 80, y: 65, desc: 'PCAP Traffic' },
   { name: 'Splunk SIEM', color: '#10b981', icon: Layers, x: 15, y: 72, desc: 'Log Events' },
   { name: 'OWASP Dragon', color: '#ef4444', icon: GitBranch, x: 46, y: 48, desc: 'Web Threats' },
 ];
