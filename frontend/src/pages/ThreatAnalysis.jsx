@@ -438,11 +438,14 @@ export default function ThreatAnalysis() {
             pendingError = e.response?.data?.detail || 'Backend unavailable — check that the API server is running on port 8000'
         }
 
-        // Wait for the remainder of the animation if the API returned too fast
-        const animationTotalMs = tab === 'hash' ? 3100 : 7300
-        const elapsed = Date.now() - startTime
-        const remaining = Math.max(0, animationTotalMs - elapsed)
-        await new Promise(resolve => setTimeout(resolve, remaining))
+        // Only hold results until the animation finishes if animation is enabled.
+        // When animation is OFF, results appear as soon as the API responds.
+        if (pipelineAnimEnabled) {
+            const animationTotalMs = tab === 'hash' ? 3100 : 7300
+            const elapsed = Date.now() - startTime
+            const remaining = Math.max(0, animationTotalMs - elapsed)
+            await new Promise(resolve => setTimeout(resolve, remaining))
+        }
 
         if (pendingResult) setResult(pendingResult)
         if (pendingError) setError(pendingError)
