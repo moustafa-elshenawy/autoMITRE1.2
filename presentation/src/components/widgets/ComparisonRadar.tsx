@@ -33,8 +33,8 @@ export default function ComparisonRadar() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-2">
       <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-1">Competitive Analysis — 5 Axes</p>
-      <div className="relative w-full" style={{ paddingBottom: '80%' }}>
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center">
+        <svg className="w-full h-full" viewBox="-20 -20 140 140" preserveAspectRatio="xMidYMid meet">
           {/* Grid rings */}
           {rings.map(ring => (
             <polygon
