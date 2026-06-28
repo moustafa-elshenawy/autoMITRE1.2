@@ -1,88 +1,106 @@
 import { motion } from 'framer-motion';
 import { Activity, Layers, GitBranch, Eye, AlertTriangle, FileText } from 'lucide-react';
 
+// Pentagon positions (cx, cy) around center (250, 200), r=130
 const tools = [
-  { name: 'Microsoft TMT', color: '#0ea5e9', icon: FileText, x: 50, y: 15, desc: 'Threat Modeling' },
-  { name: 'VirusTotal', color: '#f59e0b', icon: Eye, x: 83, y: 39, desc: 'Hash Scanning' },
-  { name: 'Network Logs', color: '#8b5cf6', icon: Activity, x: 71, y: 78, desc: 'PCAP Traffic' },
-  { name: 'Splunk SIEM', color: '#10b981', icon: Layers, x: 29, y: 78, desc: 'Log Events' },
-  { name: 'OWASP Dragon', color: '#ef4444', icon: GitBranch, x: 17, y: 39, desc: 'Web Threats' },
+  { name: 'Microsoft TMT', desc: 'Threat Modeling',   color: '#0ea5e9', Icon: FileText, cx: 250, cy: 60  },
+  { name: 'VirusTotal',    desc: 'Hash Scanning',     color: '#f59e0b', Icon: Eye,      cx: 390, cy: 155 },
+  { name: 'Network Logs',  desc: 'PCAP Traffic',      color: '#8b5cf6', Icon: Activity, cx: 340, cy: 315 },
+  { name: 'Splunk SIEM',   desc: 'Log Events',        color: '#10b981', Icon: Layers,   cx: 160, cy: 315 },
+  { name: 'OWASP Dragon',  desc: 'Web Threats',       color: '#ef4444', Icon: GitBranch,cx: 110, cy: 155 },
 ];
+
+const CX = 250, CY = 200;
 
 export default function FragmentationMap() {
   return (
-    <div className="w-full h-full relative flex items-center justify-center">
-      <div className="relative w-full h-full">
+    <div className="w-full h-full flex flex-col items-center justify-center gap-1">
+      <svg viewBox="0 0 500 390" className="w-full h-full" style={{ overflow: 'visible' }}>
+        {/* Dashed lines from each tool to center */}
+        {tools.map((t, i) => (
+          <motion.line
+            key={i}
+            x1={t.cx} y1={t.cy} x2={CX} y2={CY}
+            stroke="#ef444455"
+            strokeWidth="1"
+            strokeDasharray="4,3"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ delay: 1.0 + i * 0.1, duration: 0.5 }}
+          />
+        ))}
+
         {/* Tool nodes */}
-        {tools.map((tool, i) => {
-          const Icon = tool.icon;
+        {tools.map((t, i) => {
+          const Icon = t.Icon;
           return (
-            <motion.div
-              key={tool.name}
+            <motion.g
+              key={t.name}
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.2, duration: 0.5, type: 'spring' }}
-              className="absolute flex flex-col items-center gap-1"
-              style={{ left: `${tool.x}%`, top: `${tool.y}%`, transform: 'translate(-50%,-50%)' }}
+              transition={{ delay: i * 0.18, duration: 0.45, type: 'spring' }}
+              style={{ transformOrigin: `${t.cx}px ${t.cy}px` }}
             >
-              <motion.div
-                animate={{ boxShadow: [`0 0 8px ${tool.color}40`, `0 0 20px ${tool.color}80`, `0 0 8px ${tool.color}40`] }}
-                transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
-                className="w-14 h-14 rounded-xl flex items-center justify-center border"
-                style={{ backgroundColor: `${tool.color}15`, borderColor: `${tool.color}50` }}
-              >
-                <Icon style={{ color: tool.color }} className="w-6 h-6" />
-              </motion.div>
-              <span className="text-[9px] font-mono text-slate-300 text-center whitespace-nowrap">{tool.name}</span>
-              <span className="text-[8px] text-slate-500 text-center">{tool.desc}</span>
-            </motion.div>
+              {/* Glow ring */}
+              <motion.circle
+                cx={t.cx} cy={t.cy} r={28}
+                fill={`${t.color}18`}
+                stroke={`${t.color}60`}
+                strokeWidth="1"
+                animate={{ opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+              />
+              {/* Icon background */}
+              <circle cx={t.cx} cy={t.cy} r={20} fill={`${t.color}25`} stroke={`${t.color}80`} strokeWidth="1.2" />
+              {/* Name label */}
+              <text x={t.cx} y={t.cy + 38} textAnchor="middle" fontSize="9" fill="#e2e8f0" fontFamily="monospace" fontWeight="bold">{t.name}</text>
+              <text x={t.cx} y={t.cy + 49} textAnchor="middle" fontSize="7.5" fill="#64748b" fontFamily="monospace">{t.desc}</text>
+              {/* Lucide icon rendered via foreignObject */}
+              <foreignObject x={t.cx - 11} y={t.cy - 11} width={22} height={22} style={{ overflow: 'visible' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '22px', height: '22px' }}>
+                  <Icon style={{ color: t.color, width: '14px', height: '14px' }} />
+                </div>
+              </foreignObject>
+            </motion.g>
           );
         })}
 
-        {/* Cross-hatch barrier lines showing NO connection */}
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {tools.map((tool, i) => (
-            <motion.line
-              key={i}
-              x1={50} y1={50} x2={tool.x} y2={tool.y}
-              stroke="#ef444450"
-              strokeWidth="0.5"
-              strokeDasharray="2,2"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ delay: 1.2 + i * 0.1, duration: 0.6 }}
-            />
-          ))}
-        </svg>
-
-        {/* No connection icon in center */}
-        <motion.div
+        {/* NO BRIDGE center badge */}
+        <motion.g
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.8, type: 'spring' }}
-          className="absolute"
-          style={{ left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}
+          transition={{ delay: 1.6, type: 'spring' }}
+          style={{ transformOrigin: `${CX}px ${CY}px` }}
         >
-          <motion.div
+          <motion.circle
+            cx={CX} cy={CY} r={24}
+            fill="#ef444415"
+            stroke="#ef444466"
+            strokeWidth="1.5"
+            strokeDasharray="4,3"
             animate={{ rotate: 360 }}
+            style={{ transformOrigin: `${CX}px ${CY}px` }}
             transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-            className="w-12 h-12 rounded-full border-2 border-dashed border-red-500/60 flex items-center justify-center"
-          >
-            <AlertTriangle className="w-5 h-5 text-red-500" />
-          </motion.div>
-          <p className="text-[8px] text-red-400 text-center mt-1 font-mono">NO BRIDGE</p>
-        </motion.div>
+          />
+          <foreignObject x={CX - 10} y={CY - 10} width={20} height={20}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px' }}>
+              <AlertTriangle style={{ color: '#ef4444', width: '13px', height: '13px' }} />
+            </div>
+          </foreignObject>
+          <text x={CX} y={CY + 34} textAnchor="middle" fontSize="8" fill="#ef4444" fontFamily="monospace" fontWeight="bold">NO BRIDGE</text>
+        </motion.g>
 
         {/* Bottom label */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2 }}
-          className="absolute bottom-2 left-0 right-0 text-center text-[10px] text-slate-500 font-mono"
+        <motion.text
+          x={250} y={378}
+          textAnchor="middle" fontSize="8" fill="#475569" fontFamily="monospace"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
         >
           5 specialized tools • 0 unified context • endless manual effort
-        </motion.p>
-      </div>
+        </motion.text>
+      </svg>
     </div>
   );
 }
+
+
