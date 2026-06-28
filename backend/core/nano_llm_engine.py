@@ -10,6 +10,12 @@ from dotenv import load_dotenv
 # Load .env variables
 load_dotenv()
 
+# Import RUNTIME_CONFIG so we can respect the frontend llm_mode toggle at call-time
+try:
+    from core.osint_client import RUNTIME_CONFIG
+except ImportError:
+    RUNTIME_CONFIG = {}
+
 log = logging.getLogger("nano_llm")
 
 # Model configurations
@@ -20,7 +26,8 @@ GROQ_MODEL = "llama-3.1-8b-instant"
 class NanoLLMEngine:
     """
     Stage 2 Industrial-Grade Reasoning Engine.
-    Hybrid setup: Uses Groq Cloud Llama 3 (Ultra-Fast) if API key exists,
+    Hybrid setup: Uses Groq Cloud Llama 3 (Ultra-Fast) if API key exists AND
+    the admin has not forced local mode via the Settings toggle,
     otherwise falls back to local Phi-3.5-mini via llama-cpp-python.
     """
     def __init__(self):
@@ -32,6 +39,17 @@ class NanoLLMEngine:
             log.info("NanoLLMEngine: Cloud Llama 3 (Groq) enabled. Low latency, 0 local memory load.")
         else:
             log.info("NanoLLMEngine: Falling back to Local Phi-3.5 (Metal Acceleration).")
+
+    def _should_use_cloud(self) -> bool:
+        """Determine at call-time whether cloud or local mode is active.
+        The frontend Settings toggle writes 'llm_mode' into RUNTIME_CONFIG.
+        'cloud' (default) -> use Groq API if key available.
+        'local'          -> skip cloud even if key is present.
+        """
+        mode = RUNTIME_CONFIG.get("llm_mode", "cloud")
+        if mode == "local":
+            return False
+        return bool(os.getenv("GROQ_API_KEY")) or self.use_cloud
 
     def load_local(self):
         if self.is_local_loaded:
@@ -107,8 +125,8 @@ class NanoLLMEngine:
             f"CONTEXT (Already detected TTPs): {tech_context}"
         )
 
-        # Check cloud status dynamically
-        use_cloud = bool(os.getenv("GROQ_API_KEY")) or self.use_cloud
+        # Check cloud status dynamically (respects Settings toggle)
+        use_cloud = self._should_use_cloud()
         
         # Attempt Cloud First (Llama 3)
         if use_cloud:
@@ -195,7 +213,7 @@ class NanoLLMEngine:
             f"DATA TO EXTRACT FROM:\n{safe_text}\n"
         )
         
-        use_cloud = bool(os.getenv("GROQ_API_KEY")) or self.use_cloud
+        use_cloud = self._should_use_cloud()
         def clean_and_parse(text_in):
             if not text_in: return []
             try:

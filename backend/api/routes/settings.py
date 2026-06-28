@@ -30,6 +30,7 @@ class OsintConfigUpdate(BaseModel):
     framework_defend: Optional[bool] = None
     framework_nist: Optional[bool] = None
     framework_owasp: Optional[bool] = None
+    llm_mode: Optional[str] = None  # "cloud" | "local"
 
 
 @router.get("/osint")
@@ -47,6 +48,7 @@ async def get_osint_config(current_user: User = Depends(get_current_user)):
     framework_defend = str(RUNTIME_CONFIG.get("framework_defend", "True")).lower() == "true"
     framework_nist = str(RUNTIME_CONFIG.get("framework_nist", "True")).lower() == "true"
     framework_owasp = str(RUNTIME_CONFIG.get("framework_owasp", "True")).lower() == "true"
+    llm_mode = RUNTIME_CONFIG.get("llm_mode", "cloud")  # "cloud" | "local"
 
     def mask(s: str) -> str:
         if not s or len(s) < 8:
@@ -68,6 +70,7 @@ async def get_osint_config(current_user: User = Depends(get_current_user)):
         "framework_defend": framework_defend,
         "framework_nist": framework_nist,
         "framework_owasp": framework_owasp,
+        "llm_mode": llm_mode,
         "sources": get_source_status(),
     }
 
@@ -129,6 +132,10 @@ async def update_osint_config(
     if config.framework_owasp is not None:
         update_runtime_config("framework_owasp", str(config.framework_owasp).lower())
         updated.append("framework_owasp")
+
+    if config.llm_mode is not None and config.llm_mode in ("cloud", "local"):
+        update_runtime_config("llm_mode", config.llm_mode)
+        updated.append("llm_mode")
 
     if updated:
         background_tasks.add_task(

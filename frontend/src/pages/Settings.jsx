@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Key, Globe, Shield, Save, CheckCircle, Database, Lock, ShieldAlert } from 'lucide-react'
+import { Key, Globe, Shield, Save, CheckCircle, Database, Lock, ShieldAlert, Cpu, Cloud, Zap } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useDataView } from '../contexts/DataViewContext'
 
@@ -28,6 +28,9 @@ export default function Settings() {
     const [nistEnabled, setNistEnabled] = useState(true)
     const [owaspEnabled, setOwaspEnabled] = useState(true)
 
+    // AI Engine Mode: "cloud" (Groq) or "local" (Phi-3.5)
+    const [llmMode, setLlmMode] = useState(() => localStorage.getItem('llmMode') || 'cloud')
+
     useEffect(() => {
         if (!isContextualAdmin) return
         const token = localStorage.getItem('token')
@@ -49,6 +52,7 @@ export default function Settings() {
                 if (data.framework_defend !== undefined) setDefendEnabled(data.framework_defend)
                 if (data.framework_nist !== undefined) setNistEnabled(data.framework_nist)
                 if (data.framework_owasp !== undefined) setOwaspEnabled(data.framework_owasp)
+                if (data.llm_mode) { setLlmMode(data.llm_mode); localStorage.setItem('llmMode', data.llm_mode) }
             })
             .catch(console.error)
     }, [backendUrl, viewParam, isContextualAdmin])
@@ -57,6 +61,7 @@ export default function Settings() {
         try {
             localStorage.setItem('backendUrl', backendUrl)
             localStorage.setItem('attackVersion', attackVersion)
+            localStorage.setItem('llmMode', llmMode)
             const response = await fetch(`${backendUrl}/api/settings/osint${viewParam}`, {
                 method: 'PATCH',
                 headers: {
@@ -74,7 +79,8 @@ export default function Settings() {
                     framework_attack: attackEnabled,
                     framework_defend: defendEnabled,
                     framework_nist: nistEnabled,
-                    framework_owasp: owaspEnabled
+                    framework_owasp: owaspEnabled,
+                    llm_mode: llmMode,
                 })
             })
             if (!response.ok) {
@@ -181,6 +187,108 @@ export default function Settings() {
                             </div>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* AI Engine Mode */}
+            <div className="card" style={{ marginBottom: 20, opacity: isAdmin ? 1 : 0.65, pointerEvents: isAdmin ? 'auto' : 'none' }}>
+                <div className="card-header" style={{ marginBottom: 20 }}>
+                    <div className="card-title"><Cpu size={16} color="#0077BC" /> AI Reasoning Engine{!isAdmin && <Lock size={12} style={{ marginLeft: 6, color: '#f59e0b' }} />}</div>
+                    <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>Choose where the LLM reasoning runs. Cloud is faster; Local guarantees 100% data privacy.</div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                    {/* Groq Cloud Option */}
+                    <div
+                        onClick={() => setLlmMode('cloud')}
+                        style={{
+                            cursor: 'pointer',
+                            padding: '16px 14px',
+                            borderRadius: 10,
+                            border: `2px solid ${llmMode === 'cloud' ? '#0077BC' : 'rgba(255,255,255,0.08)'}`,
+                            background: llmMode === 'cloud' ? 'rgba(0,119,188,0.1)' : 'rgba(255,255,255,0.02)',
+                            transition: 'all 0.2s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 8,
+                        }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{
+                                width: 32, height: 32, borderRadius: 8,
+                                background: llmMode === 'cloud' ? 'rgba(0,119,188,0.25)' : 'rgba(255,255,255,0.05)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                transition: 'background 0.2s'
+                            }}>
+                                <Zap size={16} color={llmMode === 'cloud' ? '#38bdf8' : '#475569'} />
+                            </div>
+                            <div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: llmMode === 'cloud' ? '#f0f4ff' : '#94a3b8' }}>Groq Cloud</div>
+                                <div style={{ fontSize: 10, color: llmMode === 'cloud' ? '#38bdf8' : '#475569' }}>Llama-3 · &lt;1.2s</div>
+                            </div>
+                            {llmMode === 'cloud' && (
+                                <div style={{ marginLeft: 'auto', width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
+                            )}
+                        </div>
+                        <div style={{ fontSize: 11, color: '#64748b', lineHeight: 1.5 }}>
+                            Ultra-fast LLM via Groq API. Requires internet. Best for speed.
+                        </div>
+                    </div>
+
+                    {/* Local Phi-3.5 Option */}
+                    <div
+                        onClick={() => setLlmMode('local')}
+                        style={{
+                            cursor: 'pointer',
+                            padding: '16px 14px',
+                            borderRadius: 10,
+                            border: `2px solid ${llmMode === 'local' ? '#10b981' : 'rgba(255,255,255,0.08)'}`,
+                            background: llmMode === 'local' ? 'rgba(16,185,129,0.08)' : 'rgba(255,255,255,0.02)',
+                            transition: 'all 0.2s ease',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 8,
+                        }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{
+                                width: 32, height: 32, borderRadius: 8,
+                                background: llmMode === 'local' ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.05)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                transition: 'background 0.2s'
+                            }}>
+                                <Cloud size={16} color={llmMode === 'local' ? '#10b981' : '#475569'} />
+                            </div>
+                            <div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: llmMode === 'local' ? '#f0f4ff' : '#94a3b8' }}>Local Phi-3.5</div>
+                                <div style={{ fontSize: 10, color: llmMode === 'local' ? '#10b981' : '#475569' }}>Offline · 100% Private</div>
+                            </div>
+                            {llmMode === 'local' && (
+                                <div style={{ marginLeft: 'auto', width: 8, height: 8, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
+                            )}
+                        </div>
+                        <div style={{ fontSize: 11, color: '#64748b', lineHeight: 1.5 }}>
+                            Microsoft Phi-3.5-mini on Metal GPU. No data leaves device.
+                        </div>
+                    </div>
+                </div>
+
+                {/* Status banner */}
+                <div style={{
+                    marginTop: 14,
+                    padding: '10px 14px',
+                    borderRadius: 8,
+                    background: llmMode === 'cloud' ? 'rgba(56,189,248,0.06)' : 'rgba(16,185,129,0.06)',
+                    border: `1px solid ${llmMode === 'cloud' ? 'rgba(56,189,248,0.2)' : 'rgba(16,185,129,0.2)'}`,
+                    fontSize: 11,
+                    color: llmMode === 'cloud' ? '#38bdf8' : '#10b981',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                }}>
+                    {llmMode === 'cloud'
+                        ? <><Zap size={12} /> Active: Groq Llama-3 API — Internet required. Average response &lt;1.2 seconds.</>
+                        : <><Cloud size={12} /> Active: Local Phi-3.5-mini (GGUF) — Fully offline. Response ~4–7 seconds.</>}
                 </div>
             </div>
 
