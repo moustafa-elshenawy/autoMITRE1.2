@@ -9,6 +9,7 @@ export type SlideWidget =
   | 'intake'
   | 'siem_funnel'
   | 'stix_tree'
+  | 'lit_review_layer'
   // New widgets
   | 'threat_surge'
   | 'fragmentation_map'
@@ -166,34 +167,23 @@ export const slides: SlideData[] = [
   },
   {
     id: 9,
-    section: 'The Problem & Gap',
-    title: 'Related Work — Competitive Landscape',
+    section: 'Literature Review',
+    title: 'Reviewing the State of the Art',
     content: [
-      'Microsoft TMT & OWASP Dragon: STRIDE-based static modeling — no AI, no runtime analysis.',
-      'IriusRisk: Rule-based templates — powerful but closed-source and not AI-driven.',
-      'VirusTotal: Detects known signatures — no behavioral mapping or framework correlation.',
+      'Microsoft Threat Modeling Tool: Excellent for STRIDE, but purely static and lacks runtime log analysis.',
+      'OWASP Threat Dragon: Open-source, diagram-first, but relies heavily on manual human input.',
+      'VirusTotal / OSINT Platforms: Strong signature detection but zero contextual mapping to MITRE T-Codes.',
+      'Core Philosophy: autoMITRE acts as an enhancement layer to integrate with these existing tools, not a replacement for them.',
     ],
     layout: 'split',
-    widget: 'comparison_radar',
-  },
-  {
-    id: 10,
-    section: 'The Problem & Gap',
-    title: 'Comparison Matrix — Where Others Fall Short',
-    content: [
-      'Only autoMITRE delivers AI/NLP + Multi-Framework + Multi-Format + SIEM Export + Open Source.',
-      'All 5 compared tools lack at least 3 of the 6 evaluated dimensions.',
-      'autoMITRE is the first system to sit at the intersection of all capabilities.',
-    ],
-    layout: 'split',
-    widget: 'comparison_table',
+    widget: 'lit_review_layer',
   },
 
   // ────────────────────────────────────────────────────────────
-  // SECTION 3 — REQUIREMENTS & DESIGN (Slides 11–16)
+  // SECTION 3 — REQUIREMENTS & DESIGN (Slides 10–15)
   // ────────────────────────────────────────────────────────────
   {
-    id: 11,
+    id: 10,
     section: 'Requirements & Design',
     title: 'autoMITRE Contribution — Filling the Gap',
     content: [
@@ -205,7 +195,7 @@ export const slides: SlideData[] = [
     widget: 'contribution_bridge',
   },
   {
-    id: 12,
+    id: 11,
     section: 'Requirements & Design',
     title: 'System Stakeholders — Who Benefits',
     content: [
@@ -217,7 +207,7 @@ export const slides: SlideData[] = [
     widget: 'stakeholder_orbit',
   },
   {
-    id: 13,
+    id: 12,
     section: 'Requirements & Design',
     title: 'Functional Requirements (IEEE 830) — The 9 Core Capabilities',
     content: [
@@ -229,7 +219,7 @@ export const slides: SlideData[] = [
     widget: 'fr_pipeline',
   },
   {
-    id: 14,
+    id: 13,
     section: 'Requirements & Design',
     title: 'Non-Functional Requirements (IEEE 830) — Quality Attributes',
     content: [
@@ -241,7 +231,7 @@ export const slides: SlideData[] = [
     widget: 'nfr_radar',
   },
   {
-    id: 15,
+    id: 14,
     section: 'Requirements & Design',
     title: 'Design Alternatives Evaluated',
     content: [
@@ -253,7 +243,7 @@ export const slides: SlideData[] = [
     widget: 'design_decision_tree',
   },
   {
-    id: 16,
+    id: 15,
     section: 'Requirements & Design',
     title: 'High-Level System Architecture — 4 Layers',
     content: [
@@ -267,10 +257,10 @@ export const slides: SlideData[] = [
   },
 
   // ────────────────────────────────────────────────────────────
-  // SECTION 4 — THE AI ENGINE (Slides 17–26)
+  // SECTION 4 — THE AI ENGINE (Slides 16–25)
   // ────────────────────────────────────────────────────────────
   {
-    id: 17,
+    id: 16,
     section: 'The AI Engine',
     title: 'Multi-Format Data Ingestion Layer',
     content: [
@@ -282,7 +272,7 @@ export const slides: SlideData[] = [
     widget: 'intake',
   },
   {
-    id: 18,
+    id: 17,
     section: 'The AI Engine',
     title: 'Text & Threat Description Pipeline — NLP Processing',
     content: [
@@ -294,7 +284,7 @@ export const slides: SlideData[] = [
     widget: 'nlp_pipeline',
   },
   {
-    id: 19,
+    id: 18,
     section: 'The AI Engine',
     title: 'Isolated Pipeline — PCAP Network Analysis',
     content: [
@@ -306,7 +296,7 @@ export const slides: SlideData[] = [
     widget: 'pcap_flow',
   },
   {
-    id: 20,
+    id: 19,
     section: 'The AI Engine',
     title: 'SecureBERT — The Domain-Specific AI Classifier',
     content: [
@@ -318,7 +308,7 @@ export const slides: SlideData[] = [
     widget: 'securebert_brain',
   },
   {
-    id: 21,
+    id: 20,
     section: 'The AI Engine',
     title: 'RAG — Retrieval-Augmented Generation for Grounded Outputs',
     content: [
@@ -330,7 +320,7 @@ export const slides: SlideData[] = [
     widget: 'rag_mechanism',
   },
   {
-    id: 22,
+    id: 21,
     section: 'The AI Engine',
     title: 'LLM Reasoning — Cloud Engine + Local Failover',
     content: [
@@ -342,7 +332,7 @@ export const slides: SlideData[] = [
     widget: 'llm_failover',
   },
   {
-    id: 23,
+    id: 22,
     section: 'The AI Engine',
     title: 'Multi-Framework Mapping Engine',
     content: [
@@ -354,7 +344,7 @@ export const slides: SlideData[] = [
     widget: 'framework_mapper',
   },
   {
-    id: 24,
+    id: 23,
     section: 'The AI Engine',
     title: 'Mitigation Generation Pipeline',
     content: [
@@ -366,7 +356,7 @@ export const slides: SlideData[] = [
     widget: 'mitigation_flow',
   },
   {
-    id: 25,
+    id: 24,
     section: 'The AI Engine',
     title: 'FastAPI Async REST Architecture',
     content: [
@@ -378,7 +368,7 @@ export const slides: SlideData[] = [
     widget: 'api_routes',
   },
   {
-    id: 26,
+    id: 25,
     section: 'The AI Engine',
     title: 'Technology Stack — Tools & Libraries',
     content: [
@@ -391,10 +381,10 @@ export const slides: SlideData[] = [
   },
 
   // ────────────────────────────────────────────────────────────
-  // SECTION 5 — RESULTS & TESTING (Slides 27–36)
+  // SECTION 5 — RESULTS & TESTING (Slides 26–35)
   // ────────────────────────────────────────────────────────────
   {
-    id: 27,
+    id: 26,
     section: 'Results & Testing',
     title: 'Testing Framework — IEEE 829 Standard',
     content: [
@@ -406,7 +396,7 @@ export const slides: SlideData[] = [
     widget: 'test_matrix',
   },
   {
-    id: 28,
+    id: 27,
     section: 'Results & Testing',
     title: 'AI Model Accuracy — SecureBERT Evaluation',
     content: [
@@ -418,7 +408,7 @@ export const slides: SlideData[] = [
     widget: 'accuracy',
   },
   {
-    id: 29,
+    id: 28,
     section: 'Results & Testing',
     title: 'Inference Latency Benchmarks',
     content: [
@@ -430,7 +420,7 @@ export const slides: SlideData[] = [
     widget: 'latency',
   },
   {
-    id: 30,
+    id: 29,
     section: 'Results & Testing',
     title: 'Framework Mapping Accuracy',
     content: [
@@ -442,7 +432,7 @@ export const slides: SlideData[] = [
     widget: 'mapping_accuracy',
   },
   {
-    id: 31,
+    id: 30,
     section: 'Results & Testing',
     title: 'Case Study — Mimikatz Credential Dumping',
     content: [
@@ -454,7 +444,7 @@ export const slides: SlideData[] = [
     widget: 'case_study_walkthrough',
   },
   {
-    id: 32,
+    id: 31,
     section: 'Results & Testing',
     title: 'SIEM Integration — STIX 2.1 Export Validation',
     content: [
@@ -466,7 +456,7 @@ export const slides: SlideData[] = [
     widget: 'stix_tree',
   },
   {
-    id: 33,
+    id: 32,
     section: 'Results & Testing',
     title: 'Hallucination Prevention — RAG Validation',
     content: [
@@ -478,7 +468,7 @@ export const slides: SlideData[] = [
     widget: 'guardrail',
   },
   {
-    id: 34,
+    id: 33,
     section: 'Results & Testing',
     title: 'System Resiliency — Failover Test (TC-33)',
     content: [
@@ -490,7 +480,7 @@ export const slides: SlideData[] = [
     widget: 'failover_test',
   },
   {
-    id: 35,
+    id: 34,
     section: 'Results & Testing',
     title: 'Load Testing — 20 Concurrent Analysts (Locust)',
     content: [
@@ -502,7 +492,7 @@ export const slides: SlideData[] = [
     widget: 'load_test',
   },
   {
-    id: 36,
+    id: 35,
     section: 'Results & Testing',
     title: 'Functional Requirements Validation — Complete Coverage',
     content: [
@@ -515,10 +505,10 @@ export const slides: SlideData[] = [
   },
 
   // ────────────────────────────────────────────────────────────
-  // SECTION 6 — CONCLUSION & FUTURE WORK (Slides 37–40)
+  // SECTION 6 — CONCLUSION & FUTURE WORK (Slides 36–39)
   // ────────────────────────────────────────────────────────────
   {
-    id: 37,
+    id: 36,
     section: 'Conclusion & Future Work',
     title: 'Honest Limitations',
     content: [
@@ -530,7 +520,7 @@ export const slides: SlideData[] = [
     widget: 'limitations_gauge',
   },
   {
-    id: 38,
+    id: 37,
     section: 'Conclusion & Future Work',
     title: 'Future Work — DBSCAN Zero-Day Anomaly Detection',
     content: [
@@ -542,7 +532,7 @@ export const slides: SlideData[] = [
     widget: 'dbscan',
   },
   {
-    id: 39,
+    id: 38,
     section: 'Conclusion & Future Work',
     title: 'Future Enhancement Roadmap',
     content: [
@@ -554,7 +544,7 @@ export const slides: SlideData[] = [
     widget: 'future_roadmap',
   },
   {
-    id: 40,
+    id: 39,
     section: 'Conclusion & Future Work',
     title: 'Conclusion & Thank You',
     content: [

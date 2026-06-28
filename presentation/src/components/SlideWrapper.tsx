@@ -23,6 +23,7 @@ import ManualMappingHell from './widgets/ManualMappingHell';
 import GapVenn from './widgets/GapVenn';
 import ComparisonRadar from './widgets/ComparisonRadar';
 import ComparisonTable from './widgets/ComparisonTable';
+import LitReviewLayer from './widgets/LitReviewLayer';
 import ContributionBridge from './widgets/ContributionBridge';
 import ObjectivesGrid from './widgets/ObjectivesGrid';
 import StakeholderOrbit from './widgets/StakeholderOrbit';
@@ -75,6 +76,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'gap_venn':               return <GapVenn />;
       case 'comparison_radar':       return <ComparisonRadar />;
       case 'comparison_table':       return <ComparisonTable />;
+      case 'lit_review_layer':       return <LitReviewLayer />;
       case 'contribution_bridge':    return <ContributionBridge />;
       case 'objectives_grid':        return <ObjectivesGrid />;
       case 'stakeholder_orbit':      return <StakeholderOrbit />;
