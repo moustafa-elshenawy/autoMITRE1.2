@@ -32,28 +32,28 @@ const allTCs = [
 
 export default function TestMatrix() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-3">
-      <p className="text-[11px] font-mono text-slate-400 uppercase tracking-widest">
+    <div className="w-full h-full flex flex-col items-center justify-center p-4 gap-4">
+      <p className="text-xs font-mono text-slate-400 uppercase tracking-widest">
         IEEE 829 Test Case Matrix (37 Total)
       </p>
 
-      <div className="grid grid-cols-6 gap-1.5 w-full">
+      <div className="grid grid-cols-6 gap-2 w-full max-w-4xl">
         {allTCs.map((tc, i) => (
           <motion.div
             key={tc.id}
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.03, type: 'spring', bounce: 0.4 }}
-            className="flex flex-col items-center gap-1 p-1.5 rounded-lg border border-emerald-800/30 bg-emerald-950/20"
+            className="flex flex-col items-center gap-1 p-2 rounded-lg border border-emerald-800/30 bg-emerald-950/20"
             title={tc.desc ? `${tc.id}: ${tc.desc}` : tc.id}
           >
-            <span className="text-[8px] font-mono text-slate-400">{tc.id}</span>
+            <span className="text-[10px] font-mono text-slate-400">{tc.id}</span>
             <motion.div
-              animate={{ boxShadow: ['0 0 0px #10b981', '0 0 8px #10b98170', '0 0 0px #10b981'] }}
+              animate={{ boxShadow: ['0 0 0px #10b981', '0 0 10px #10b98180', '0 0 0px #10b981'] }}
               transition={{ duration: 2, repeat: Infinity, delay: i * 0.1 }}
-              className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center"
+              className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center mt-1"
             >
-              <span className="text-[8px] text-white font-bold">✓</span>
+              <span className="text-[10px] text-white font-bold">✓</span>
             </motion.div>
           </motion.div>
         ))}
@@ -63,14 +63,14 @@ export default function TestMatrix() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="flex items-center gap-4"
+        className="flex items-center gap-5 mt-2"
       >
-        <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-emerald-500" />
-          <span className="text-[11px] font-mono font-bold text-emerald-400">37 / 37 PASS (100%)</span>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-emerald-500" />
+          <span className="text-sm font-mono font-bold text-emerald-400">37 / 37 PASS (100%)</span>
         </div>
-        <span className="text-[10px] text-slate-500 font-mono">|</span>
-        <span className="text-[10px] text-slate-500 font-mono">0 Failures • 0 Blocked</span>
+        <span className="text-xs text-slate-500 font-mono">|</span>
+        <span className="text-xs text-slate-500 font-mono">0 Failures • 0 Blocked</span>
       </motion.div>
     </div>
   );
