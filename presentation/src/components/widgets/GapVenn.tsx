@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 
 export default function GapVenn() {
   const circles = [
-    { label: 'AI / NLP\nEngines', color: '#0ea5e9', cx: 38, cy: 42, lx: 26, ly: 28, anchor: 'end' },
-    { label: 'Multi-Framework\nMapping', color: '#8b5cf6', cx: 62, cy: 42, lx: 74, ly: 28, anchor: 'start' },
-    { label: 'Multi-Format\nIngestion', color: '#10b981', cx: 50, cy: 62, lx: 50, ly: 84, anchor: 'middle' },
+    { label: 'AI / NLP\nEngines', color: '#0ea5e9', cx: 38, cy: 42, lx: 20, ly: 22, anchor: 'middle' },
+    { label: 'Multi-Framework\nMapping', color: '#8b5cf6', cx: 62, cy: 42, lx: 80, ly: 22, anchor: 'middle' },
+    { label: 'Multi-Format\nIngestion', color: '#10b981', cx: 50, cy: 62, lx: 50, ly: 88, anchor: 'middle' },
   ];
 
   return (
