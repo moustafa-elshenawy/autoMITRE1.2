@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FileText, Network, Code, Globe, FileJson } from 'lucide-react';
 
@@ -10,7 +10,14 @@ const sources = [
 ];
 
 export default function DataIntakeHub() {
-  const [activeSource, setActiveSource] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % sources.length);
+    }, 1800);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="w-full h-full p-8 flex flex-col items-center justify-center relative bg-slate-900/50 overflow-hidden">
@@ -22,10 +29,10 @@ export default function DataIntakeHub() {
         
         {/* Central Hub */}
         <motion.div 
-          animate={{ scale: activeSource ? 1.1 : 1 }}
-          className={`absolute z-20 p-6 rounded-2xl border transition-colors duration-300 flex flex-col items-center justify-center ${activeSource ? 'bg-cyan-950 border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.4)]' : 'bg-slate-800 border-slate-600'}`}
+          animate={{ scale: activeIndex >= 0 ? 1.05 : 1 }}
+          className="absolute z-20 p-6 rounded-2xl border transition-colors duration-300 flex flex-col items-center justify-center bg-cyan-950 border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.4)]"
         >
-          <FileJson className={`w-12 h-12 mb-2 ${activeSource ? 'text-cyan-400' : 'text-slate-400'}`} />
+          <FileJson className="w-12 h-12 mb-2 text-cyan-400" />
           <span className="font-mono text-xs text-slate-200">Standardized</span>
           <span className="font-mono text-xs text-slate-200">Schema (JSON)</span>
         </motion.div>
@@ -37,16 +44,14 @@ export default function DataIntakeHub() {
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
           
-          const isActive = activeSource === source.id;
+          const isActive = activeIndex === index;
 
           return (
             <div key={source.id} className="absolute z-30" style={{ transform: `translate(${x}px, ${y}px)` }}>
               <motion.div
-                onHoverStart={() => setActiveSource(source.id)}
-                onHoverEnd={() => setActiveSource(null)}
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity, delay: index * 0.5, ease: "easeInOut" }}
-                className={`relative p-4 rounded-full cursor-pointer border transition-all duration-300 bg-slate-900 ${isActive ? `border-${source.color.split('-')[1]}-400 ${source.glow} scale-110` : 'border-slate-700 hover:border-slate-500'}`}
+                className={`relative p-4 rounded-full border transition-all duration-300 bg-slate-900 ${isActive ? `border-${source.color.split('-')[1]}-400 ${source.glow} scale-110` : 'border-slate-700'}`}
               >
                 <source.icon className={`w-8 h-8 ${isActive ? source.color : 'text-slate-500'}`} />
                 
