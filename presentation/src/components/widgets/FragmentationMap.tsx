@@ -2,11 +2,11 @@ import { motion } from 'framer-motion';
 import { Activity, Layers, GitBranch, Eye, AlertTriangle, FileText } from 'lucide-react';
 
 const tools = [
-  { name: 'Microsoft TMT', color: '#0ea5e9', icon: FileText, x: 15, y: 20, desc: 'Threat Modeling' },
-  { name: 'VirusTotal', color: '#f59e0b', icon: Eye, x: 72, y: 10, desc: 'Hash Scanning' },
-  { name: 'Network Logs', color: '#8b5cf6', icon: Activity, x: 80, y: 65, desc: 'PCAP Traffic' },
-  { name: 'Splunk SIEM', color: '#10b981', icon: Layers, x: 15, y: 72, desc: 'Log Events' },
-  { name: 'OWASP Dragon', color: '#ef4444', icon: GitBranch, x: 46, y: 48, desc: 'Web Threats' },
+  { name: 'Microsoft TMT', color: '#0ea5e9', icon: FileText, x: 50, y: 15, desc: 'Threat Modeling' },
+  { name: 'VirusTotal', color: '#f59e0b', icon: Eye, x: 83, y: 39, desc: 'Hash Scanning' },
+  { name: 'Network Logs', color: '#8b5cf6', icon: Activity, x: 71, y: 78, desc: 'PCAP Traffic' },
+  { name: 'Splunk SIEM', color: '#10b981', icon: Layers, x: 29, y: 78, desc: 'Log Events' },
+  { name: 'OWASP Dragon', color: '#ef4444', icon: GitBranch, x: 17, y: 39, desc: 'Web Threats' },
 ];
 
 export default function FragmentationMap() {
@@ -41,10 +41,10 @@ export default function FragmentationMap() {
 
         {/* Cross-hatch barrier lines showing NO connection */}
         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {[[15,20,46,48],[72,10,46,48],[80,65,46,48],[15,72,46,48]].map(([x1,y1,x2,y2], i) => (
+          {tools.map((tool, i) => (
             <motion.line
               key={i}
-              x1={x1} y1={y1} x2={x2} y2={y2}
+              x1={50} y1={50} x2={tool.x} y2={tool.y}
               stroke="#ef444450"
               strokeWidth="0.5"
               strokeDasharray="2,2"
@@ -61,7 +61,7 @@ export default function FragmentationMap() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 1.8, type: 'spring' }}
           className="absolute"
-          style={{ left: '46%', top: '48%', transform: 'translate(-50%,-50%)' }}
+          style={{ left: '50%', top: '50%', transform: 'translate(-50%,-50%)' }}
         >
           <motion.div
             animate={{ rotate: 360 }}
