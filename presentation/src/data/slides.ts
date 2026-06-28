@@ -402,7 +402,7 @@ export const slides: SlideData[] = [
     title: 'AI Model Accuracy — SecureBERT Evaluation',
     content: [
       'Dataset: 20,736 cyber threat narratives across all 499 MITRE ATT&CK techniques.',
-      'Core Classification: 96.81% Accuracy and 96.65% F1-Score (exceeds 90% pass threshold).',
+      'Core Classification: 96.81% Accuracy and 96.65% F1-Score.',
       'Severity Scoring: 95.22% F1-Score for CVSS-aligned threat severity classification.',
     ],
     layout: 'split',
