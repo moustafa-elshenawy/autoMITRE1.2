@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Key, Globe, Shield, Save, CheckCircle, Database, Lock, ShieldAlert, Cpu, Cloud, Zap } from 'lucide-react'
+import { Key, Globe, Shield, Save, CheckCircle, Database, Lock, ShieldAlert, Cpu, Cloud, Zap, Activity } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useDataView } from '../contexts/DataViewContext'
 
@@ -30,6 +30,15 @@ export default function Settings() {
 
     // AI Engine Mode: "cloud" (Groq) or "local" (Phi-3.5)
     const [llmMode, setLlmMode] = useState(() => localStorage.getItem('llmMode') || 'cloud')
+
+    // UI Preferences — purely client-side, stored in localStorage
+    const [pipelineAnimEnabled, setPipelineAnimEnabled] = useState(
+        () => localStorage.getItem('pipelineAnimEnabled') !== 'false'
+    )
+    const togglePipelineAnim = (val) => {
+        setPipelineAnimEnabled(val)
+        localStorage.setItem('pipelineAnimEnabled', String(val))
+    }
 
     useEffect(() => {
         if (!isContextualAdmin) return
@@ -289,6 +298,51 @@ export default function Settings() {
                     {llmMode === 'cloud'
                         ? <><Zap size={12} /> Active: Groq Llama-3 API — Internet required. Average response &lt;1.2 seconds.</>
                         : <><Cloud size={12} /> Active: Local Phi-3.5-mini (GGUF) — Fully offline. Response ~4–7 seconds.</>}
+                </div>
+            </div>
+
+            {/* UI Preferences */}
+            <div className="card" style={{ marginBottom: 20 }}>
+                <div className="card-header" style={{ marginBottom: 16 }}>
+                    <div className="card-title"><Activity size={16} color="#0077BC" /> UI Preferences</div>
+                    <div style={{ fontSize: 11, color: '#475569', marginTop: 4 }}>Controls visual elements of the interface. These settings are saved locally in your browser.</div>
+                </div>
+
+                {/* Pipeline Animation toggle */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'rgba(255,255,255,0.02)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}>
+                    <div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#f0f4ff' }}>AI Pipeline Animation</div>
+                        <div style={{ fontSize: 11, color: '#475569', marginTop: 3 }}>
+                            Show the live 8-stage pipeline progress overlay while the AI is analyzing a threat.
+                        </div>
+                    </div>
+                    <div
+                        id="toggle-pipeline-anim"
+                        onClick={() => togglePipelineAnim(!pipelineAnimEnabled)}
+                        style={{
+                            width: 44, height: 24, borderRadius: 100,
+                            background: pipelineAnimEnabled ? '#0077BC' : 'rgba(255,255,255,0.1)',
+                            position: 'relative', cursor: 'pointer', flexShrink: 0,
+                            transition: 'background 0.2s ease',
+                            boxShadow: pipelineAnimEnabled ? '0 0 8px rgba(0,119,188,0.5)' : 'none',
+                        }}
+                    >
+                        <div style={{
+                            width: 18, height: 18, borderRadius: '50%', background: 'white',
+                            position: 'absolute', top: 3,
+                            left: pipelineAnimEnabled ? 23 : 3,
+                            transition: 'left 0.2s ease',
+                            boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                        }} />
+                    </div>
+                </div>
+
+                {/* Status hint */}
+                <div style={{ marginTop: 10, fontSize: 11, color: pipelineAnimEnabled ? '#38bdf8' : '#475569', display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Activity size={11} />
+                    {pipelineAnimEnabled
+                        ? 'Animation is ON — the pipeline visualizer will appear during threat analysis.'
+                        : 'Animation is OFF — threat analysis will run silently with a minimal spinner.'}
                 </div>
             </div>
 

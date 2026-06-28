@@ -397,6 +397,8 @@ export default function ThreatAnalysis() {
     const [result, setResult] = useState(null)
     const [error, setError] = useState(null)
     const { viewParam } = useDataView()
+    // Read the animation preference set in Settings (defaults to enabled)
+    const pipelineAnimEnabled = localStorage.getItem('pipelineAnimEnabled') !== 'false'
 
     const analyzeApiTool = async () => {
         setLoading(true); setError(null); setResult(null); setExtractedAttacks([]); setSavedAttacksList([])
@@ -713,9 +715,9 @@ export default function ThreatAnalysis() {
                 )}
             </div>
 
-            {/* Pipeline Animations — shown while loading */}
-            <AIPipelineAnimation visible={loading && tab !== 'hash'} />
-            <HashPipelineAnimation visible={loading && tab === 'hash'} />
+            {/* Pipeline Animations — shown while loading (can be toggled off in Settings) */}
+            <AIPipelineAnimation visible={pipelineAnimEnabled && loading && tab !== 'hash'} />
+            <HashPipelineAnimation visible={pipelineAnimEnabled && loading && tab === 'hash'} />
 
             <ThreatResultPanel result={result} />
             
