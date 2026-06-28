@@ -18,11 +18,7 @@ export default function ContributionBridge() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08, duration: 0.4 }}
-              className={`border rounded px-2 py-0.5 text-center ${
-                i < 5
-                  ? 'bg-slate-900/60 border-slate-700/50'
-                  : 'bg-cyan-950/30 border-cyan-700/40'
-              }`}
+              className="bg-cyan-950/30 border border-cyan-700/40 rounded px-2 py-0.5 text-center"
             >
               <span className="text-[8.5px] font-mono text-slate-400">{tool}</span>
             </motion.div>
