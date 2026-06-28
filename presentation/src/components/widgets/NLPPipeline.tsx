@@ -31,7 +31,7 @@ export default function NLPPipeline() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-3">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">NLP Processing Pipeline — Live Simulation</p>
+      <p className="text-[12px] font-mono text-slate-400 uppercase tracking-widest mb-2">NLP Processing Pipeline — Live Simulation</p>
 
       {/* Stage indicator */}
       <div className="flex gap-1 w-full justify-center">
@@ -39,7 +39,7 @@ export default function NLPPipeline() {
           <motion.div
             key={s.label}
             animate={{ opacity: i <= stage ? 1 : 0.2, scale: i === stage ? 1.1 : 1 }}
-            className="flex-1 py-1 rounded-md text-center text-[7px] font-mono"
+            className="flex-1 py-2 rounded-md text-center text-[10px] font-mono"
             style={{ backgroundColor: i <= stage ? `${s.color}20` : '#1e293b', color: i <= stage ? s.color : '#475569', border: `1px solid ${i === stage ? s.color : '#1e293b'}` }}
           >
             {s.label}
@@ -59,7 +59,7 @@ export default function NLPPipeline() {
               scale: stage >= 2 && tokenColors[token] ? 1.1 : 1,
             }}
             transition={{ duration: 0.4 }}
-            className="text-xs font-mono px-2 py-0.5 rounded border"
+            className="text-base font-mono px-3 py-1 rounded border"
           >
             {token}
           </motion.span>
@@ -77,7 +77,7 @@ export default function NLPPipeline() {
           { label: 'Target: LSASS Process', color: '#f59e0b' },
           { label: 'Maps to: T1003', color: '#10b981' },
         ].map((tag) => (
-          <span key={tag.label} className="text-[8px] font-mono px-2 py-1 rounded-lg"
+          <span key={tag.label} className="text-[11px] font-mono px-3 py-1.5 rounded-lg"
             style={{ color: tag.color, backgroundColor: `${tag.color}15`, border: `1px solid ${tag.color}40` }}>
             {tag.label}
           </span>

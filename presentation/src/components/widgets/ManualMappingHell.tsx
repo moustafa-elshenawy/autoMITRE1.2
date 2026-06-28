@@ -26,12 +26,12 @@ export default function ManualMappingHell() {
               <motion.div
                 animate={i > 0 && i < 5 ? { borderColor: ['#f59e0b50', '#ef444450', '#f59e0b50'] } : {}}
                 transition={{ duration: 1.5, repeat: Infinity }}
-                className="w-14 h-14 rounded-xl border flex flex-col items-center justify-center"
+                className="w-20 h-20 rounded-xl border flex flex-col items-center justify-center"
                 style={{ borderColor: `${step.color}50`, backgroundColor: `${step.color}10` }}
               >
-                <span className="text-xl">{step.icon}</span>
+                <span className="text-3xl">{step.icon}</span>
               </motion.div>
-              <span className="text-[8px] font-mono text-center text-slate-400 w-16">{step.label}</span>
+              <span className="text-[12px] font-mono text-center text-slate-400 w-24">{step.label}</span>
             </motion.div>
             {i < steps.length - 1 && (
               <motion.div
@@ -39,7 +39,7 @@ export default function ManualMappingHell() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: i * 0.3 + 0.5 }}
               >
-                <ArrowRight className="w-3 h-3 text-slate-600 shrink-0" />
+                <ArrowRight className="w-5 h-5 text-slate-600 shrink-0" />
               </motion.div>
             )}
           </div>
@@ -53,12 +53,12 @@ export default function ManualMappingHell() {
         transition={{ delay: 2.0 }}
         className="flex items-center gap-4 bg-red-950/30 border border-red-800/40 rounded-xl px-4 py-2 w-full"
       >
-        <Clock className="w-4 h-4 text-red-400 shrink-0" />
+        <Clock className="w-5 h-5 text-red-400 shrink-0" />
         <div>
-          <p className="text-xs font-bold text-red-300">Avg. time per manual mapping: <span className="text-red-400">15–40 minutes</span></p>
-          <p className="text-[10px] text-slate-500 mt-0.5">Per analyst • Per incident • While attackers move in seconds</p>
+          <p className="text-sm font-bold text-red-300">Avg. time per manual mapping: <span className="text-red-400">15–40 minutes</span></p>
+          <p className="text-xs text-slate-500 mt-0.5">Per analyst • Per incident • While attackers move in seconds</p>
         </div>
-        <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+        <AlertCircle className="w-5 h-5 text-red-400 shrink-0" />
       </motion.div>
 
       {/* AutoMITRE contrast */}
@@ -71,9 +71,9 @@ export default function ManualMappingHell() {
         <motion.div
           animate={{ rotate: [0, 360] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full shrink-0"
+          className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full shrink-0"
         />
-        <p className="text-xs font-bold text-emerald-300">autoMITRE: same mapping in <span className="text-emerald-400">&lt; 1.2 seconds</span> automatically</p>
+        <p className="text-sm font-bold text-emerald-300">autoMITRE: same mapping in <span className="text-emerald-400">&lt; 1.2 seconds</span> automatically</p>
       </motion.div>
     </div>
   );

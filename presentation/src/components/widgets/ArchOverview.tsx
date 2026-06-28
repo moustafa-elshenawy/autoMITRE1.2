@@ -26,7 +26,7 @@ const layers = [
 export default function ArchOverview() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-2">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">System Architecture — 4 Layers</p>
+      <p className="text-[13px] font-mono text-slate-400 uppercase tracking-widest">System Architecture — 4 Layers</p>
       <div className="w-full flex flex-col gap-2">
         {layers.map((layer, li) => (
           <motion.div
@@ -38,7 +38,7 @@ export default function ArchOverview() {
             style={{ borderColor: `${layer.color}40`, backgroundColor: `${layer.color}08` }}
           >
             <div
-              className="text-[8px] font-mono font-bold w-20 shrink-0 text-center py-1 rounded-lg"
+              className="text-[11px] font-mono font-bold w-28 shrink-0 text-center py-1.5 rounded-lg"
               style={{ color: layer.color, backgroundColor: `${layer.color}15`, border: `1px solid ${layer.color}40` }}
             >
               {layer.label}
@@ -50,7 +50,7 @@ export default function ArchOverview() {
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: li * 0.25 + ii * 0.08 + 0.3, type: 'spring' }}
-                  className="text-[8px] font-mono px-2 py-0.5 rounded-md"
+                  className="text-[11px] font-mono px-3 py-1 rounded-md"
                   style={{ color: layer.color, backgroundColor: `${layer.color}15`, border: `1px solid ${layer.color}30` }}
                 >
                   {item}
@@ -75,7 +75,7 @@ export default function ArchOverview() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
-        className="text-[9px] text-slate-500 font-mono"
+        className="text-[12px] text-slate-500 font-mono mt-2"
       >
         FastAPI (Backend) ↔ React.js (Frontend) ↔ SQLite + ChromaDB (Storage)
       </motion.div>

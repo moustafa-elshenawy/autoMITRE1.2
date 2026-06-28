@@ -33,7 +33,7 @@ export default function PCAPFlow() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-2">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">PCAP Stream Analysis — Scapy Pipeline</p>
+      <p className="text-[12px] font-mono text-slate-400 uppercase tracking-widest mb-2">PCAP Stream Analysis — Scapy Pipeline</p>
 
       {/* Stream visualization */}
       <div className="w-full h-32 relative rounded-xl border border-slate-800/50 bg-slate-950/60 overflow-hidden">
@@ -46,7 +46,7 @@ export default function PCAPFlow() {
         {packets.map(p => (
           <motion.div
             key={p.id}
-            className="absolute text-[8px] font-mono px-1.5 py-0.5 rounded whitespace-nowrap"
+            className="absolute text-[10px] font-mono px-2 py-1 rounded whitespace-nowrap"
             style={{
               left: `${p.x}%`,
               top: `${p.progress * 85}%`,
@@ -70,7 +70,7 @@ export default function PCAPFlow() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: i * 0.15 + 0.5 }}
-            className="text-[8px] font-mono text-slate-400 bg-slate-900/50 rounded px-2 py-1 border border-slate-800/50"
+            className="text-[11px] font-mono text-slate-400 bg-slate-900/50 rounded px-3 py-1.5 border border-slate-800/50 text-center"
           >
             📊 {feat}
           </motion.div>
@@ -78,11 +78,11 @@ export default function PCAPFlow() {
       </div>
 
       {/* Anomaly counter */}
-      <div className="w-full flex items-center gap-2">
-        <span className="text-[9px] text-slate-400 font-mono">Detected Anomalies:</span>
+      <div className="w-full flex items-center justify-center gap-3 mt-2">
+        <span className="text-[12px] text-slate-400 font-mono">Detected Anomalies:</span>
         <motion.span
           animate={{ color: anomalies > 30 ? '#ef4444' : '#f59e0b' }}
-          className="text-sm font-bold font-mono"
+          className="text-xl font-bold font-mono"
         >
           {anomalies}
         </motion.span>

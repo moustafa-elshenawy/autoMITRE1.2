@@ -14,8 +14,8 @@ const frs = [
 
 export default function FRPipeline() {
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-3">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Functional Requirements Pipeline (IEEE 830)</p>
+    <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-6">
+      <p className="text-sm font-mono text-slate-400 uppercase tracking-widest">Functional Requirements Pipeline (IEEE 830)</p>
       <div className="relative w-full">
         {/* Pipeline line */}
         <motion.div
@@ -32,7 +32,7 @@ export default function FRPipeline() {
                 initial={{ opacity: 0, y: -8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + i * 0.12 }}
-                className="text-[7px] font-mono font-bold"
+                className="text-[10px] font-mono font-bold mb-2"
                 style={{ color: fr.priority === 'HIGH' ? '#fbbf24' : '#64748b' }}
               >
                 {fr.priority}
@@ -41,7 +41,7 @@ export default function FRPipeline() {
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.4 + i * 0.12, type: 'spring', bounce: 0.5 }}
-                className="w-10 h-10 rounded-full border-2 flex items-center justify-center relative z-10"
+                className="w-16 h-16 rounded-full border-2 flex items-center justify-center relative z-10"
                 style={{ borderColor: fr.color, backgroundColor: `${fr.color}15` }}
               >
                 <motion.div
@@ -49,15 +49,15 @@ export default function FRPipeline() {
                   transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
                   className="w-full h-full rounded-full flex items-center justify-center"
                 >
-                  <span className="text-[8px] font-bold font-mono" style={{ color: fr.color }}>{fr.id}</span>
+                  <span className="text-xs font-bold font-mono" style={{ color: fr.color }}>{fr.id}</span>
                 </motion.div>
               </motion.div>
               <motion.span
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 + i * 0.12 }}
-                className="text-[7px] text-slate-400 font-mono text-center"
-                style={{ maxWidth: '42px' }}
+                className="text-[10px] text-slate-400 font-mono text-center mt-2 leading-tight"
+                style={{ maxWidth: '60px' }}
               >
                 {fr.label}
               </motion.span>
@@ -69,9 +69,9 @@ export default function FRPipeline() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8 }}
-        className="text-center"
+        className="text-center mt-4"
       >
-        <span className="text-[9px] text-slate-500 font-mono">9 Functional Requirements • 6 HIGH priority • All validated (100% PASS)</span>
+        <span className="text-xs text-slate-500 font-mono">9 Functional Requirements • 6 HIGH priority • All validated (100% PASS)</span>
       </motion.div>
     </div>
   );

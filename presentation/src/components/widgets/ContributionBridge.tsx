@@ -18,9 +18,9 @@ export default function ContributionBridge() {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08, duration: 0.4 }}
-              className="bg-cyan-950/30 border border-cyan-700/40 rounded px-2 py-0.5 text-center"
+              className="bg-cyan-950/30 border border-cyan-700/40 rounded px-3 py-1.5 text-center"
             >
-              <span className="text-[8.5px] font-mono text-slate-400">{tool}</span>
+              <span className="text-[12px] font-mono text-slate-400">{tool}</span>
             </motion.div>
           ))}
         </div>
@@ -56,8 +56,8 @@ export default function ContributionBridge() {
               animate={{ boxShadow: ['0 0 10px rgba(34,211,238,0.3)', '0 0 25px rgba(34,211,238,0.6)', '0 0 10px rgba(34,211,238,0.3)'] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <p className="text-[11px] font-bold text-cyan-300 font-mono">autoMITRE</p>
-              <p className="text-[8px] text-slate-400 font-mono mt-0.5">AI Unification</p>
+              <p className="text-[14px] font-bold text-cyan-300 font-mono">autoMITRE</p>
+              <p className="text-[11px] text-slate-400 font-mono mt-0.5">AI Unification</p>
             </motion.div>
           </motion.div>
         </div>
@@ -70,9 +70,9 @@ export default function ContributionBridge() {
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.5 + i * 0.12, duration: 0.4 }}
-              className="bg-emerald-950/40 border border-emerald-700/50 rounded px-2 py-1 text-center"
+              className="bg-emerald-950/40 border border-emerald-700/50 rounded px-3 py-1.5 text-center"
             >
-              <span className="text-[9px] font-mono text-emerald-300">✓ {out}</span>
+              <span className="text-[12px] font-mono text-emerald-300">✓ {out}</span>
             </motion.div>
           ))}
         </div>

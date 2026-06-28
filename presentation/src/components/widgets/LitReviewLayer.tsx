@@ -35,17 +35,17 @@ export default function LitReviewLayer() {
         className="w-full max-w-sm rounded-xl border-2 border-amber-400/70 bg-amber-500/10 px-4 py-2 flex items-center justify-between"
         style={{ boxShadow: '0 0 20px rgba(251,191,36,0.25)' }}
       >
-        <div className="flex items-center gap-2">
-          <span className="text-xl">🛡️</span>
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">🛡️</span>
           <div>
-            <p className="text-amber-400 font-bold font-mono text-sm tracking-wide">autoMITRE</p>
-            <p className="text-[10px] text-amber-300/70 font-mono">Enhancement &amp; Integration Layer</p>
+            <p className="text-amber-400 font-bold font-mono text-lg tracking-wide">autoMITRE</p>
+            <p className="text-xs text-amber-300/70 font-mono">Enhancement &amp; Integration Layer</p>
           </div>
         </div>
         <motion.div
           animate={{ scale: [1, 1.15, 1] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="text-[10px] font-mono bg-amber-400/20 text-amber-400 px-2 py-0.5 rounded-full border border-amber-400/40"
+          className="text-xs font-mono bg-amber-400/20 text-amber-400 px-3 py-1 rounded-full border border-amber-400/40"
         >
           AI-Powered
         </motion.div>
@@ -64,12 +64,12 @@ export default function LitReviewLayer() {
             <motion.div
               animate={{ opacity: [0.3, 1, 0.3] }}
               transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.2 }}
-              className="w-0.5 h-full bg-gradient-to-b from-amber-400/70 to-transparent"
+              className="w-1 h-full bg-gradient-to-b from-amber-400/70 to-transparent"
             />
-            <span className="text-[8px] text-amber-400 font-mono mt-0.5">▲</span>
+            <span className="text-[10px] text-amber-400 font-mono mt-0.5">▲</span>
           </motion.div>
         ))}
-        <p className="absolute top-1 right-0 text-[8px] font-mono text-slate-500">integrates &amp; enhances</p>
+        <p className="absolute top-1 right-0 text-[10px] font-mono text-slate-500">integrates &amp; enhances</p>
       </div>
 
       {/* Tool cards */}
@@ -83,17 +83,17 @@ export default function LitReviewLayer() {
             className="flex-1 rounded-xl border p-2.5 flex flex-col gap-1.5"
             style={{ borderColor: `${t.color}50`, backgroundColor: `${t.color}0D` }}
           >
-            <div className="flex items-center gap-1.5">
-              <span className="text-base">{t.icon}</span>
-              <p className="text-[10px] font-bold font-mono text-slate-200 leading-tight">{t.name}</p>
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{t.icon}</span>
+              <p className="text-[13px] font-bold font-mono text-slate-200 leading-tight">{t.name}</p>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="text-[9px]">✅</span>
-              <p className="text-[9px] font-mono leading-tight" style={{ color: t.color }}>{t.strength}</p>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[12px]">✅</span>
+              <p className="text-[12px] font-mono leading-tight" style={{ color: t.color }}>{t.strength}</p>
             </div>
-            <div className="flex items-start gap-1">
-              <span className="text-[9px] mt-0.5">❌</span>
-              <p className="text-[9px] text-red-400/80 font-mono leading-tight">{t.gap}</p>
+            <div className="flex items-start gap-2">
+              <span className="text-[12px] mt-0.5">❌</span>
+              <p className="text-[12px] text-red-400/80 font-mono leading-tight">{t.gap}</p>
             </div>
           </motion.div>
         ))}
@@ -103,7 +103,7 @@ export default function LitReviewLayer() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.0 }}
-        className="text-[9px] text-slate-500 font-mono text-center"
+        className="text-[12px] text-slate-500 font-mono text-center mt-2"
       >
         autoMITRE does not replace these tools — it completes what they cannot do alone
       </motion.p>
