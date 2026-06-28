@@ -86,7 +86,6 @@ export default function PCAPFlow() {
         >
           {anomalies}
         </motion.span>
-        <span className="text-[9px] text-slate-500 font-mono">— PCAP accuracy: 63.2% (heuristic baseline)</span>
       </div>
     </div>
   );

@@ -290,7 +290,7 @@ export const slides: SlideData[] = [
     content: [
       'Packet Parsing: Scapy performs header inspection and reconstructs TCP/UDP flow sessions.',
       'Feature Extraction: src/dst IPs, ports, protocols, flags, payload size, inter-packet timing.',
-      'Behavioral Classification: Detects beaconing, port scanning, and C2 patterns (63.2% baseline).',
+      'Behavioral Classification: Detects beaconing, port scanning, and C2 patterns.',
     ],
     layout: 'split',
     widget: 'pcap_flow',
