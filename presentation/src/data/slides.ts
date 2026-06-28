@@ -433,7 +433,6 @@ export const slides: SlideData[] = [
     widget: 'mapping_accuracy',
   },
   {
-      {
     id: 30,
     section: 'Results & Testing',
     title: 'Contextualizing 84% Accuracy',
@@ -445,7 +444,8 @@ export const slides: SlideData[] = [
     layout: 'split',
     widget: 'accuracy_context',
   },
-id: 31,
+  {
+    id: 31,
     section: 'Results & Testing',
     title: 'Case Study — Mimikatz Credential Dumping',
     content: [
