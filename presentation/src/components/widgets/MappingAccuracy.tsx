@@ -5,7 +5,7 @@ const mappings = [
   { label: 'D3FEND + NIST\nMapping', value: 98.41, color: '#8b5cf6', total: 100, desc: 'Deterministic mapping' },
 ];
 
-const r = 36;
+const r = 42;
 const circumference = 2 * Math.PI * r;
 
 export default function MappingAccuracy() {
@@ -24,11 +24,11 @@ export default function MappingAccuracy() {
               transition={{ duration: 0.5, type: 'spring' }}
               className="flex flex-col items-center gap-3"
             >
-              <div className="relative w-28 h-28">
-                <svg className="w-full h-full -rotate-90" viewBox="0 0 96 96">
-                  <circle cx={48} cy={48} r={r} fill="none" stroke="#1e293b" strokeWidth={10} />
+              <div className="relative w-36 h-36">
+                <svg className="w-full h-full -rotate-90" viewBox="0 0 104 104">
+                  <circle cx={52} cy={52} r={r} fill="none" stroke="#1e293b" strokeWidth={10} />
                   <motion.circle
-                    cx={48} cy={48} r={r}
+                    cx={52} cy={52} r={r}
                     fill="none"
                     stroke={m.color}
                     strokeWidth={10}
