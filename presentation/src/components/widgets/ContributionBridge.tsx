@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-const leftTools = ['Microsoft TMT', 'IriusRisk', 'VirusTotal', 'Splunk SIEM', 'OWASP Dragon'];
+const leftTools = ['Raw Threat Description', 'Network PCAP', 'Logs / CSV', 'JSON / STIX', 'Hash / OSINT'];
 const rightOutputs = ['ATT&CK Map', 'D3FEND Plan', 'NIST Controls', 'STIX Export', 'Mitigations'];
 
 export default function ContributionBridge() {
