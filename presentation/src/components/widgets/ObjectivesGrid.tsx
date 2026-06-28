@@ -1,18 +1,18 @@
 import { motion } from 'framer-motion';
 
 const objectives = [
-  { icon: '📥', title: 'Multi-Format Ingestion', desc: 'PCAP, Text, JSON, HTML, CSV, Hashes', color: '#0ea5e9' },
-  { icon: '🧠', title: 'AI Semantic Analysis', desc: 'SecureBERT + RAG-grounded reasoning', color: '#8b5cf6' },
-  { icon: '🗺️', title: 'Framework Mapping', desc: 'ATT&CK, D3FEND, NIST 800-53, OWASP', color: '#10b981' },
-  { icon: '🛡️', title: 'Mitigation Generation', desc: 'Explainable step-by-step defenses', color: '#f59e0b' },
-  { icon: '🔮', title: 'Threat Prediction', desc: 'Next-stage attack forecasting via history', color: '#ec4899' },
-  { icon: '🔗', title: 'SIEM Orchestration', desc: 'STIX 2.1 & JSON export for Splunk/Wazuh', color: '#06b6d4' },
+  { icon: '🚨', title: '1. The Problem', desc: 'SOC workflow limits & alert fatigue', color: '#ef4444' },
+  { icon: '🕳️', title: '2. The Gap', desc: 'Where current security tools fail', color: '#f59e0b' },
+  { icon: '📐', title: '3. Design', desc: 'Engineering & architecture choices', color: '#10b981' },
+  { icon: '🧠', title: '4. AI Engine', desc: 'SecureBERT, RAG, & LLM flow', color: '#8b5cf6' },
+  { icon: '📊', title: '5. Results', desc: '96.8% accuracy & IEEE 829', color: '#0ea5e9' },
+  { icon: '🚀', title: '6. Conclusion', desc: 'Future work & DBSCAN roadmap', color: '#a855f7' },
 ];
 
 export default function ObjectivesGrid() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-3 gap-2">
-      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">6 Core Objectives</p>
+      <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Presentation Roadmap</p>
       <div className="grid grid-cols-3 gap-2 w-full">
         {objectives.map((obj, i) => (
           <motion.div

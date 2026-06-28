@@ -18,8 +18,8 @@ export default function StakeholderOrbit() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest mb-1">Who Benefits from autoMITRE</p>
-      <div className="relative w-full" style={{ paddingBottom: '80%' }}>
-        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+      <div className="relative w-full flex-1 min-h-0 flex items-center justify-center mt-2">
+        <svg className="w-full h-full" viewBox="-15 -15 130 130" preserveAspectRatio="xMidYMid meet">
           {/* Orbit circle */}
           <motion.circle
             cx={50} cy={50} r={35}
@@ -70,7 +70,8 @@ export default function StakeholderOrbit() {
           {/* Stakeholder nodes */}
           {stakeholders.map((s, i) => {
             const pos = toXY(s.angle, s.dist);
-            const labelPos = toXY(s.angle, s.dist + 10);
+            const anchor = s.angle === 270 || s.angle === 90 ? "middle" : (s.angle < 90 || s.angle > 270 ? "start" : "end");
+            const labelPos = toXY(s.angle, s.dist + 8);
             return (
               <g key={s.label}>
                 <motion.circle
@@ -84,8 +85,8 @@ export default function StakeholderOrbit() {
                   style={{ transformOrigin: `${pos.x}px ${pos.y}px` }}
                 />
                 <motion.text
-                  x={labelPos.x} y={labelPos.y}
-                  textAnchor="middle" dominantBaseline="middle"
+                  x={labelPos.x} y={s.angle === 270 ? labelPos.y - 2 : labelPos.y}
+                  textAnchor={anchor} dominantBaseline="middle"
                   fontSize="3" fill={s.color} fontFamily="monospace"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

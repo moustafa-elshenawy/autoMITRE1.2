@@ -203,7 +203,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       <div className={`flex-grow flex ${isSplit ? 'flex-row gap-12 items-center' : 'flex-col items-center justify-center'} w-full`}>
         {/* Bullet points */}
         <div className={`${isSplit ? 'w-5/12' : 'w-full max-w-4xl'} flex flex-col justify-center h-full`}>
-          <ul className="space-y-5 w-full">
+          <ul className="space-y-3 w-full">
             {slide.content.map((point, idx) => (
               <motion.li
                 key={idx}
@@ -211,9 +211,9 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
                 animate={{ opacity: 1, x: 0, rotateX: 0 }}
                 whileHover={{ scale: 1.02, x: 10, borderColor: 'rgba(34,211,238,0.5)', backgroundColor: 'rgba(15,23,42,0.8)' }}
                 transition={{ duration: 0.4, delay: 0.4 + idx * 0.15 }}
-                className="text-xl flex items-start bg-slate-900/40 p-5 rounded-xl border border-slate-800/50 cursor-default transition-colors duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] backdrop-blur-sm"
+                className="text-lg flex items-center bg-slate-900/40 px-5 py-3.5 rounded-xl border border-slate-800/50 cursor-default transition-colors duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] backdrop-blur-sm"
               >
-                <span className="text-cyan-500 mr-4 mt-1.5 opacity-80 shrink-0 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">▸</span>
+                <span className="text-cyan-500 mr-4 opacity-80 shrink-0 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">▸</span>
                 <span className="leading-relaxed text-slate-200">{point}</span>
               </motion.li>
             ))}

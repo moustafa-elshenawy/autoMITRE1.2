@@ -2,11 +2,30 @@ import { useState, useEffect, useCallback } from 'react';
 import { slides } from './data/slides';
 import SlideWrapper from './components/SlideWrapper';
 import CyberBackground from './components/CyberBackground';
-import { ChevronLeft, ChevronRight, ShieldAlert, Printer } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ShieldAlert, Printer, Maximize, Minimize } from 'lucide-react';
 
 function App() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isExportMode, setIsExportMode] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => console.log(err));
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  };
 
   const nextSlide = useCallback(() => {
     setCurrentSlideIndex((prev) => Math.min(prev + 1, slides.length - 1));
@@ -91,8 +110,16 @@ function App() {
         </div>
         <div className="flex items-center gap-4 pointer-events-auto">
           <button 
+            onClick={toggleFullscreen}
+            className="flex items-center gap-1.5 text-xs font-mono bg-slate-900/80 hover:bg-slate-800 text-slate-300 px-3 py-1.5 rounded-full border border-slate-800 transition-all cursor-pointer"
+            title="Toggle Fullscreen"
+          >
+            {isFullscreen ? <Minimize className="w-3.5 h-3.5" /> : <Maximize className="w-3.5 h-3.5" />}
+            <span className="mt-0.5">{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
+          </button>
+          <button 
             onClick={() => setIsExportMode(true)}
-            className="text-xs font-mono bg-cyan-950/80 hover:bg-cyan-900 text-cyan-400 px-3 py-1 rounded-full border border-cyan-800/50 transition-all hover:neon-glow-cyan cursor-pointer"
+            className="text-xs font-mono bg-cyan-950/80 hover:bg-cyan-900 text-cyan-400 px-3 py-1.5 rounded-full border border-cyan-800/50 transition-all hover:neon-glow-cyan cursor-pointer"
           >
             Export PDF
           </button>
