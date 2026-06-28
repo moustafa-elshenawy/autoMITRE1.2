@@ -15,7 +15,7 @@ const maxVal = 212;
 export default function ThreatSurge() {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4 gap-3">
-      <p className="text-xs text-cyan-400 font-mono uppercase tracking-widest mb-2">
+      <p className="text-sm text-cyan-400 font-mono uppercase tracking-widest mb-2">
         Global Cyber Incidents (Thousands/Year)
       </p>
       <div className="w-full flex items-end justify-around gap-2 h-48">
@@ -25,7 +25,7 @@ export default function ThreatSurge() {
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.15, duration: 0.4 }}
-              className="text-[10px] font-mono font-bold text-red-400"
+              className="text-sm font-mono font-bold text-red-400"
             >
               {d.label}
             </motion.span>
@@ -45,7 +45,7 @@ export default function ThreatSurge() {
                 className="absolute inset-0 bg-gradient-to-t from-transparent to-red-300/20"
               />
             </motion.div>
-            <span className="text-[10px] text-slate-400 font-mono">{d.year}</span>
+            <span className="text-xs text-slate-400 font-mono mt-1">{d.year}</span>
           </div>
         ))}
       </div>
@@ -60,7 +60,7 @@ export default function ThreatSurge() {
           transition={{ duration: 1, repeat: Infinity }}
           className="w-2 h-2 rounded-full bg-red-500"
         />
-        <span className="text-xs text-red-400 font-mono">+562% surge since 2019 — defenses haven't kept pace</span>
+        <span className="text-sm text-red-400 font-mono">+562% surge since 2019 — defenses haven't kept pace</span>
       </motion.div>
     </div>
   );
