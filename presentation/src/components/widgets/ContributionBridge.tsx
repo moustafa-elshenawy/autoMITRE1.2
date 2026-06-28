@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 
 const leftTools = [
-  'Microsoft TMT', 'IriusRisk', 'VirusTotal', 'Splunk SIEM', 'OWASP Dragon',
-  'Raw Threat Description', 'Network PCAP', 'Logs / CSV', 'JSON / STIX', 'Hash / OSINT',
+  'Microsoft TMT', 'IriusRisk', 'OWASP Dragon',
+  'Raw Threat Description', 'Network PCAP', 'Logs / CSV', 'JSON / STIX',
 ];
 const rightOutputs = ['ATT&CK Map', 'D3FEND Plan', 'NIST Controls', 'STIX Export', 'Mitigations'];
 
