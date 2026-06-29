@@ -268,6 +268,18 @@ export const slides: SlideData[] = [
   {
     id: 16,
     section: 'The AI Engine',
+    title: 'Multi-Format Data Ingestion Layer',
+    content: [
+      'Text Descriptions: Raw CTI reports, analyst notes, and threat narratives.',
+      'Structured Inputs: IriusRisk HTML (dual-schema), JSON threat models, CSV/Excel tabular data.',
+      'Binary Inputs: PCAP network captures (Scapy), MD5/SHA256 malware hashes (VirusTotal API).',
+    ],
+    layout: 'split',
+    widget: 'intake',
+  },
+  {
+    id: 17,
+    section: 'The AI Engine',
     title: 'Architectural Data Flow & Model Orchestration',
     content: [
       'Two Parallel Paths: Unstructured text uses the 3-Layer RAG Pipeline; structured logs can route to Deep-Learning.',
@@ -277,18 +289,6 @@ export const slides: SlideData[] = [
     ],
     layout: 'split',
     widget: 'data_flow_diagram',
-  },
-  {
-    id: 17,
-    section: 'The AI Engine',
-    title: 'Multi-Format Data Ingestion Layer',
-    content: [
-      'Text Descriptions: Raw CTI reports, analyst notes, and threat narratives.',
-      'Structured Inputs: IriusRisk HTML (dual-schema), JSON threat models, CSV/Excel tabular data.',
-      'Binary Inputs: PCAP network captures (Scapy), MD5/SHA256 malware hashes (VirusTotal API).',
-    ],
-    layout: 'split',
-    widget: 'intake',
   },
   {
     id: 18,
