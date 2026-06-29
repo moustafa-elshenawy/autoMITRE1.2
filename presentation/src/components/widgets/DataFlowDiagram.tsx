@@ -5,7 +5,7 @@ export default function DataFlowDiagram() {
   const lineClass = "absolute bg-gradient-to-b from-cyan-500 to-emerald-500 w-0.5 z-0";
   const arrowClass = "w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[6px] border-t-emerald-500 absolute -bottom-1 left-[-3px]";
 
-  const nodeVariants = {
+  const nodeVariants: any = {
     hidden: { opacity: 0, y: 20 },
     visible: (custom: number) => ({
       opacity: 1,
@@ -14,7 +14,7 @@ export default function DataFlowDiagram() {
     })
   };
 
-  const lineVariants = {
+  const lineVariants: any = {
     hidden: { height: 0, opacity: 0 },
     visible: (custom: number) => ({
       height: "100%",
