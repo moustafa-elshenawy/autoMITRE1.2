@@ -389,18 +389,6 @@ export const slides: SlideData[] = [
   {
     id: 26,
     section: 'The AI Engine',
-    title: 'Mitigation Generation Pipeline',
-    content: [
-      'Step 1 Detect: AI identifies threat intent, target, and attack technique from input.',
-      'Step 2 Map: Correlate to ATT&CK, D3FEND, and NIST — produce defensive control IDs.',
-      'Steps 3–4 Reason & Recommend: LLM generates explainable step-by-step mitigation actions.',
-    ],
-    layout: 'split',
-    widget: 'mitigation_flow',
-  },
-  {
-    id: 27,
-    section: 'The AI Engine',
     title: 'Predictive Attack Path Generation',
     content: [
       'Proactive Intelligence: Transitions the system from reactive reporting to proactive forecasting.',
@@ -409,6 +397,18 @@ export const slides: SlideData[] = [
     ],
     layout: 'split',
     widget: 'prediction_engine',
+  },
+  {
+    id: 27,
+    section: 'The AI Engine',
+    title: 'Mitigation Generation Pipeline',
+    content: [
+      'Step 1 Detect: AI identifies threat intent, target, and attack technique from input.',
+      'Step 2 Map: Correlate to ATT&CK, D3FEND, and NIST — produce defensive control IDs.',
+      'Steps 3–4 Reason & Recommend: LLM generates explainable step-by-step mitigation actions.',
+    ],
+    layout: 'split',
+    widget: 'mitigation_flow',
   },
   {
     id: 28,
