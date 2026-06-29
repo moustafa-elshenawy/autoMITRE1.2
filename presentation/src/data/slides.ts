@@ -344,7 +344,7 @@ export const slides: SlideData[] = [
     section: 'The AI Engine',
     title: 'SecureBERT — The Domain-Specific AI Classifier',
     content: [
-      'Cybersecurity-Trained: Pre-trained on 20,736 threat narratives across all 499 ATT&CK techniques.',
+      'Cybersecurity-Trained: Pre-trained on 20,736 threat narratives from the MITRE CTID TRAM dataset across all 499 ATT&CK techniques.',
       'Superior Performance: 96.81% accuracy, 96.65% F1-Score — outperforms generic BERT models.',
       'Severity Scoring: Classifies threats into CVSS-aligned severity levels at 95.22% F1-Score.',
     ],
@@ -456,7 +456,7 @@ export const slides: SlideData[] = [
     section: 'Results & Testing',
     title: 'AI Model Accuracy — SecureBERT Evaluation',
     content: [
-      'Dataset: 20,736 cyber threat narratives across all 499 MITRE ATT&CK techniques.',
+      'Dataset: MITRE CTID TRAM dataset (20,736 cyber threat narratives across all 499 MITRE ATT&CK techniques).',
       'Core Classification: 96.81% Accuracy and 96.65% F1-Score.',
       'Severity Scoring: 95.22% F1-Score for CVSS-aligned threat severity classification.',
     ],
