@@ -142,7 +142,7 @@ export const slides: SlideData[] = [
     content: [
       '10,000+ daily alerts per analyst — the human filtering ceiling has been exceeded.',
       'High false-positive rates cause genuine threats to be buried in noise.',
-      'MTTD (Mean Time to Detect) averages 207 days in the industry — far too slow.',
+      'MTTD (Mean Time to Detect) averages 194 days in the industry (2024) — far too slow.',
     ],
     layout: 'split',
     widget: 'alert_fatigue_meter',
@@ -153,7 +153,7 @@ export const slides: SlideData[] = [
     title: 'Manual MITRE Mapping — A Bottleneck in Every Incident',
     content: [
       'Analysts spend 15–40 minutes per incident manually mapping to ATT&CK techniques.',
-      'MITRE ATT&CK contains 499+ unique techniques requiring domain expertise to navigate.',
+      'MITRE ATT&CK contains 650+ unique techniques and sub-techniques requiring domain expertise.',
       'During active incidents, this delay directly increases Mean Time to Respond (MTTR).',
     ],
     layout: 'split',
