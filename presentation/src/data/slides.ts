@@ -44,6 +44,7 @@ export type SlideWidget =
   | 'limitations_gauge'
   | 'future_roadmap'
   | 'conclusion_shield'
+  | 'data_flow_diagram'
   | 'none';
 
 export type SlideData = {
@@ -379,6 +380,19 @@ export const slides: SlideData[] = [
     ],
     layout: 'split',
     widget: 'tech_stack_wheel',
+  },
+  {
+    id: 999,
+    section: 'The AI Engine',
+    title: 'Architectural Data Flow & Model Orchestration',
+    content: [
+      'Two Parallel Paths: Unstructured text uses the 3-Layer RAG Pipeline; structured logs can route to Deep-Learning.',
+      'Llama-3.2 + all-mpnet: Act as the semantic extraction and retrieval engine for zero-shot framework mapping.',
+      'SecureBERT + Bi-Encoder: Provide hierarchical multi-label classification and semantic verification.',
+      'XGBoost Severity: Both paths ultimately converge into the final risk regression model.',
+    ],
+    layout: 'split',
+    widget: 'data_flow_diagram',
   },
 
   // ────────────────────────────────────────────────────────────

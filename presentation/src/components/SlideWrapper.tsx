@@ -50,6 +50,7 @@ import FRValidation from './widgets/FRValidation';
 import LimitationsGauge from './widgets/LimitationsGauge';
 import FutureRoadmap from './widgets/FutureRoadmap';
 import ConclusionShield from './widgets/ConclusionShield';
+import DataFlowDiagram from './widgets/DataFlowDiagram';
 
 export default function SlideWrapper({ slide }: { slide: SlideData }) {
   const isTitle = slide.layout === 'title';
@@ -102,6 +103,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'load_test':              return <LoadTest />;
       case 'fr_validation':          return <FRValidation />;
       case 'limitations_gauge':      return <LimitationsGauge />;
+      case 'data_flow_diagram':      return <DataFlowDiagram />;
       case 'future_roadmap':         return <FutureRoadmap />;
       case 'conclusion_shield':      return <ConclusionShield />;
       case 'none':                   return null;
