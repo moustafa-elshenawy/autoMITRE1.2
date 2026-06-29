@@ -51,6 +51,8 @@ import LimitationsGauge from './widgets/LimitationsGauge';
 import FutureRoadmap from './widgets/FutureRoadmap';
 import ConclusionShield from './widgets/ConclusionShield';
 import DataFlowDiagram from './widgets/DataFlowDiagram';
+import SemanticReranker from './widgets/SemanticReranker';
+import ThreatSeverity from './widgets/ThreatSeverity';
 
 export default function SlideWrapper({ slide }: { slide: SlideData }) {
   const isTitle = slide.layout === 'title';
@@ -104,6 +106,8 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'fr_validation':          return <FRValidation />;
       case 'limitations_gauge':      return <LimitationsGauge />;
       case 'data_flow_diagram':      return <DataFlowDiagram />;
+      case 'semantic_reranker':      return <SemanticReranker />;
+      case 'threat_severity':        return <ThreatSeverity />;
       case 'future_roadmap':         return <FutureRoadmap />;
       case 'conclusion_shield':      return <ConclusionShield />;
       case 'none':                   return null;

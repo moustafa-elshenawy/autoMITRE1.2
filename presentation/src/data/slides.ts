@@ -45,6 +45,8 @@ export type SlideWidget =
   | 'future_roadmap'
   | 'conclusion_shield'
   | 'data_flow_diagram'
+  | 'semantic_reranker'
+  | 'threat_severity'
   | 'none';
 
 export type SlideData = {
@@ -258,11 +260,11 @@ export const slides: SlideData[] = [
     widget: 'arch_overview',
   },
 
-  // ────────────────────────────────────────────────────────────
-  // SECTION 4 — THE AI ENGINE (Slides 16–25)
+    // ────────────────────────────────────────────────────────────
+  // SECTION 4 — THE AI ENGINE
   // ────────────────────────────────────────────────────────────
   {
-    id: 999,
+    id: 16,
     section: 'The AI Engine',
     title: 'Architectural Data Flow & Model Orchestration',
     content: [
@@ -275,7 +277,7 @@ export const slides: SlideData[] = [
     widget: 'data_flow_diagram',
   },
   {
-    id: 16,
+    id: 17,
     section: 'The AI Engine',
     title: 'Multi-Format Data Ingestion Layer',
     content: [
@@ -287,7 +289,19 @@ export const slides: SlideData[] = [
     widget: 'intake',
   },
   {
-    id: 17,
+    id: 18,
+    section: 'The AI Engine',
+    title: 'LLM Reasoning — Cloud Engine + Local Failover',
+    content: [
+      'Primary: Groq Cloud API (LPU-powered) delivers reasoning at ~0.8s average latency.',
+      'Fallback / Local Extraction: Phi-3.5-mini and Llama-3.2-3B-Instruct running locally via Apple Metal (MPS).',
+      'Zero Downtime: Automatic exception-based routing — no analyst intervention required during failover.',
+    ],
+    layout: 'split',
+    widget: 'llm_failover',
+  },
+  {
+    id: 19,
     section: 'The AI Engine',
     title: 'Text & Threat Description Pipeline — NLP Processing',
     content: [
@@ -297,30 +311,6 @@ export const slides: SlideData[] = [
     ],
     layout: 'split',
     widget: 'nlp_pipeline',
-  },
-  {
-    id: 18,
-    section: 'The AI Engine',
-    title: 'Isolated Pipeline — PCAP Network Analysis',
-    content: [
-      'Packet Parsing: Scapy performs header inspection and reconstructs TCP/UDP flow sessions.',
-      'Feature Extraction: src/dst IPs, ports, protocols, flags, payload size, inter-packet timing.',
-      'Behavioral Classification: Detects beaconing, port scanning, and C2 patterns.',
-    ],
-    layout: 'split',
-    widget: 'pcap_flow',
-  },
-  {
-    id: 19,
-    section: 'The AI Engine',
-    title: 'SecureBERT — The Domain-Specific AI Classifier',
-    content: [
-      'Cybersecurity-Trained: Pre-trained on 20,736 threat narratives across all 499 ATT&CK techniques.',
-      'Superior Performance: 96.81% accuracy, 96.65% F1-Score — outperforms generic BERT models.',
-      'Severity Scoring: Classifies threats into CVSS-aligned severity levels at 95.22% F1-Score.',
-    ],
-    layout: 'split',
-    widget: 'securebert_brain',
   },
   {
     id: 20,
@@ -337,18 +327,6 @@ export const slides: SlideData[] = [
   {
     id: 21,
     section: 'The AI Engine',
-    title: 'LLM Reasoning — Cloud Engine + Local Failover',
-    content: [
-      'Primary: Groq Cloud API (LPU-powered) delivers reasoning at ~0.8s average latency.',
-      'Fallback / Local Extraction: Phi-3.5-mini and Llama-3.2-3B-Instruct running locally via Apple Metal (MPS).',
-      'Zero Downtime: Automatic exception-based routing — no analyst intervention required during failover.',
-    ],
-    layout: 'split',
-    widget: 'llm_failover',
-  },
-  {
-    id: 22,
-    section: 'The AI Engine',
     title: 'Multi-Framework Mapping Engine',
     content: [
       'Single-Pass Correlation: One threat maps to ATT&CK, D3FEND, NIST 800-53, and OWASP ASVS.',
@@ -359,7 +337,55 @@ export const slides: SlideData[] = [
     widget: 'framework_mapper',
   },
   {
+    id: 22,
+    section: 'The AI Engine',
+    title: 'SecureBERT — The Domain-Specific AI Classifier',
+    content: [
+      'Cybersecurity-Trained: Pre-trained on 20,736 threat narratives across all 499 ATT&CK techniques.',
+      'Superior Performance: 96.81% accuracy, 96.65% F1-Score — outperforms generic BERT models.',
+      'Severity Scoring: Classifies threats into CVSS-aligned severity levels at 95.22% F1-Score.',
+    ],
+    layout: 'split',
+    widget: 'securebert_brain',
+  },
+  {
     id: 23,
+    section: 'The AI Engine',
+    title: 'Semantic Bi-Encoder Reranker',
+    content: [
+      'Hallucination Filter: SecureBERT can occasionally output high-confidence false positives.',
+      'Semantic Verification: all-mpnet-base-v2 cross-checks SecureBERT predictions against definitions.',
+      'Precision Boost: Only tags with > 0.45 cosine similarity are retained, filtering out statistical noise.',
+    ],
+    layout: 'split',
+    widget: 'semantic_reranker',
+  },
+  {
+    id: 24,
+    section: 'The AI Engine',
+    title: 'Isolated Pipeline — PCAP Network Analysis',
+    content: [
+      'Packet Parsing: Scapy performs header inspection and reconstructs TCP/UDP flow sessions.',
+      'Feature Extraction: src/dst IPs, ports, protocols, flags, payload size, inter-packet timing.',
+      'Behavioral Classification: Detects beaconing, port scanning, and C2 patterns.',
+    ],
+    layout: 'split',
+    widget: 'pcap_flow',
+  },
+  {
+    id: 25,
+    section: 'The AI Engine',
+    title: 'Threat Severity Prediction',
+    content: [
+      'XGBoost Regressor: Converges both pipelines into a final CVSS v3.1 base score (0.0 - 10.0).',
+      'Features: Base CVSS of mapped techniques, SecureBERT severity flags, and tactical impact.',
+      'Performance: High precision regression providing quantifiable risk metrics to the dashboard.',
+    ],
+    layout: 'split',
+    widget: 'threat_severity',
+  },
+  {
+    id: 26,
     section: 'The AI Engine',
     title: 'Mitigation Generation Pipeline',
     content: [
@@ -371,7 +397,7 @@ export const slides: SlideData[] = [
     widget: 'mitigation_flow',
   },
   {
-    id: 24,
+    id: 27,
     section: 'The AI Engine',
     title: 'FastAPI Async REST Architecture',
     content: [
@@ -383,7 +409,7 @@ export const slides: SlideData[] = [
     widget: 'api_routes',
   },
   {
-    id: 25,
+    id: 28,
     section: 'The AI Engine',
     title: 'Technology Stack — Tools & Libraries',
     content: [
@@ -395,11 +421,11 @@ export const slides: SlideData[] = [
     widget: 'tech_stack_wheel',
   },
 
-  // ────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────
   // SECTION 5 — RESULTS & TESTING (Slides 26–35)
   // ────────────────────────────────────────────────────────────
   {
-    id: 26,
+    id: 29,
     section: 'Results & Testing',
     title: 'Testing Framework — IEEE 829 Standard',
     content: [
@@ -411,7 +437,7 @@ export const slides: SlideData[] = [
     widget: 'test_matrix',
   },
   {
-    id: 27,
+    id: 30,
     section: 'Results & Testing',
     title: 'AI Model Accuracy — SecureBERT Evaluation',
     content: [
@@ -423,7 +449,7 @@ export const slides: SlideData[] = [
     widget: 'accuracy',
   },
   {
-    id: 28,
+    id: 31,
     section: 'Results & Testing',
     title: 'Inference Latency Benchmarks',
     content: [
@@ -435,7 +461,7 @@ export const slides: SlideData[] = [
     widget: 'latency',
   },
   {
-    id: 29,
+    id: 32,
     section: 'Results & Testing',
     title: 'Framework Mapping Accuracy',
     content: [
@@ -447,7 +473,7 @@ export const slides: SlideData[] = [
     widget: 'mapping_accuracy',
   },
   {
-    id: 30,
+    id: 33,
     section: 'Results & Testing',
     title: 'Contextualizing 84% Accuracy',
     content: [
@@ -459,7 +485,7 @@ export const slides: SlideData[] = [
     widget: 'accuracy_context',
   },
   {
-    id: 31,
+    id: 34,
     section: 'Results & Testing',
     title: 'Case Study — Mimikatz Credential Dumping',
     content: [
@@ -471,7 +497,7 @@ export const slides: SlideData[] = [
     widget: 'case_study_walkthrough',
   },
   {
-    id: 32,
+    id: 35,
     section: 'Results & Testing',
     title: 'SIEM Integration — STIX 2.1 Export Validation',
     content: [
@@ -483,7 +509,7 @@ export const slides: SlideData[] = [
     widget: 'stix_tree',
   },
   {
-    id: 33,
+    id: 36,
     section: 'Results & Testing',
     title: 'Hallucination Prevention — RAG Validation',
     content: [
@@ -495,7 +521,7 @@ export const slides: SlideData[] = [
     widget: 'guardrail',
   },
   {
-    id: 34,
+    id: 37,
     section: 'Results & Testing',
     title: 'System Resiliency — Failover Test (TC-33)',
     content: [
@@ -507,7 +533,7 @@ export const slides: SlideData[] = [
     widget: 'failover_test',
   },
   {
-    id: 35,
+    id: 38,
     section: 'Results & Testing',
     title: 'Load Testing — 20 Concurrent Analysts (Locust)',
     content: [
@@ -519,7 +545,7 @@ export const slides: SlideData[] = [
     widget: 'load_test',
   },
   {
-    id: 36,
+    id: 39,
     section: 'Results & Testing',
     title: 'Functional Requirements Validation — Complete Coverage',
     content: [
@@ -535,7 +561,7 @@ export const slides: SlideData[] = [
   // SECTION 6 — CONCLUSION & FUTURE WORK (Slides 36–39)
   // ────────────────────────────────────────────────────────────
   {
-    id: 37,
+    id: 40,
     section: 'Conclusion & Future Work',
     title: 'Honest Limitations',
     content: [
@@ -547,7 +573,7 @@ export const slides: SlideData[] = [
     widget: 'limitations_gauge',
   },
   {
-    id: 38,
+    id: 41,
     section: 'Conclusion & Future Work',
     title: 'Future Work — DBSCAN Zero-Day Anomaly Detection',
     content: [
@@ -559,7 +585,7 @@ export const slides: SlideData[] = [
     widget: 'dbscan',
   },
   {
-    id: 39,
+    id: 42,
     section: 'Conclusion & Future Work',
     title: 'Future Enhancement Roadmap',
     content: [
@@ -571,7 +597,7 @@ export const slides: SlideData[] = [
     widget: 'future_roadmap',
   },
   {
-    id: 40,
+    id: 43,
     section: 'Conclusion & Future Work',
     title: 'Conclusion & Thank You',
     content: [
