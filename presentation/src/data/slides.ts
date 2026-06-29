@@ -249,7 +249,7 @@ export const slides: SlideData[] = [
     title: 'High-Level System Architecture — 4 Layers',
     content: [
       'Input Layer: 7 heterogeneous formats normalized into a unified JSON threat schema.',
-      'AI Engine: SecureBERT classifier + ChromaDB RAG + Groq LLM + local Phi-3.5 fallback.',
+      'AI Engine: SecureBERT + ChromaDB RAG (all-mpnet-base-v2) + Groq LLM + local Phi-3.5 / Llama-3.2 extractors.',
       'Mapping Layer: Cosine similarity engine correlating threats to 4 frameworks simultaneously.',
       'Output Layer: React dashboard, STIX 2.1, JSON, and PDF exports.',
     ],
@@ -278,7 +278,7 @@ export const slides: SlideData[] = [
     title: 'Text & Threat Description Pipeline — NLP Processing',
     content: [
       'Tokenization: spaCy and NLTK preprocess unstructured text into semantic tokens.',
-      'Named Entity Recognition: Extracts attack actors, tools, targets, and actions from prose.',
+      'Extraction: Llama-3.2-3B-Instruct (via MLX) acts as a local NLP relation extractor.',
       'Embedding: all-mpnet-base-v2 generates 768-dimensional semantic threat vectors.',
     ],
     layout: 'split',
@@ -326,7 +326,7 @@ export const slides: SlideData[] = [
     title: 'LLM Reasoning — Cloud Engine + Local Failover',
     content: [
       'Primary: Groq Cloud API (LPU-powered) delivers reasoning at ~0.8s average latency.',
-      'Fallback: Phi-3.5-mini-instruct quantized to Q4_K_M, running via llama_cpp + Apple Metal MPS.',
+      'Fallback / Local Extraction: Phi-3.5-mini and Llama-3.2-3B-Instruct running locally via Apple Metal (MPS).',
       'Zero Downtime: Automatic exception-based routing — no analyst intervention required during failover.',
     ],
     layout: 'split',
@@ -338,7 +338,7 @@ export const slides: SlideData[] = [
     title: 'Multi-Framework Mapping Engine',
     content: [
       'Single-Pass Correlation: One threat maps to ATT&CK, D3FEND, NIST 800-53, and OWASP ASVS.',
-      'Semantic Similarity: Cosine distance between threat vectors and framework embeddings.',
+      'Three-Layer Pipeline: Llama 3.2 Extractor → all-mpnet Retriever → Deterministic Logic Gatekeeper.',
       'Accuracy: 84.06% for ATT&CK (semantic) and 98.41% for D3FEND/NIST (deterministic).',
     ],
     layout: 'split',
