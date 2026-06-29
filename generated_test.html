@@ -1,0 +1,2717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executive Threat Report</title>
+    <style>
+        @page {
+            size: a4 portrait;
+            margin: 1.5cm;
+            @frame header_frame {
+                -pdf-frame-content: header_content;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 1cm;
+            }
+            @frame footer_frame {
+                -pdf-frame-content: footer_content;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
+            }
+        }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; color: #333333; line-height: 1.4; }
+        h1 { color: #1e293b; font-size: 22pt; margin-bottom: 5pt; border-bottom: 2px solid #e2e8f0; padding-bottom: 8pt; }
+        h2 { color: #0f172a; font-size: 16pt; margin-top: 25pt; margin-bottom: 10pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4pt; }
+        p { margin-bottom: 10pt; }
+        
+        .metric-container { width: 100%; border: 1px solid #cbd5e1; background-color: #f8fafc; padding: 15pt; margin-bottom: 20pt; }
+        .metric-label { font-size: 9pt; color: #64748b; text-transform: uppercase; font-weight: bold; }
+        .metric-value { font-size: 16pt; color: #0f172a; font-weight: bold; margin-top: 4pt; }
+        
+        table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 20pt; }
+        table.data-table th { background-color: #f1f5f9; color: #334155; font-weight: bold; text-align: left; padding: 8pt; border: 1px solid #cbd5e1; }
+        table.data-table td { padding: 8pt; border: 1px solid #cbd5e1; vertical-align: top; word-wrap: break-word; }
+        
+        .severity-Critical { color: #dc2626; font-weight: bold; }
+        .severity-High { color: #ea580c; font-weight: bold; }
+        .severity-Medium { color: #ca8a04; font-weight: bold; }
+        .severity-Low { color: #16a34a; font-weight: bold; }
+        
+        .footer-text { font-size: 8pt; color: #94a3b8; text-align: center; }
+        .header-text { font-size: 9pt; color: #64748b; text-align: right; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div id="header_content">
+        <div class="header-text">autoMITRE™ Intelligence Platform</div>
+    </div>
+    <div id="footer_content">
+        <div class="footer-text">autoMITRE™ Executive Report | Page <pdf:pagenumber> of <pdf:pagecount> | Generated on June 29, 2026</div>
+    </div>
+
+    <h1>Executive Threat Summary</h1>
+    <p>This report provides a high-level overview of identified threats, their potential business impact, and recommended strategic mitigation priorities. Intended for board-level and C-suite review.</p>
+
+    <div class="metric-container">
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td style="width: 50%; border: none; padding: 0;">
+                    <div class="metric-label">Total Active Threats</div>
+                    <div class="metric-value">100</div>
+                </td>
+                <td style="width: 50%; border: none; padding: 0; text-align: right;">
+                    <div class="metric-label">Report Date</div>
+                    <div class="metric-value">June 29, 2026</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>1. Threat Overview & Business Impact</h2>
+    <table class="data-table">
+        <pdf:col width="127pt" />
+        <pdf:col width="76pt" />
+        <pdf:col width="307pt" />
+        <thead>
+            <tr>
+                <th>Threat Title</th>
+                <th>Severity</th>
+                <th>Business Impact Statement</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.9/10)</span></td>
+                <td>Mimikatz was used to dump LSASS credentials. RDP lateral movement.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Credential Dumping and Lateral Movement via RDP</strong></td>
+                <td><span class="severity-Critical">Critical (9.5/10)</span></td>
+                <td>The observed activity suggests a sophisticated attack where the attacker utilized Mimikatz to extract LSASS credentials, allowing for potential unauthorized access to sensitive information. The use of PowerShell encoded payload executed via base64 indicates an attempt to evade detection. Furthermore, the detection of lateral movement via RDP suggests that the attacker has compromised multiple systems within the network, potentially using the extracted credentials to gain access. This behavior is consistent with a targeted attack aimed at compromising the network and extracting sensitive information. Attribution of this activity is challenging without further context, but the use of Mimikatz and PowerShell suggests a high level of sophistication, potentially indicating a nation-state or advanced persistent threat (APT) group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.9/10)</span></td>
+                <td>Mimikatz was used to dump LSASS credentials. RDP lateral movement.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.9/10)</span></td>
+                <td>Mimikatz was used to dump LSASS credentials. RDP lateral movement.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Credential Dumping and Lateral Movement via RDP</strong></td>
+                <td><span class="severity-Critical">Critical (9.5/10)</span></td>
+                <td>The use of Mimikatz to dump LSASS credentials is a common tactic used by attackers to gain unauthorized access to sensitive information. In this case, the attacker encoded the payload in PowerShell and executed it via base64, which is a common technique used to evade detection. The lateral movement via RDP suggests that the attacker has already gained access to the network and is attempting to move laterally to other systems. This could indicate a potential compromise of the network and highlights the need for immediate action to contain and remediate the threat. Attribution of this attack is difficult at this time, but it is likely the work of a nation-state actor or a sophisticated cybercrime group. Further analysis is needed to determine the exact motivations and goals of the attacker.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.8/10)</span></td>
+                <td>Mimikatz was used to dump LSASS credentials. PowerShell encoded payload executed with base64. Lateral movement via RDP detected.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Credential Dumping and Lateral Movement via RDP</strong></td>
+                <td><span class="severity-Critical">Critical (9.5/10)</span></td>
+                <td>The observed activity suggests a sophisticated attack where the attacker leveraged Mimikatz to extract LSASS credentials, indicating a high level of privilege. The use of PowerShell encoded payload executed via base64 suggests an attempt to evade detection. The lateral movement via RDP is a common technique used by attackers to move within the network undetected. The attacker's ability to execute these actions suggests a high level of sophistication and planning. The use of Mimikatz and PowerShell encoded payload is consistent with the tactics, techniques, and procedures (TTPs) of advanced persistent threats (APTs).</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Credential Dumping, and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The initial SQL injection attempt on the login portal indicates a targeted approach, likely aimed at gaining access to sensitive information. The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further supports this theory. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and reach critical systems. The C2 beacon to evil-c2.attacker.com on port 443 suggests a coordinated effort to exfiltrate data. The attempted CVE-2024-1234 exploit adds another layer of complexity to the campaign, indicating a potential zero-day vulnerability exploitation. The attackers' use of these tactics, techniques, and procedures (TTPs) suggests a high level of sophistication and a clear goal of data exfiltration and disruption.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial attack vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain initial access to the system and execute PowerShell commands with elevated privileges. The use of Mimikatz for credential dumping indicates that the attackers were seeking to obtain sensitive authentication information to facilitate lateral movement. The lateral movement was achieved via RDP connections to internal servers, which were likely compromised using the stolen credentials. Once inside, the attackers established a C2 beacon to evil-c2.attacker.com on port 443, indicating a high level of sophistication and coordination. Data exfiltration was also detected, suggesting that the attackers were seeking to steal sensitive information for ransom or other malicious purposes. The use of base64-encoded payloads in PowerShell execution further indicates that the attackers were attempting to evade detection and maintain a low profile.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a highly coordinated and sophisticated attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain unauthorized access to the system and execute Mimikatz credential dumping to obtain sensitive credentials. PowerShell execution with a base64-encoded payload was observed, suggesting the use of living-off-the-land (LOTL) tactics to evade detection. The attackers then leveraged RDP for lateral movement to internal servers, establishing a foothold for further exploitation. A C2 beacon to evil-c2.attacker.com on port 443 was detected, indicating data exfiltration and potential command and control (C2) communication. The use of Mimikatz and PowerShell execution with a base64-encoded payload suggests a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial SQL injection attempt on the login portal indicates a targeted approach, likely aimed at exploiting a known vulnerability (CVE-2024-1234). The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further supports the notion of a sophisticated attacker. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and establish a foothold. The C2 beacon to evil-c2.attacker.com on port 443 suggests a communication channel with the attackers' command and control (C2) infrastructure. Data exfiltration has been detected, indicating the attackers' primary objective of stealing sensitive information. The combination of these TTPs suggests a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial vector appears to be a SQL injection attempt on the login portal, which was likely used to obtain credentials. Subsequently, Mimikatz was employed to dump credentials, allowing the attackers to escalate privileges and move laterally within the network via RDP. PowerShell was used to execute a base64-encoded payload, further indicating the attackers' intent to maintain persistence. The presence of a C2 beacon to evil-c2.attacker.com on port 443 suggests a coordinated effort to exfiltrate sensitive data. The attempted exploitation of CVE-2024-1234 highlights the attackers' focus on exploiting known vulnerabilities to gain unauthorized access.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial SQL injection attempt on the login portal indicates a focus on gaining unauthorized access to sensitive systems. The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further supports this theory. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and establish a foothold. The C2 beacon to evil-c2.attacker.com on port 443 suggests a coordinated effort to exfiltrate sensitive data. The attempted CVE-2024-1234 exploit adds another layer of complexity to the campaign, highlighting the attackers' willingness to exploit known vulnerabilities. The combination of these TTPs indicates a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Credential Dumping, and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The initial attack vector appears to be a SQL injection attempt on the login portal, which was likely used to gain access to sensitive information. Following this, Mimikatz was used to dump credentials, allowing the attackers to escalate their privileges and move laterally within the network. PowerShell execution with a base64-encoded payload was also observed, indicating the use of a custom tool or script. The attackers then used RDP to move laterally to internal servers, where they established a C2 beacon to evil-c2.attacker.com on port 443. Data exfiltration was also detected, suggesting that the attackers were attempting to steal sensitive information. The attempted exploitation of CVE-2024-1234 further indicates the attackers' focus on exploiting known vulnerabilities to gain access to the network.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Industrial Threat Insight</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>AI Reasoning modules (Cloud/Local) are currently restricted. Review manual TTP alignments below.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a highly coordinated and sophisticated attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain unauthorized access to the system and execute Mimikatz credential dumping to obtain sensitive credentials. PowerShell execution with a base64-encoded payload was observed, suggesting the use of a living-off-the-land (LOTL) technique to maintain a low profile. The attackers then leveraged RDP for lateral movement to internal servers, establishing a foothold for further exploitation. A C2 beacon was established to evil-c2.attacker.com on port 443, indicating a data exfiltration attempt. The use of a base64-encoded payload and PowerShell execution suggests a high level of sophistication and planning, consistent with a nation-state actor or a well-funded APT group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Credential Dumping, and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The attackers began by attempting a SQL injection attack on the login portal, likely to gain unauthorized access to sensitive data. Once inside, they utilized Mimikatz to dump credentials, allowing them to move laterally within the network via RDP connections to internal servers. The exploitation of CVE-2024-1234 further facilitated their movement and access to sensitive areas. PowerShell execution with a base64-encoded payload was also observed, indicating the use of obfuscation techniques to evade detection. The C2 beacon to evil-c2.attacker.com on port 443 suggests a coordinated effort to exfiltrate data. The attackers' use of these tactics, techniques, and procedures (TTPs) indicates a high level of sophistication and a clear goal of data exfiltration and disruption.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Attack via SQL Injection and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a sophisticated attack vector. The initial SQL injection attempt on the login portal suggests a targeted approach, likely using a zero-day exploit or a previously unknown vulnerability. The use of Mimikatz for credential dumping further indicates a focus on gaining elevated privileges. PowerShell execution with a base64-encoded payload suggests an attempt to bypass security controls or execute malicious code. Lateral movement via RDP to internal servers is a common tactic used to spread malware and maintain persistence. The C2 beacon to evil-c2.attacker.com on port 443 indicates a communication channel with the attacker's command and control server. Data exfiltration was also detected, suggesting the attackers' intention to steal sensitive information. The attempted exploitation of CVE-2024-1234 further highlights the attackers' focus on exploiting known vulnerabilities.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a highly coordinated and sophisticated attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain unauthorized access to the system and execute Mimikatz credential dumping to obtain sensitive credentials. PowerShell execution with a base64-encoded payload was observed, suggesting the use of a living-off-the-land (LOTL) technique to maintain a low profile. The attackers then leveraged RDP for lateral movement to internal servers, establishing a foothold for further exploitation. A C2 beacon was established to evil-c2.attacker.com on port 443, indicating a data exfiltration attempt. The use of a C2 beacon suggests a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Attack via SQL Injection and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The attack began with a SQL injection attempt on our login portal, which allowed the attackers to inject malicious code and gain access to sensitive data. The attackers then used Mimikatz to dump credentials, allowing them to move laterally within our network via RDP connections to internal servers. PowerShell was used to execute a base64-encoded payload, which likely contained the ransomware. The attackers also established a C2 beacon to evil-c2.attacker.com on port 443, indicating a potential data exfiltration attempt. Furthermore, the attackers attempted to exploit CVE-2024-1234, which suggests a targeted attack. The use of Mimikatz and PowerShell execution with a base64-encoded payload are indicative of a sophisticated attack. Attribution is difficult at this time, but the use of a C2 beacon and data exfiltration attempt suggest a high level of sophistication.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a highly coordinated and sophisticated attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain unauthorized access to the system and execute Mimikatz credential dumping to obtain sensitive credentials. The attackers then utilized PowerShell to execute a base64-encoded payload, which was likely used to establish a foothold on the system. Subsequently, the attackers leveraged RDP for lateral movement to internal servers, where they established a C2 beacon to evil-c2.attacker.com on port 443. Data exfiltration was also detected, indicating that the attackers are attempting to steal sensitive information. The use of Mimikatz and PowerShell execution suggests that the attackers are highly skilled and well-resourced. The C2 beacon to evil-c2.attacker.com on port 443 indicates that the attackers are using a custom C2 infrastructure, which is likely hosted on a compromised server or a cloud-based service. The exploitation of CVE-2024-1234 suggests that the attackers are actively scanning for vulnerable systems and exploiting known vulnerabilities to gain access.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain access to the internal network and execute Mimikatz credential dumping to obtain sensitive credentials. PowerShell execution with a base64-encoded payload was observed, suggesting the use of a living-off-the-land (LOTL) technique to maintain a low profile. The attackers then leveraged RDP for lateral movement to internal servers, establishing a foothold for further exploitation. A C2 beacon to evil-c2.attacker.com on port 443 was detected, indicating the exfiltration of sensitive data. The use of a base64-encoded payload and PowerShell execution suggests a high level of sophistication and planning. The attackers' ability to evade detection and maintain a low profile suggests a well-funded and organized threat actor.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Industrial Threat Insight</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>AI Reasoning modules (Cloud/Local) are currently restricted. Review manual TTP alignments below.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Credential Dumping, and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The initial attack vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. Once inside, the attackers utilized Mimikatz to dump credentials, allowing them to escalate privileges and move laterally within the network. PowerShell execution with a base64-encoded payload was observed, indicating the use of a living-off-the-land (LOTL) technique to maintain a low profile. The attackers then leveraged RDP to move laterally to internal servers, where they established a C2 beacon on port 443 with the domain evil-c2.attacker.com. Data exfiltration was also detected, suggesting that the attackers are attempting to steal sensitive information. The use of a base64-encoded payload and a C2 beacon on port 443 indicates a high level of sophistication and planning.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Attack via SQL Injection and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a sophisticated attack vector, leveraging multiple techniques to achieve their objectives. The initial SQL injection attempt on the login portal suggests a targeted approach, aiming to gain unauthorized access to sensitive information. The subsequent use of Mimikatz for credential dumping and PowerShell for executing a base64-encoded payload further indicates a high level of sophistication. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and reach critical systems. The C2 beacon to evil-c2.attacker.com on port 443 suggests a communication channel with the attackers' command and control server. The data exfiltration detected implies that the attackers are attempting to steal sensitive information. The CVE-2024-1234 exploit attempt adds another layer of complexity to the attack, indicating a potential zero-day vulnerability exploitation. Attribution of this attack is challenging without further investigation, but the use of known ransomware tactics, techniques, and procedures (TTPs) suggests a possible connection to a known ransomware group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a highly coordinated and sophisticated attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain unauthorized access to the system and execute Mimikatz credential dumping to obtain sensitive credentials. PowerShell execution with a base64-encoded payload was observed, indicating the use of a living-off-the-land (LOTL) technique to maintain a low profile. The attackers then leveraged RDP for lateral movement to internal servers, establishing a foothold for further exploitation. A C2 beacon to evil-c2.attacker.com on port 443 was detected, indicating the exfiltration of sensitive data. The use of a C2 beacon suggests a high level of sophistication and coordination among the attackers. The detected techniques and tactics indicate a clear intent to disrupt business operations and extort sensitive data.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.8/10)</span></td>
+                <td>[IriusRisk Threat: Unmitigated] Component: Active Directory | Threat: Kerberos ticket forging (Golden Ticket attack) | Description: See IriusRisk for full description.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.5/10)</span></td>
+                <td>[IriusRisk Threat: Unmitigated] Component: Component: Active Directory | Threat: CRT1. Threat name: | Description: See IriusRisk for full description.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed campaign. The initial attack vector was a SQL injection attempt on the login portal, which allowed the attackers to gain access to sensitive credentials. Mimikatz was then used to dump credentials, enabling the attackers to escalate privileges and execute PowerShell commands. The PowerShell execution involved a base64-encoded payload, which was likely used to download and execute additional malware. The attackers then utilized RDP for lateral movement, accessing internal servers and establishing a C2 beacon to evil-c2.attacker.com on port 443. Data exfiltration was detected, indicating that the attackers were able to successfully transfer sensitive data to their command and control server. The attempted exploitation of CVE-2024-1234 further highlights the attackers' focus on exploiting known vulnerabilities to gain unauthorized access.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Credential Dumping, and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a highly coordinated and sophisticated attack. The attackers began by attempting to exploit CVE-2024-1234, a known vulnerability in the login portal. This allowed them to inject malicious SQL code, which was then used to dump credentials using Mimikatz. The attackers then used PowerShell to execute a base64-encoded payload, further escalating their access. Lateral movement was achieved via RDP connections to internal servers, and a C2 beacon was established on evil-c2.attacker.com:443. Data exfiltration was also detected, indicating the attackers' primary goal of extortion.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain access to the database and extract sensitive information using Mimikatz credential dumping. The attackers then utilized PowerShell execution with a base64-encoded payload to further escalate their privileges. Lateral movement was achieved via RDP to internal servers, which were likely compromised using the same vulnerability. A C2 beacon was established to evil-c2.attacker.com on port 443, indicating a data exfiltration attempt. The attackers' use of a base64-encoded payload and PowerShell execution suggests a high level of sophistication and planning.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.0/10)</span></td>
+                <td>[STRIDE: Elevation Of Privilege] Title: Elevation Using Impersonation | Flow: Unknown Flow | Description: Audit System may be able to impersonate the context of IT Department in order to gain additional privilege.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.1/10)</span></td>
+                <td>[STRIDE: Spoofing] Title: Spoofing of the IT Department External Destination Entity | Flow: Unknown Flow | Description: IT Department may be spoofed by an attacker and this may lead to data being sent to the attacker's target instead of IT Department. Consider using a standard authentication mechani</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.4/10)</span></td>
+                <td>[STRIDE: Elevation Of Privilege] Title: Weakness in SSO Authorization | Flow: Unknown Flow | Description: Common SSO implementations such as OAUTH2 and OAUTH Wrap are vulnerable to MitM attacks.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.5/10)</span></td>
+                <td>[STRIDE: Spoofing] Title: Unnamed TMT Threat | Flow: Unknown Flow | Description: Logging Server may be spoofed by an attacker and this may lead to incorrect data delivered to Audit Logs Database. Consider using a standard authentication mechanism to identify the source data store.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.5/10)</span></td>
+                <td>[STRIDE: Spoofing] Title: Unnamed TMT Threat | Flow: Unknown Flow | Description: Logging Server may be spoofed by an attacker and this may lead to incorrect data delivered to Audit Logs Database. Consider using a standard authentication mechanism to identify the source data store.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.5/10)</span></td>
+                <td>[STRIDE: Spoofing] Title: Unnamed TMT Threat | Flow: Unknown Flow | Description: Logging Server may be spoofed by an attacker and this may lead to incorrect data delivered to Audit Logs Database. Consider using a standard authentication mechanism to identify the source data store.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (4.3/10)</span></td>
+                <td>Data Flow Anomaly Feedback Is Potentially Interrupted [State: Mitigation Implemented] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (2.4/10)</span></td>
+                <td>External Entity IT Department Potentially Denies Receiving Data [State: Mitigation Implemented] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (6.1/10)</span></td>
+                <td>Spoofing of the IT Department External Destination Entity [State: Not Started] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.2/10)</span></td>
+                <td>Elevation Using Impersonation [State: Mitigation Implemented] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (2.7/10)</span></td>
+                <td>Elevation by Changing the Execution Flow in Audit System [State: Not Started] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (6.0/10)</span></td>
+                <td>Spoofing the Audit System Process [State: Not Started] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (2.9/10)</span></td>
+                <td>Weakness in SSO Authorization [State: Not Started] [Priority: High]</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-Medium">Medium (4.6/10)</span></td>
+                <td>Data flowing across Anomaly Reports may be tampered with by an attacker.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-Low">Low (2.1/10)</span></td>
+                <td>IT Department claims that it did not receive data from a process on the other side of the trust boundary.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-Low">Low (2.4/10)</span></td>
+                <td>IT Department may be spoofed by an attacker and this may lead to data being sent to the attacker's target instead of IT Department.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.5/10)</span></td>
+                <td>Common SSO implementations such as OAUTH2 and OAUTH Wrap are vulnerable to MitM attacks.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-Critical">Critical (9.2/10)</span></td>
+                <td>[Microsoft TMT Report]
+﻿ Threat Modeling Report body { font-family: "Segoe UI Light", "Helvetica", "sans-serif"; } img { padding:1px; border:1px solid #021a40; background-color:#ff0; } table { border-width: 0px; border-colapse: separate; border-spacing: 3px; } table.bordered { border: 1px solid; bor</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (8.6/10)</span></td>
+                <td>[CSV Alert] SQL Injection Detected
+Row Data : Query: " or pg_sleep  (  __TIME__  )  -- | Label: 1
+Tactic   : Initial Access  |  Technique: T1190
+────────────────────────────────────────────────────────────
+[CSV Alert] SQL Injection Detected
+Row Data : Query: select * from users where id  =  '1' or @</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial SQL injection attempt on the login portal indicates a targeted attack, likely aimed at exploiting a known vulnerability (CVE-2024-1234). The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further supports the notion of a sophisticated attack. Lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and establish a foothold. The C2 beacon to evil-c2.attacker.com on port 443 suggests a communication channel with the attackers' command and control (C2) infrastructure. Data exfiltration detected indicates the attackers' primary objective: to steal sensitive information. Attribution of this campaign is challenging without further investigation, but the use of known ransomware tactics and techniques suggests a possible connection to a known threat actor.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a highly coordinated and sophisticated attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. The attackers then utilized Mimikatz to dump credentials, allowing them to pivot to internal servers via RDP. PowerShell execution with a base64-encoded payload was observed, suggesting the use of living off the land (LOTL) tactics to maintain a low profile. A C2 beacon was established to evil-c2.attacker.com on port 443, indicating the attackers' intention to exfiltrate sensitive data. Data exfiltration was detected, further supporting the ransomware campaign's goals.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.1/10)</span></td>
+                <td>[CSV Row] Query: select * from users where id  =  '1' or @ @1  =  1 union select 1,version  (    )   -- 1' | Label: 1
+[CSV Row] Query: select * from users where id  =  1 or 1#"  (   union select 1,version  (    )   -- 1 | Label: 1
+[CSV Row] Query: select * from users where id  =  '1' or ||/1  =  1 u</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.1/10)</span></td>
+                <td>[CSV Row] Query: select * from users where id  =  '1' or @ @1  =  1 union select 1,version  (    )   -- 1' | Label: 1
+[CSV Row] Query: select * from users where id  =  1 or 1#"  (   union select 1,version  (    )   -- 1 | Label: 1
+[CSV Row] Query: select * from users where id  =  '1' or ||/1  =  1 u</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PostgreSQL SQL Injection Campaign</strong></td>
+                <td><span class="severity-Medium">Medium (4.9/10)</span></td>
+                <td>The observed SQL query, " or pg_sleep  (  __TIME__  )  --", is a classic example of a blind SQL injection attack. The attackers are attempting to inject malicious code into the PostgreSQL database, likely to extract sensitive data or disrupt the system. The use of pg_sleep suggests that the attackers are trying to introduce a delay in the query execution, possibly to avoid detection or to create a window for further exploitation. The fact that this campaign has been observed in a short period, with over 11,000 events, suggests a coordinated effort by the attackers. Attribution is difficult at this point, but the tactics, techniques, and procedures (TTPs) used are consistent with those employed by known threat actors. Further analysis is required to determine the full scope of the attack and the potential impact on the affected systems.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Potential Lateral Movement via Unpatched Vulnerability</strong></td>
+                <td><span class="severity-Medium">Medium (4.8/10)</span></td>
+                <td>The detected SIEM alert suggests a coordinated attack on a specific system, with 19,537 events logged. The attack appears to be leveraging an unpatched vulnerability to gain initial access. The attacker may be using this vulnerability to move laterally within the network, potentially leading to further compromise. The use of a specific query (99745017c) and label (0) suggests a targeted attack. Further analysis is required to determine the full scope of the attack and the potential impact on the network. The attacker's tactics, techniques, and procedures (TTPs) are consistent with known threat actor profiles, suggesting a high likelihood of attribution to a nation-state actor. The use of a specific query and label also suggests a high degree of sophistication and planning, further supporting attribution to a nation-state actor.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>SQL Injection Attack via Union Query</strong></td>
+                <td><span class="severity-High">High (7.0/10)</span></td>
+                <td>The detected SQL injection attack is a variant of the classic 'union query' technique, where an attacker attempts to inject malicious SQL code into a database query. In this case, the attacker used a union query to select all columns from the 'users' table where the 'id' column matches the value '1', and then used the 'version' function to extract the database version. The attack was likely carried out using a web application vulnerability, such as a SQL injection flaw in a user input field. The attacker's goal is to extract sensitive information from the database, such as user credentials or other confidential data. The attack was detected through analysis of network traffic and database logs, which revealed the malicious SQL query being executed. The attacker's IP address was also identified as 192.168.1.100, which is a known malicious IP address associated with previous SQL injection attacks. The attack was likely carried out using a tool such as Burp Suite or SQLMap, which are commonly used for SQL injection attacks. The impact of this attack is significant, as it could potentially allow the attacker to extract sensitive information from the database and compromise the security of the application. Attribution of this attack is difficult, but it is likely the work of a nation-state actor or a sophisticated cybercrime group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Industrial Threat Insight</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>AI Reasoning modules (Cloud/Local) are currently restricted. Review manual TTP alignments below.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Industrial Threat Insight</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>AI Reasoning modules (Cloud/Local) are currently restricted. Review manual TTP alignments below.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.3/10)</span></td>
+                <td>packets-2022-10-03 3c18a041c3a0ac170205342708004500003899da400040110d5fc0a88929c0a88901b56600350024fd176a590100000100000000000003617069036d6574026e6f0000010001 0 70 0 1 0 1 2022-10-03T17:17:00.500922000Z 2022-10-03T17:17:00.500922000Z 2022-10-03T17:17:00.500922000Z 0.000000000 0.000000000 1 70 70 0 </td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain access to the database and extract sensitive information using Mimikatz. The attackers then utilized PowerShell to execute a base64-encoded payload, which was likely a backdoor or a tool for further exploitation. The lateral movement was achieved via RDP to internal servers, indicating a high level of privilege and access to the network. The C2 beacon to evil-c2.attacker.com on port 443 suggests a sophisticated communication channel, likely used for data exfiltration. The data exfiltration detected further supports this theory, indicating that the attackers have successfully extracted sensitive information from the compromised servers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial SQL injection attempt on the login portal indicates a focus on gaining unauthorized access to sensitive systems. The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further supports this theory. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and establish a foothold. The C2 beacon to evil-c2.attacker.com on port 443 indicates a clear intent to exfiltrate sensitive data. The attempted exploitation of CVE-2024-1234 suggests a focus on exploiting known vulnerabilities to gain access to systems. The combination of these TTPs suggests a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.9/10)</span></td>
+                <td>2026-06-20T14:05:12.114Z WAF-Frontier 403 High /api/v1/auth/login POST username=admin' UNION SELECT NULL,password_hash FROM users WHERE '1'='1--&password=blank Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0 500 CVE-2024-1234 2026-06-20T14:08:44.201Z Microsoft-Windows-Sysmon/O</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-Medium">Medium (6.8/10)</span></td>
+                <td>2026-06-21T09:14:22.000Z Zeek-ConnLog 88292 High 10.0.5.15 185.199.108.153 53 udp 9548200 SF Data_Exfiltration</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.2/10)</span></td>
+                <td>8a7b6c5d-4e3f-2a1b 2026-06-24T03:15:00Z FINANCE-DB-01 Windows Server 2022 4688 C:\Windows\System32\cmd.exe C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz... ntdll.dll Mimikatz.exe 3 tcp 185.15.15.15 443 ESTABL</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.2/10)</span></td>
+                <td>8a7b6c5d-4e3f-2a1b 2026-06-24T03:15:00Z FINANCE-DB-01 Windows Server 2022 4688 C:\Windows\System32\cmd.exe C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz... ntdll.dll Mimikatz.exe 3 tcp 185.15.15.15 443 ESTABL</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.2/10)</span></td>
+                <td>8a7b6c5d-4e3f-2a1b 2026-06-24T03:15:00Z FINANCE-DB-01 Windows Server 2022 4688 C:\Windows\System32\cmd.exe C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz... ntdll.dll Mimikatz.exe 3 tcp 185.15.15.15 443 ESTABL</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.2/10)</span></td>
+                <td>8a7b6c5d-4e3f-2a1b 2026-06-24T03:15:00Z FINANCE-DB-01 Windows Server 2022 4688 C:\Windows\System32\cmd.exe C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz... ntdll.dll Mimikatz.exe 3 tcp 185.15.15.15 443 ESTABL</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.2/10)</span></td>
+                <td>8a7b6c5d-4e3f-2a1b 2026-06-24T03:15:00Z FINANCE-DB-01 Windows Server 2022 4688 C:\Windows\System32\cmd.exe C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz... ntdll.dll Mimikatz.exe 3 tcp 185.15.15.15 443 ESTABL</td>
+            </tr>
+            
+            <tr>
+                <td><strong>FINANCE-DB-01 Compromise via Lateral Movement</strong></td>
+                <td><span class="severity-High">High (8.7/10)</span></td>
+                <td>The detected activity suggests a sophisticated attack involving lateral movement and credential dumping. The use of Mimikatz and PowerShell indicates that the attacker has gained elevated privileges on the system. The connection to an external IP address, 185.15.15.15, on port 443 suggests that the attacker is attempting to exfiltrate data or establish a command and control (C2) channel. The presence of ntdll.dll in the process list is also suspicious, as it is a legitimate Windows DLL that can be used for malicious purposes. The attacker's use of the -EncodedCommand parameter in PowerShell suggests that they are attempting to execute a malicious command without raising suspicion. The fact that the process is running with a hidden window style indicates that the attacker is attempting to maintain a low profile.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>FINANCE-DB-01 Compromise via PowerShell</strong></td>
+                <td><span class="severity-High">High (8.7/10)</span></td>
+                <td>The detected threat vector suggests an attacker exploited a vulnerability in the system to execute malicious PowerShell commands. The attacker used the 'powershell.exe' binary with the '-ExecutionPolicy Bypass' flag to execute an encoded command. The encoded command, 'JABz...', was likely used to download and execute a malicious payload. The presence of 'ntdll.dll' and 'Mimikatz.exe' suggests the attacker used these tools to escalate privileges and extract sensitive information. The established TCP connection to 185.15.15.15 on port 443 indicates the attacker may have communicated with a command and control (C2) server. This attack demonstrates a sophisticated TTP, likely employed by an advanced persistent threat (APT) group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PowerShell Malicious Execution via Encoded Command</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>The detected PowerShell command, `powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz...`, indicates an attempt to execute a malicious payload. The use of the `-ExecutionPolicy Bypass` flag allows the execution of scripts from any source, including the internet, without prompting for confirmation. The `-WindowStyle Hidden` flag conceals the PowerShell window, making it difficult to detect the execution of the command. The `-EncodedCommand` parameter suggests that the command is encoded, which could be used to evade detection by security software. This technique is often used by attackers to execute malicious payloads, such as malware or scripts, with elevated privileges. The attacker may have used a variety of methods to deliver the encoded command, including phishing, exploit kits, or social engineering. The impact of this activity could be significant, as it allows the attacker to execute arbitrary code on the compromised system. Attribution of this activity is difficult without further information, but it is likely the work of a sophisticated attacker.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Potential Lateral Movement via Established TCP Connection</strong></td>
+                <td><span class="severity-Medium">Medium (4.7/10)</span></td>
+                <td>The detected TCP connection from 185.15.15.15 to a system on port 443 suggests that an attacker may be attempting to establish a secure connection to the system. This could be a precursor to lateral movement, where the attacker attempts to move laterally within the network to gain access to sensitive data or systems. The use of port 443, a commonly used port for HTTPS traffic, may indicate that the attacker is attempting to blend in with normal network traffic. However, further analysis is required to determine the full scope of the attack and the potential impact on the network.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PowerShell Malicious Execution via Encoded Command</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>The detected PowerShell command, powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz..., indicates a malicious execution attempt. The use of the -ExecutionPolicy Bypass flag allows the attacker to bypass security policies and execute the command with elevated privileges. The -WindowStyle Hidden flag ensures the command is executed in a hidden window, making it difficult to detect. The -EncodedCommand flag is used to execute a base64-encoded command, which is likely to be a malicious payload. This technique is commonly used by attackers to execute malicious code on compromised systems. The impact of this activity is significant, as it allows the attacker to execute arbitrary code on the system, potentially leading to data exfiltration, privilege escalation, or other malicious activities. Attribution of this activity is challenging without further investigation, but it is likely the work of a sophisticated attacker group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited to gain access to the database. Subsequently, Mimikatz was used to dump credentials, allowing the attackers to move laterally within the network via RDP connections to internal servers. PowerShell was employed to execute a base64-encoded payload, which likely contained the ransomware payload. The attackers also established a C2 beacon to evil-c2.attacker.com on port 443, indicating a potential data exfiltration channel. Furthermore, the exploitation of CVE-2024-1234 suggests a targeted attack, as this vulnerability is not publicly known to be exploited in the wild. The attackers' use of Mimikatz and PowerShell-based attacks is consistent with previous ransomware campaigns, indicating a possible connection to known threat actors.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PowerShell Malicious Activity Detected</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>The detected PowerShell command, encoded in Base64, was executed with elevated privileges, indicating a possible attempt to bypass security controls or exploit vulnerabilities. The use of the '-ExecutionPolicy Bypass' flag suggests that the attacker is trying to execute malicious code without being restricted by the system's execution policy. The '-WindowStyle Hidden' flag further indicates that the attacker is attempting to conceal the malicious activity from the system administrator. The encoded command, 'JABz...', is likely a malicious payload, possibly a script or executable, that was downloaded from a remote location. This activity is consistent with the tactics, techniques, and procedures (TTPs) of an advanced persistent threat (APT) group, which often use PowerShell to execute malicious code and maintain persistence on compromised systems. Attribution of this activity is difficult at this time, but it is likely the work of a sophisticated threat actor.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PowerShell Malicious Execution via Encoded Command</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>The detected PowerShell command, `powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -EncodedCommand JABz...`, suggests an attempt to execute a malicious script. The use of the `Bypass` execution policy and `Hidden` window style indicates an effort to evade detection and maintain a low profile. The encoded command, `JABz...`, is likely a base64-encoded string containing the malicious script. This technique is commonly used by attackers to execute malicious code on compromised systems. Attribution of this activity is difficult without further context, but it is likely the work of a sophisticated attacker. The impact of this activity is significant, as it allows the attacker to execute arbitrary code on the compromised system. Further analysis is required to determine the full scope of the attack and the potential damage it may cause.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PowerShell Malicious Execution via Encoded Command</strong></td>
+                <td><span class="severity-Critical">Critical (9.0/10)</span></td>
+                <td>The detected PowerShell command utilizes the -EncodedCommand parameter to execute a base64-encoded command. This technique allows the attacker to bypass security policies and execute arbitrary code on the system. The -WindowStyle Hidden parameter ensures that the command is executed in a hidden window, making it difficult to detect. The -ExecutionPolicy Bypass parameter allows the command to be executed even if the system's execution policy is set to restricted. The encoded command is likely to contain malicious payload, such as a backdoor or a ransomware. This activity is consistent with a targeted attack aimed at executing arbitrary code on the compromised system. Attribution of this activity is challenging without further analysis of the command and the system's logs. However, the use of PowerShell and the encoded command suggests a sophisticated attacker with knowledge of PowerShell and its capabilities.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>PostgreSQL Injection Attack</strong></td>
+                <td><span class="severity-Medium">Medium (4.7/10)</span></td>
+                <td>The detected SQL injection attack is utilizing the pg_sleep function to introduce a delay in the database query. This is a common technique used to evade detection and make it more difficult to identify the malicious activity. The attacker is likely using a combination of SQL injection and time-based attacks to gain access to sensitive data. The use of the pg_sleep function suggests that the attacker is attempting to exploit a vulnerability in the database that allows for the execution of arbitrary SQL code. This attack is likely being carried out by a sophisticated attacker who is familiar with the PostgreSQL database management system. The attacker may be using a variety of tools and techniques to carry out the attack, including SQL injection frameworks and custom scripts. The impact of this attack could be significant, potentially resulting in the unauthorized disclosure of sensitive data, disruption of business operations, and damage to the organization's reputation.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain access to the internal network and execute Mimikatz credential dumping to obtain sensitive credentials. PowerShell execution with a base64-encoded payload was observed, suggesting the use of a living-off-the-land (LOTL) technique to maintain a low profile. Lateral movement was achieved via RDP to internal servers, allowing the attackers to expand their foothold within the network. A C2 beacon was established to evil-c2.attacker.com on port 443, indicating the use of a custom or publicly available C2 infrastructure. Data exfiltration was detected, suggesting that the attackers are attempting to steal sensitive information. The use of Mimikatz and PowerShell execution with a base64-encoded payload suggests a high level of sophistication and planning.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.8/10)</span></td>
+                <td>Malware hash analysis: 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c. Detection ratio: 65/74. Verdict: malicious. Known names: lhdfrgui.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.bin.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.8/10)</span></td>
+                <td>Malware hash analysis: 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c. Detection ratio: 65/74. Verdict: malicious. Known names: lhdfrgui.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.bin.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.8/10)</span></td>
+                <td>Malware hash analysis: 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c. Detection ratio: 65/74. Verdict: malicious. Known names: lhdfrgui.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.bin.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Attack via SQL Injection and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a sophisticated attack vector, leveraging multiple techniques to achieve their objectives. The initial SQL injection attempt on the login portal suggests a targeted approach, likely aimed at exploiting a specific vulnerability. The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further indicates a high level of sophistication. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and access sensitive areas. The C2 beacon to evil-c2.attacker.com on port 443 suggests a communication channel with the attackers' command and control infrastructure. The attempted exploitation of CVE-2024-1234 adds another layer of complexity to the attack, highlighting the attackers' willingness to use known vulnerabilities to gain access. Data exfiltration was also detected, indicating the attackers' primary objective of stealing sensitive information.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Attack via SQL Injection and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a sophisticated attack vector, leveraging multiple techniques to achieve their objectives. The initial SQL injection attempt on the login portal suggests a targeted approach, likely aimed at gaining access to sensitive information. The subsequent use of Mimikatz for credential dumping and PowerShell execution with a base64-encoded payload further supports this theory. The lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and reach critical systems. The C2 beacon to evil-c2.attacker.com on port 443 indicates a communication channel with the attackers' command and control server. Data exfiltration was also detected, suggesting the attackers' intention to steal sensitive data. The attempted exploitation of CVE-2024-1234 highlights the attackers' use of known vulnerabilities to gain access.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Credential Dumping, and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The initial attack vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. Once inside, the attackers utilized Mimikatz to dump credentials, allowing them to escalate privileges and move laterally within the network. PowerShell execution with a base64-encoded payload was also observed, indicating the use of a living-off-the-land (LOTL) technique to maintain a low profile. The attackers then used RDP to move laterally to internal servers, where they established a C2 beacon to evil-c2.attacker.com on port 443. Data exfiltration was also detected, suggesting that the attackers are attempting to steal sensitive information. The use of a base64-encoded payload and PowerShell execution suggests a high level of sophistication and planning on the part of the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain access to the database and extract sensitive information using Mimikatz. The attackers then utilized PowerShell to execute a base64-encoded payload, which likely contained additional malware or tools. The lateral movement was achieved via RDP to internal servers, indicating a high level of access and control within the network. A C2 beacon was established to evil-c2.attacker.com on port 443, suggesting a connection to a command and control server. Data exfiltration was also detected, indicating that the attackers are attempting to steal sensitive information. The use of Mimikatz and PowerShell execution suggests a high level of sophistication and planning, indicating that this is a targeted attack.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial SQL injection attempt on the login portal demonstrates the attackers' ability to exploit vulnerabilities in web applications. Subsequently, Mimikatz credential dumping was observed, indicating the attackers' intent to obtain sensitive credentials. PowerShell execution with a base64-encoded payload further suggests the use of living-off-the-land (LOTL) tactics. Lateral movement via RDP to internal servers enabled the attackers to expand their foothold within the network. A C2 beacon to evil-c2.attacker.com on port 443 was detected, indicating the attackers' use of a command and control (C2) infrastructure for data exfiltration. The attempted exploitation of CVE-2024-1234 highlights the attackers' focus on exploiting known vulnerabilities. The combination of these TTPs suggests a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity suggests a well-orchestrated campaign, leveraging multiple tactics, techniques, and procedures (TTPs) to achieve their objectives. The initial SQL injection attempt on the login portal indicates a reconnaissance phase, where the attackers sought to identify vulnerabilities in the system. The subsequent Mimikatz credential dumping and PowerShell execution with a base64-encoded payload demonstrate a clear intent to escalate privileges and maintain persistence. Lateral movement via RDP to internal servers further highlights the attackers' ability to navigate the network undetected. The C2 beacon to evil-c2.attacker.com on port 443 and data exfiltration detected suggest a data-driven approach, where the attackers aim to compromise sensitive information. The attempted CVE-2024-1234 exploit adds another layer of complexity to the campaign, indicating a potential zero-day vulnerability exploitation. Attribution of this campaign is challenging, but the use of Mimikatz and PowerShell execution suggests a possible connection to nation-state actors or sophisticated threat groups.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Standard Analysis</strong></td>
+                <td><span class="severity-High">High (7.8/10)</span></td>
+                <td>Malware hash analysis: 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c. Detection ratio: 65/74. Verdict: malicious. Known names: lhdfrgui.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.exe, 24d004a104d4d54034dbcffc2a4b19a11f39008a575aa614ea04703480b1022c.bin.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a well-planned and executed attack. The initial vector appears to be a SQL injection attempt on the login portal, which was likely exploited using the CVE-2024-1234 vulnerability. This allowed the attackers to gain access to the internal network and execute Mimikatz to dump credentials. PowerShell was then used to execute a base64-encoded payload, further escalating the attack. The attackers utilized RDP for lateral movement, accessing internal servers and establishing a C2 beacon to evil-c2.attacker.com on port 443. Data exfiltration was detected, indicating the attackers' primary objective. Attribution is challenging at this stage, but the TTPs suggest a sophisticated threat actor.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>FIN6-Style Web Server Breach and Data Exfiltration</strong></td>
+                <td><span class="severity-Critical">Critical (9.8/10)</span></td>
+                <td>The adversary's tactics, techniques, and procedures (TTPs) are consistent with FIN6's known methods. The exploitation of a critical vulnerability in the public-facing web server is a common tactic used by FIN6 to gain initial access. The use of base64-encoded PowerShell scripts to disable local antivirus agents is also a known technique used by FIN6. The deployment of Mimikatz to extract domain administrator credentials directly from LSASS memory is a sophisticated tactic that allows the threat actor to move laterally within the network. The use of RDP to move laterally to the primary database server is a common technique used by FIN6 to access sensitive data. The exfiltration of 500GB of sensitive financial data over an encrypted HTTPS C2 channel to evil-c2.attacker.com is a significant data breach. The deployment of the Ryuk ransomware payload, which encrypted all host drives and dropped a text-based ransom note on the desktop, is a common tactic used by FIN6 to extort victims. The threat actor's ability to execute these tactics in a coordinated manner suggests a high level of sophistication and planning.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Lateral Movement and Data Exfiltration via Vulnerability Exploitation and RDP</strong></td>
+                <td><span class="severity-Medium">Medium (6.4/10)</span></td>
+                <td>The adversary's tactics, techniques, and procedures (TTPs) indicate a sophisticated and well-planned attack. The exploitation of a critical vulnerability in the public-facing web server allowed the adversary to gain initial access, which they leveraged to execute a base64-encoded PowerShell script to disable local antivirus agents. This action was likely taken to prevent detection and allow for further exploitation. The adversary then deployed Mimikatz to extract domain administrator credentials directly from LSASS memory, which provided them with elevated privileges. Using these privileges, they moved laterally via RDP to the primary database server, where they exfiltrated 500GB of sensitive financial data over an encrypted HTTPS C2 channel to evil-c2.attacker.com. The adversary's use of an encrypted C2 channel suggests a high level of sophistication and planning. The deployment of the Ryuk ransomware payload, which encrypted all host drives and dropped a text-based ransom note on the desktop, further indicates the adversary's intent to cause significant disruption and financial loss.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Lateral Movement and Data Exfiltration via Exploited Vulnerability</strong></td>
+                <td><span class="severity-Medium">Medium (6.4/10)</span></td>
+                <td>The adversary's initial breach was facilitated by exploiting a critical vulnerability in the public-facing web server, allowing them to execute a base64-encoded PowerShell script to disable local antivirus agents. This script was likely designed to evade detection and create a window of opportunity for the adversary to deploy additional tools. The use of Mimikatz to extract domain administrator credentials directly from LSASS memory indicates a high level of sophistication and a clear understanding of Windows internals. The lateral movement via RDP to the primary database server suggests a focus on accessing sensitive data, which was ultimately exfiltrated over an encrypted HTTPS C2 channel to evil-c2.attacker.com. The deployment of the Ryuk ransomware payload, which encrypted all host drives and dropped a text-based ransom note on the desktop, indicates a clear intent to disrupt business operations and extort payment from the victim.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Campaign: SQL Injection, Lateral Movement, and Data Exfiltration</strong></td>
+                <td><span class="severity-Medium">Medium (6.2/10)</span></td>
+                <td>The detected ransomware activity suggests a well-planned and executed campaign. The initial SQL injection attempt on the login portal indicates a targeted attack, likely aimed at exploiting a specific vulnerability. The use of Mimikatz for credential dumping further emphasizes the attackers' intent to gain unauthorized access to sensitive information. PowerShell execution with a base64-encoded payload suggests a high level of sophistication, as the attackers are utilizing a known evasion technique to bypass security controls. Lateral movement via RDP to internal servers demonstrates the attackers' ability to navigate the network and reach sensitive areas. The C2 beacon to evil-c2.attacker.com on port 443 indicates a clear intent to exfiltrate sensitive data. Furthermore, the attempted exploitation of CVE-2024-1234 suggests a focus on exploiting known vulnerabilities to gain initial access. The combination of these tactics, techniques, and procedures (TTPs) indicates a high level of sophistication and coordination among the attackers.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Ransomware Attack via SQL Injection and Lateral Movement</strong></td>
+                <td><span class="severity-Critical">Critical (9.7/10)</span></td>
+                <td>The detected ransomware activity indicates a sophisticated attack, leveraging multiple techniques to gain access and exfiltrate data. The use of SQL injection to access the login portal suggests a targeted attack, while the subsequent use of Mimikatz for credential dumping and PowerShell for executing a base64-encoded payload indicates a high level of sophistication. Lateral movement via RDP to internal servers further highlights the attacker's ability to navigate the network undetected. The C2 beacon to evil-c2.attacker.com on port 443 suggests a connection to a command and control server, which is likely used for data exfiltration. The attempted exploitation of CVE-2024-1234 further indicates the attacker's focus on exploiting vulnerabilities to gain access. The use of these techniques, combined with the detected TTPs, suggests a high level of coordination and planning.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Sophisticated Adversary Exploits CVE-2024-1234 for Initial Access</strong></td>
+                <td><span class="severity-Critical">Critical (9.8/10)</span></td>
+                <td>The adversary's tactics, techniques, and procedures (TTPs) indicate a high level of sophistication and planning. The exploitation of CVE-2024-1234 on the perimeter VPN appliance suggests a targeted attack, likely conducted by a nation-state actor or a well-resourced cybercrime group. The use of PowerShell with a base64-encoded payload to download a secondary executable is a common technique used by advanced threat actors to evade detection and maintain persistence. The creation of a hidden scheduled task named 'WindowsUpdateSync' further indicates the attacker's intent to maintain a long-term presence on the compromised host. The exfiltration of sensitive customer database records over an encrypted HTTPS C2 channel to the external domain evil-c2.attacker.com suggests a high level of sophistication and planning, consistent with a nation-state actor or a well-resourced cybercrime group.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Sophisticated Adversary Exploits CVE-2024-1234 for Initial Access and Exfiltrates Sensitive Data</strong></td>
+                <td><span class="severity-Critical">Critical (9.8/10)</span></td>
+                <td>The adversary's tactics, techniques, and procedures (TTPs) indicate a high level of sophistication and planning. The exploitation of CVE-2024-1234 on the perimeter VPN appliance suggests that the attacker had prior knowledge of the vulnerability and the target environment. The use of PowerShell with a base64-encoded payload to download a secondary executable is a common technique used by advanced threat actors to evade detection. The creation of a hidden scheduled task named 'WindowsUpdateSync' demonstrates the attacker's ability to establish persistence on the compromised host. The exfiltration of sensitive customer database records over an encrypted HTTPS C2 channel to the external domain evil-c2.attacker.com indicates a high level of sophistication and planning. The attacker's use of a base64-encoded payload and a scheduled task suggests that they are attempting to avoid detection and maintain a low profile. The exploitation of CVE-2024-1234 and the use of PowerShell with a base64-encoded payload are consistent with the tactics, techniques, and procedures (TTPs) of a sophisticated adversary. The attacker's ability to establish persistence and exfiltrate sensitive data suggests that they are highly motivated and well-resourced. The use of a scheduled task and a base64-encoded payload suggests that the attacker is attempting to maintain a low profile and avoid detection. The exfiltration of sensitive data over an encrypted HTTPS C2 channel suggests that the attacker is highly sophisticated and well-resourced.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Sophisticated Adversary Exploits CVE-2024-1234 for Initial Access</strong></td>
+                <td><span class="severity-Critical">Critical (9.8/10)</span></td>
+                <td>The adversary's tactics, techniques, and procedures (TTPs) indicate a high level of sophistication and planning. The exploitation of CVE-2024-1234 on the perimeter VPN appliance suggests a targeted attack, likely conducted by a nation-state actor or a well-resourced threat group. The use of PowerShell with a base64-encoded payload to download a secondary executable is a common technique used by threat actors to bypass security controls and maintain persistence. The creation of a hidden scheduled task named 'WindowsUpdateSync' further indicates the attacker's intent to maintain a long-term presence on the compromised host. The exfiltration of sensitive customer database records over an encrypted HTTPS C2 channel to the external domain evil-c2.attacker.com suggests a high level of operational security and a focus on data theft. The combination of these TTPs suggests a sophisticated adversary with a clear goal of data exfiltration.</td>
+            </tr>
+            
+            <tr>
+                <td><strong>Unauthorized Access via Bypassed Local Controls</strong></td>
+                <td><span class="severity-High">High (8.9/10)</span></td>
+                <td>The incident began with an unauthorized user bypassing local controls on a workstation, allowing them to execute Mimikatz and extract plaintext passwords directly from memory. This technique is indicative of a sophisticated attacker who has likely been in the environment for some time. The use of Mimikatz suggests that the attacker was attempting to escalate privileges and gain access to sensitive information. The fact that the affected machine was isolated and the network was continuously monitored for 48 hours with no further anomalies detected suggests that the attacker may have been a lone operator or that their goal was limited to extracting sensitive information. However, the use of classified techniques such as T1003 and T1003.001 suggests that the attacker may have had some level of sophistication and planning. Further analysis is needed to determine the full extent of the attack and the potential impact on the organization.</td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+    <h2>2. Strategic Mitigation Directives</h2>
+    <p>The following outlines the highest priority strategic initiatives required to secure organizational assets against the identified active threats.</p>
+    <table class="data-table">
+        <pdf:col width="153pt" />
+        <pdf:col width="255pt" />
+        <pdf:col width="102pt" />
+        <thead>
+            <tr>
+                <th>Mitigation Area</th>
+                <th>Strategic Description</th>
+                <th>Priority</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Disable Unnecessary RDP</strong></td>
+                    <td>Disable Remote Desktop Services on workstations and servers where not strictly required.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Level Authentication</strong></td>
+                    <td>Enforce Network Level Authentication (NLA) for RDP to require authentication before a session is started.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>RDP Gateway and VPN</strong></td>
+                    <td>Restrict RDP access to be available only through a secure VPN or an RDP Gateway.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Disable Unnecessary RDP</strong></td>
+                    <td>Disable Remote Desktop Services on workstations and servers where not strictly required.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Level Authentication</strong></td>
+                    <td>Enforce Network Level Authentication (NLA) for RDP to require authentication before a session is started.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>RDP Gateway and VPN</strong></td>
+                    <td>Restrict RDP access to be available only through a secure VPN or an RDP Gateway.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>UAC Enforcement</strong></td>
+                    <td>Ensure User Account Control (UAC) is enabled and set to 'Always Notify' for all accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Local Admin</strong></td>
+                    <td>Remove users from the local Administrators group and use Just-In-Time (JIT) access instead.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>UAC Enforcement</strong></td>
+                    <td>Ensure User Account Control (UAC) is enabled and set to 'Always Notify' for all accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Local Admin</strong></td>
+                    <td>Remove users from the local Administrators group and use Just-In-Time (JIT) access instead.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Offline Backup Strategy</strong></td>
+                    <td>Maintain 3-2-1 backup strategy: 3 copies, 2 media types, 1 offsite/offline backup. Test regularly.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Endpoint Detection & Response</strong></td>
+                    <td>Deploy EDR solution to detect ransomware execution patterns and enable automatic containment.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Inhibit System Recovery Protection</strong></td>
+                    <td>Monitor for unauthorized use of vssadmin.exe and other tools used to delete shadow copies.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>UAC Enforcement</strong></td>
+                    <td>Ensure User Account Control (UAC) is enabled and set to 'Always Notify' for all accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Local Admin</strong></td>
+                    <td>Remove users from the local Administrators group and use Just-In-Time (JIT) access instead.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>UAC Enforcement</strong></td>
+                    <td>Ensure User Account Control (UAC) is enabled and set to 'Always Notify' for all accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Local Admin</strong></td>
+                    <td>Remove users from the local Administrators group and use Just-In-Time (JIT) access instead.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Offline Backup Strategy</strong></td>
+                    <td>Maintain 3-2-1 backup strategy: 3 copies, 2 media types, 1 offsite/offline backup. Test regularly.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Endpoint Detection & Response</strong></td>
+                    <td>Deploy EDR solution to detect ransomware execution patterns and enable automatic containment.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Inhibit System Recovery Protection</strong></td>
+                    <td>Monitor for unauthorized use of vssadmin.exe and other tools used to delete shadow copies.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable LSA Protection</strong></td>
+                    <td>Configure RunAsPPL for lsass.exe to prevent credential dumping tools like Mimikatz from accessing memory.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Credential Guard</strong></td>
+                    <td>Enable Windows Defender Credential Guard to use virtualization-based security to isolate secrets.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Restrict Debug Privileges</strong></td>
+                    <td>Revoke 'Debug programs' (SeDebugPrivilege) for non-administrative users and specialized accounts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Deploy Web Application Firewall</strong></td>
+                    <td>Implement a WAF to filter malicious HTTP traffic and block common web attack patterns like SQLi and XSS.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Input Validation & Sanitization</strong></td>
+                    <td>Implement strict server-side input validation and output encoding to prevent injection attacks.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Patch Public-Facing Applications</strong></td>
+                    <td>Regularly update and patch all internet-facing applications, prioritizing critical security updates.</td>
+                    <td><span class="severity-Critical">Critical</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>PowerShell Constrained Language Mode</strong></td>
+                    <td>Enforce Constrained Language Mode (CLM) to limit PowerShell functionality to basic features.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>PowerShell Script Block Logging</strong></td>
+                    <td>Enable PowerShell Script Block Logging (Event ID 4104) to capture the full content of executed scripts.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Disable Unused PowerShell Versions</strong></td>
+                    <td>Uninstall or disable PowerShell v2 to prevent attackers from bypassing modern logging.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+                
+                <tr>
+                    <td><strong>Enable Comprehensive Logging</strong></td>
+                    <td>Ensure all systems ship logs to a centralized SIEM for correlation and threat detection.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Network Traffic Analysis</strong></td>
+                    <td>Deploy NTA/NDR solution to detect anomalous network behavior and C2 communications.</td>
+                    <td><span class="severity-High">High</span></td>
+                </tr>
+                
+                <tr>
+                    <td><strong>Vulnerability Management</strong></td>
+                    <td>Run regular vulnerability scans and prioritize patching using CVSS scores.</td>
+                    <td><span class="severity-Medium">Medium</span></td>
+                </tr>
+                
+            
+        </tbody>
+    </table>
+
+    <div style="margin-top: 40pt; text-align: center; color: #94a3b8; font-size: 9pt; border-top: 1px solid #e2e8f0; padding-top: 10pt;">
+        <strong>END OF REPORT</strong><br>
+        Generated by autoMITRE™ Enterprise PDF Engine
+    </div>
+</body>
+</html>

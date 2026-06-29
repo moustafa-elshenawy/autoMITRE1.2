@@ -2,109 +2,151 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ report_type }} Threat Report</title>
+    <title>Executive Threat Report</title>
     <style>
         @page {
             size: a4 portrait;
-            margin: 2cm;
-            @frame header_frame {           /* Static Frame */
+            margin: 1.5cm;
+            @frame header_frame {
                 -pdf-frame-content: header_content;
-                left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+                left: 1.5cm; right: 1.5cm; top: 1cm; height: 1cm;
             }
-            @frame footer_frame {           /* Another static Frame */
+            @frame footer_frame {
                 -pdf-frame-content: footer_content;
-                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+                left: 1.5cm; right: 1.5cm; bottom: 0.5cm; height: 1cm;
             }
         }
-        body { font-family: Helvetica, sans-serif; font-size: 11pt; color: #333; }
-        h1 { color: #1e293b; font-size: 24pt; margin-bottom: 5pt; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        h2 { color: #0f172a; font-size: 16pt; margin-top: 20pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px; }
-        h3 { color: #334155; font-size: 13pt; margin-top: 15pt; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10pt; margin-bottom: 15pt; }
-        th { background-color: #f8fafc; color: #475569; font-weight: bold; text-align: left; padding: 8pt; border: 1px solid #e2e8f0; }
-        td { padding: 8pt; border: 1px solid #e2e8f0; vertical-align: top; }
-        .risk-Critical { color: #ef4444; font-weight: bold; }
-        .risk-High { color: #f97316; font-weight: bold; }
-        .risk-Medium { color: #f59e0b; font-weight: bold; }
-        .risk-Low { color: #22c55e; font-weight: bold; }
-        .metric-box { border: 1px solid #e2e8f0; padding: 15pt; background-color: #f8fafc; margin-bottom: 15pt; }
-        .metric-title { font-size: 10pt; color: #64748b; text-transform: uppercase; }
-        .metric-value { font-size: 20pt; font-weight: bold; color: #0f172a; }
+        body { font-family: Helvetica, Arial, sans-serif; font-size: 10pt; color: #333333; line-height: 1.5; }
+        h1 { color: #1e293b; font-size: 22pt; margin-bottom: 5pt; border-bottom: 2px solid #e2e8f0; padding-bottom: 8pt; }
+        h2 { color: #0f172a; font-size: 16pt; margin-top: 25pt; margin-bottom: 15pt; border-bottom: 1px solid #cbd5e1; padding-bottom: 4pt; }
+        p { margin-bottom: 15pt; color: #475569; }
+        
+        /* Metric Header */
+        .metric-container { width: 100%; border: 1px solid #cbd5e1; background-color: #f8fafc; padding: 15pt; margin-bottom: 25pt; border-radius: 4px; }
+        .metric-label { font-size: 9pt; color: #64748b; text-transform: uppercase; font-weight: bold; }
+        .metric-value { font-size: 16pt; color: #0f172a; font-weight: bold; margin-top: 4pt; }
+        
+        /* Card Styles */
+        .threat-card {
+            border: 1px solid #cbd5e1;
+            margin-bottom: 15pt;
+            padding: 12pt;
+            background-color: #ffffff;
+        }
+        .threat-header {
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 8pt;
+            margin-bottom: 10pt;
+        }
+        .threat-title {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #0f172a;
+        }
+        .threat-severity {
+            font-size: 10pt;
+            font-weight: bold;
+            margin-top: 4pt;
+        }
+        .threat-description {
+            color: #334155;
+            font-size: 10pt;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+        /* Mitigation Card Styles */
+        .mitigation-card {
+            border-left: 4px solid #3b82f6;
+            background-color: #f8fafc;
+            padding: 12pt;
+            margin-bottom: 12pt;
+        }
+        .mitigation-title {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 4pt;
+        }
+        .mitigation-desc {
+            color: #475569;
+            font-size: 10pt;
+        }
+        .mitigation-priority {
+            font-weight: bold;
+            font-size: 9pt;
+            text-transform: uppercase;
+        }
+        
+        /* Severities */
+        .severity-Critical { color: #dc2626; }
+        .severity-High { color: #ea580c; }
+        .severity-Medium { color: #ca8a04; }
+        .severity-Low { color: #16a34a; }
+        
+        /* Header/Footer */
+        .footer-text { font-size: 8pt; color: #94a3b8; text-align: center; }
+        .header-text { font-size: 9pt; color: #64748b; text-align: right; font-weight: bold; }
     </style>
 </head>
 <body>
     <div id="header_content">
-        <div style="font-size: 10pt; color: #64748b; text-align: right;">autoMITRE™ Intelligence Platform</div>
+        <div class="header-text">autoMITRE™ Intelligence Platform</div>
     </div>
     <div id="footer_content">
-        <div style="font-size: 9pt; color: #94a3b8; text-align: center;">Page <pdf:pagenumber> of <pdf:pagecount> - Generated on {{ report_date }}</div>
+        <div class="footer-text">autoMITRE™ Executive Report | Page <pdf:pagenumber> of <pdf:pagecount> | Generated on {{ report_date }}</div>
     </div>
 
     <h1>Executive Threat Summary</h1>
     <p>This report provides a high-level overview of identified threats, their potential business impact, and recommended strategic mitigation priorities. Intended for board-level and C-suite review.</p>
 
-    <div class="metric-box">
-        <table style="border: none; margin: 0; padding: 0;">
+    <div class="metric-container">
+        <table style="width: 100%; border: none;">
             <tr>
-                <td style="border: none; width: 50%;">
-                    <div class="metric-title">Total Active Threats</div>
+                <td style="width: 50%; border: none; padding: 0;">
+                    <div class="metric-label">Total Active Threats</div>
                     <div class="metric-value">{{ total_threats }}</div>
                 </td>
-                <td style="border: none; width: 50%;">
-                    <div class="metric-title">Report Date</div>
-                    <div class="metric-value" style="font-size: 14pt; padding-top: 5pt;">{{ report_date }}</div>
+                <td style="width: 50%; border: none; padding: 0; text-align: right;">
+                    <div class="metric-label">Report Date</div>
+                    <div class="metric-value">{{ report_date }}</div>
                 </td>
             </tr>
         </table>
     </div>
 
-    <h2>Threat Overview & Business Impact</h2>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 25%">Threat Title</th>
-                <th style="width: 15%">Severity</th>
-                <th style="width: 60%">Business Impact Statement</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for threat in threats %}
-            <tr>
-                <td><strong>{{ threat.title }}</strong></td>
-                <td><span class="risk-{{ threat.risk_score.severity }}">{{ threat.risk_score.severity }} ({{ threat.risk_score.score }}/10)</span></td>
-                <td>{{ threat.description }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h2>1. Threat Overview & Business Impact</h2>
+    {% for threat in threats %}
+    <div class="threat-card">
+        <div class="threat-header">
+            <div class="threat-title">{{ threat.title }}</div>
+            <div class="threat-severity severity-{{ threat.risk_score.severity }}">
+                Severity: {{ threat.risk_score.severity }} ({{ threat.risk_score.score }}/10)
+            </div>
+        </div>
+        <div class="threat-description">
+            {{ threat.description }}
+        </div>
+    </div>
+    {% endfor %}
 
-    <h2>Strategic Mitigation Directives</h2>
-    <p>The following table outlines the highest priority mitigation steps across all identified threats to protect organizational assets.</p>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 30%">Mitigation Area</th>
-                <th style="width: 50%">Strategic Description</th>
-                <th style="width: 20%">Priority</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for threat in threats %}
-                {% for mitigation in threat.mitigations[:3] %}
-                <tr>
-                    <td><strong>{{ mitigation.title }}</strong></td>
-                    <td>{{ mitigation.description }}</td>
-                    <td><span class="risk-{{ mitigation.priority }}">{{ mitigation.priority }}</span></td>
-                </tr>
-                {% endfor %}
-            {% endfor %}
-        </tbody>
-    </table>
+    <h2>2. Strategic Mitigation Directives</h2>
+    <p>The following outlines the highest priority strategic initiatives required to secure organizational assets against the identified active threats.</p>
+    {% for threat in threats %}
+        {% for mitigation in threat.mitigations[:3] %}
+        <div class="mitigation-card">
+            <div class="mitigation-title">{{ mitigation.title }}</div>
+            <div class="mitigation-priority severity-{{ mitigation.priority }}">Priority: {{ mitigation.priority }}</div>
+            <div class="mitigation-desc" style="margin-top: 6pt;">
+                {{ mitigation.description }}
+            </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
 
-    <p style="margin-top: 30pt; font-size: 10pt; color: #64748b; text-align: center;">
-        END OF EXECUTIVE REPORT<br>
-        autoMITRE™ Enterprise PDF Engine
-    </p>
-
+    <div style="margin-top: 40pt; text-align: center; color: #94a3b8; font-size: 9pt; border-top: 1px solid #e2e8f0; padding-top: 10pt;">
+        <strong>END OF REPORT</strong><br>
+        Generated by autoMITRE™ Enterprise PDF Engine
+    </div>
 </body>
 </html>

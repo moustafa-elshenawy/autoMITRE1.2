@@ -92,10 +92,13 @@
 
         <h3>[+] MITRE ATT&CK MAPPINGS</h3>
         <table>
+            <pdf:col width="20%" />
+            <pdf:col width="40%" />
+            <pdf:col width="40%" />
             <tr>
-                <th style="width: 20%">ID</th>
-                <th style="width: 40%">Name</th>
-                <th style="width: 40%">Tactic</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Tactic</th>
             </tr>
             {% for tech in threat.attack_techniques %}
             <tr>
@@ -108,9 +111,11 @@
 
         <h3>[+] ACTIVE DEFENSE COUNTERMEASURES (D3FEND & NIST)</h3>
         <table>
+            <pdf:col width="20%" />
+            <pdf:col width="80%" />
             <tr>
-                <th style="width: 20%">D3FEND ID</th>
-                <th style="width: 80%">Description</th>
+                <th>D3FEND ID</th>
+                <th>Description</th>
             </tr>
             {% for def in threat.defend_countermeasures[:5] %}
             <tr>
