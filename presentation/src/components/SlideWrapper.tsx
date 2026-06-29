@@ -54,6 +54,7 @@ import DataFlowDiagram from './widgets/DataFlowDiagram';
 import SemanticReranker from './widgets/SemanticReranker';
 import ThreatSeverity from './widgets/ThreatSeverity';
 import PredictionEngine from './widgets/PredictionEngine';
+import SiemSoarIntegration from './widgets/SiemSoarIntegration';
 
 export default function SlideWrapper({ slide }: { slide: SlideData }) {
   const isTitle = slide.layout === 'title';
@@ -111,6 +112,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'threat_severity':        return <ThreatSeverity />;
       case 'prediction_engine':      return <PredictionEngine />;
       case 'future_roadmap':         return <FutureRoadmap />;
+      case 'siem_soar_integration':  return <SiemSoarIntegration />;
       case 'conclusion_shield':      return <ConclusionShield />;
       case 'none':                   return null;
       default:                       return <DynamicCyberArt seed={slide.id} />;

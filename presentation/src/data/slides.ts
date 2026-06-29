@@ -48,6 +48,7 @@ export type SlideWidget =
   | 'semantic_reranker'
   | 'threat_severity'
   | 'prediction_engine'
+  | 'siem_soar_integration'
   | 'none';
 
 export type SlideData = {
@@ -597,8 +598,20 @@ export const slides: SlideData[] = [
     layout: 'split',
     widget: 'dbscan',
   },
-  {
+    {
     id: 43,
+    section: 'Conclusion & Future Work',
+    title: 'Future Work — SIEM & SOAR Integration',
+    content: [
+      'Active Defense: Moving autoMITRE from passive intelligence to an active automated response trigger.',
+      'SIEM Sync: Native, bi-directional API hooks for Splunk Enterprise Security and QRadar.',
+      'SOAR Playbooks: Trigger Cortex XSOAR isolation playbooks immediately upon high-severity predictions.',
+    ],
+    layout: 'split',
+    widget: 'siem_soar_integration',
+  },
+{
+    id: 44,
     section: 'Conclusion & Future Work',
     title: 'Future Enhancement Roadmap',
     content: [
@@ -610,7 +623,7 @@ export const slides: SlideData[] = [
     widget: 'future_roadmap',
   },
   {
-    id: 44,
+    id: 45,
     section: 'Conclusion & Future Work',
     title: 'Conclusion & Thank You',
     content: [
