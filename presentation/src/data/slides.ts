@@ -47,6 +47,7 @@ export type SlideWidget =
   | 'data_flow_diagram'
   | 'semantic_reranker'
   | 'threat_severity'
+  | 'prediction_engine'
   | 'none';
 
 export type SlideData = {
@@ -399,6 +400,18 @@ export const slides: SlideData[] = [
   {
     id: 27,
     section: 'The AI Engine',
+    title: 'Predictive Attack Path Generation',
+    content: [
+      'Proactive Intelligence: Transitions the system from reactive reporting to proactive forecasting.',
+      'Kill-Chain Context: Analyzes the current tactic (e.g., Privilege Escalation) to predict logical next steps.',
+      'LLM Reasoning: Generates explainable, probabilistic narratives of the adversary\'s most likely targets.',
+    ],
+    layout: 'split',
+    widget: 'prediction_engine',
+  },
+  {
+    id: 28,
+    section: 'The AI Engine',
     title: 'FastAPI Async REST Architecture',
     content: [
       'Asynchronous Endpoints: All routes use async/await — no blocking I/O during file analysis.',
@@ -409,7 +422,7 @@ export const slides: SlideData[] = [
     widget: 'api_routes',
   },
   {
-    id: 28,
+    id: 29,
     section: 'The AI Engine',
     title: 'Technology Stack — Tools & Libraries',
     content: [
@@ -425,7 +438,7 @@ export const slides: SlideData[] = [
   // SECTION 5 — RESULTS & TESTING (Slides 26–35)
   // ────────────────────────────────────────────────────────────
   {
-    id: 29,
+    id: 30,
     section: 'Results & Testing',
     title: 'Testing Framework — IEEE 829 Standard',
     content: [
@@ -437,7 +450,7 @@ export const slides: SlideData[] = [
     widget: 'test_matrix',
   },
   {
-    id: 30,
+    id: 31,
     section: 'Results & Testing',
     title: 'AI Model Accuracy — SecureBERT Evaluation',
     content: [
@@ -449,7 +462,7 @@ export const slides: SlideData[] = [
     widget: 'accuracy',
   },
   {
-    id: 31,
+    id: 32,
     section: 'Results & Testing',
     title: 'Inference Latency Benchmarks',
     content: [
@@ -461,7 +474,7 @@ export const slides: SlideData[] = [
     widget: 'latency',
   },
   {
-    id: 32,
+    id: 33,
     section: 'Results & Testing',
     title: 'Framework Mapping Accuracy',
     content: [
@@ -473,7 +486,7 @@ export const slides: SlideData[] = [
     widget: 'mapping_accuracy',
   },
   {
-    id: 33,
+    id: 34,
     section: 'Results & Testing',
     title: 'Contextualizing 84% Accuracy',
     content: [
@@ -485,7 +498,7 @@ export const slides: SlideData[] = [
     widget: 'accuracy_context',
   },
   {
-    id: 34,
+    id: 35,
     section: 'Results & Testing',
     title: 'Case Study — Mimikatz Credential Dumping',
     content: [
@@ -497,7 +510,7 @@ export const slides: SlideData[] = [
     widget: 'case_study_walkthrough',
   },
   {
-    id: 35,
+    id: 36,
     section: 'Results & Testing',
     title: 'SIEM Integration — STIX 2.1 Export Validation',
     content: [
@@ -509,7 +522,7 @@ export const slides: SlideData[] = [
     widget: 'stix_tree',
   },
   {
-    id: 36,
+    id: 37,
     section: 'Results & Testing',
     title: 'Hallucination Prevention — RAG Validation',
     content: [
@@ -521,7 +534,7 @@ export const slides: SlideData[] = [
     widget: 'guardrail',
   },
   {
-    id: 37,
+    id: 38,
     section: 'Results & Testing',
     title: 'System Resiliency — Failover Test (TC-33)',
     content: [
@@ -533,7 +546,7 @@ export const slides: SlideData[] = [
     widget: 'failover_test',
   },
   {
-    id: 38,
+    id: 39,
     section: 'Results & Testing',
     title: 'Load Testing — 20 Concurrent Analysts (Locust)',
     content: [
@@ -545,7 +558,7 @@ export const slides: SlideData[] = [
     widget: 'load_test',
   },
   {
-    id: 39,
+    id: 40,
     section: 'Results & Testing',
     title: 'Functional Requirements Validation — Complete Coverage',
     content: [
@@ -561,7 +574,7 @@ export const slides: SlideData[] = [
   // SECTION 6 — CONCLUSION & FUTURE WORK (Slides 36–39)
   // ────────────────────────────────────────────────────────────
   {
-    id: 40,
+    id: 41,
     section: 'Conclusion & Future Work',
     title: 'Honest Limitations',
     content: [
@@ -573,7 +586,7 @@ export const slides: SlideData[] = [
     widget: 'limitations_gauge',
   },
   {
-    id: 41,
+    id: 42,
     section: 'Conclusion & Future Work',
     title: 'Future Work — DBSCAN Zero-Day Anomaly Detection',
     content: [
@@ -585,7 +598,7 @@ export const slides: SlideData[] = [
     widget: 'dbscan',
   },
   {
-    id: 42,
+    id: 43,
     section: 'Conclusion & Future Work',
     title: 'Future Enhancement Roadmap',
     content: [
@@ -597,7 +610,7 @@ export const slides: SlideData[] = [
     widget: 'future_roadmap',
   },
   {
-    id: 43,
+    id: 44,
     section: 'Conclusion & Future Work',
     title: 'Conclusion & Thank You',
     content: [

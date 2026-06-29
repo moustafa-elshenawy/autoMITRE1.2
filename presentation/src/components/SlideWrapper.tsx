@@ -53,6 +53,7 @@ import ConclusionShield from './widgets/ConclusionShield';
 import DataFlowDiagram from './widgets/DataFlowDiagram';
 import SemanticReranker from './widgets/SemanticReranker';
 import ThreatSeverity from './widgets/ThreatSeverity';
+import PredictionEngine from './widgets/PredictionEngine';
 
 export default function SlideWrapper({ slide }: { slide: SlideData }) {
   const isTitle = slide.layout === 'title';
@@ -108,6 +109,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
       case 'data_flow_diagram':      return <DataFlowDiagram />;
       case 'semantic_reranker':      return <SemanticReranker />;
       case 'threat_severity':        return <ThreatSeverity />;
+      case 'prediction_engine':      return <PredictionEngine />;
       case 'future_roadmap':         return <FutureRoadmap />;
       case 'conclusion_shield':      return <ConclusionShield />;
       case 'none':                   return null;
