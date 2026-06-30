@@ -380,9 +380,9 @@ export const slides: SlideData[] = [
     section: 'The AI Engine',
     title: 'Threat Severity Prediction',
     content: [
-      'XGBoost Regressor: Converges both pipelines into a final CVSS v3.1 base score (0.0 - 10.0).',
-      'Features: Base CVSS of mapped techniques, SecureBERT severity flags, and tactical impact.',
-      'Performance: High precision regression providing quantifiable risk metrics to the dashboard.',
+      'XGBoost Regressor: Predicts threat severity on a CVSS v3.1 aligned scale (0.0 - 10.0) in microseconds.',
+      'Features: 15-dimensional feature vector containing text complexity, entity counts, registry/process activity, and C2 indicators.',
+      'Blended Scoring: Merges XGBoost, SecureBERT, and heuristic scores using MAX aggregation to prevent risk dilution.',
     ],
     layout: 'split',
     widget: 'threat_severity',
