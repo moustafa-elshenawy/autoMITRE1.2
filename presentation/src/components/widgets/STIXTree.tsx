@@ -41,7 +41,7 @@ export default function STIXTree() {
                   animate={{ opacity: 1, y: 0 }}
                   className="bg-slate-900 border border-slate-700 p-3 rounded-lg text-xs font-mono text-slate-400 flex flex-col items-center"
                 >
-                  <span className="text-emerald-400">Indicator</span>
+                  <span className="text-emerald-400">Attack_Pattern</span>
                   <span>T1003.001</span>
                 </motion.div>
               )}
