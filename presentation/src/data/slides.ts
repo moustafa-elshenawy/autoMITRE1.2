@@ -231,7 +231,7 @@ export const slides: SlideData[] = [
     title: 'Non-Functional Requirements (IEEE 830) — Quality Attributes',
     content: [
       'NFR1 Performance: Cloud inference < 1.2s; local inference 4–6.5s (within hardware limits).',
-      'NFR5 Security: Input sanitization (95% coverage), RBAC enforcement, no data leakage.',
+      'NFR5 Security: Input sanitization (95% coverage), OWASP ZAP scan validation, no data leakage.',
       'NFR8 Interoperability: Outputs validated for Splunk, QRadar, Wazuh, and Elastic Security.',
     ],
     layout: 'split',
@@ -566,7 +566,7 @@ export const slides: SlideData[] = [
     content: [
       '9 Functional Requirements — all formally validated against dedicated test case ranges.',
       'All test cases PASS: Authentication, Upload, AI Analysis, Mapping, Mitigation, SIEM Export.',
-      'NFRs met: Performance (< 1.2s), Security (95% sanitization coverage), Interoperability (STIX).',
+      'NFRs met: Performance (< 1.2s), Security (95% sanitization & OWASP ZAP scan), Interoperability (STIX).',
     ],
     layout: 'split',
     widget: 'fr_validation',
