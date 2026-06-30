@@ -327,7 +327,6 @@ async def extract_attacks(file: UploadFile = File(...), context: Optional[str] =
 
         if is_iriusrisk_xml or is_iriusrisk_html or is_iriusrisk_excel or is_iriusrisk_pdf or is_iriusrisk_csv:
             print("!!! ROUTER HIT - IRIUSRISK ROUTE (EXTRACT): ", filename, " !!!")
-            import os
             ext = os.path.splitext(filename)[1] if filename else ".xml"
             temp_path = f"/tmp/{uuid.uuid4()}_{filename if filename else 'upload' + ext}"
             with open(temp_path, "wb") as f:
