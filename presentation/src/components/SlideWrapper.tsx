@@ -146,7 +146,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-6xl font-bold tracking-tighter text-slate-50 glitch-text-container"
+            className="text-7xl font-bold tracking-tighter text-slate-50 glitch-text-container"
             data-text={slide.title}
           >
             {slide.title}
@@ -159,7 +159,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 + idx * 0.2 }}
-                className="text-xl text-slate-300 font-light"
+                className="text-2xl text-slate-300 font-light leading-relaxed"
               >
                 {point}
               </motion.li>
@@ -197,7 +197,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-emerald-400 font-mono text-sm uppercase tracking-widest mb-3 block"
+          className="text-emerald-400 font-mono text-lg uppercase tracking-widest mb-4 block"
         >
           {slide.section}
         </motion.span>
@@ -206,7 +206,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3 }}
-          className="font-bold tracking-tight text-5xl text-slate-50 pb-4 relative"
+          className="font-bold tracking-tight text-5xl text-slate-50 pb-5 relative"
         >
           {slide.title}
           <div className="absolute bottom-0 left-0 h-[1px] bg-gradient-to-r from-cyan-500 via-emerald-400 to-transparent w-full" />
@@ -225,7 +225,7 @@ export default function SlideWrapper({ slide }: { slide: SlideData }) {
                 animate={{ opacity: 1, x: 0, rotateX: 0 }}
                 whileHover={{ scale: 1.02, x: 10, borderColor: 'rgba(34,211,238,0.5)', backgroundColor: 'rgba(15,23,42,0.8)' }}
                 transition={{ duration: 0.4, delay: 0.4 + idx * 0.15 }}
-                className="text-lg flex items-center bg-slate-900/40 px-5 py-3.5 rounded-xl border border-slate-800/50 cursor-default transition-colors duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] backdrop-blur-sm"
+                className="text-xl flex items-center bg-slate-900/40 px-5 py-4 rounded-xl border border-slate-800/50 cursor-default transition-colors duration-300 shadow-lg hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] backdrop-blur-sm"
               >
                 <span className="text-cyan-500 mr-4 opacity-80 shrink-0 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]">▸</span>
                 <span className="leading-relaxed text-slate-200">{point}</span>
